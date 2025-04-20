@@ -47,7 +47,7 @@ function findMe(i,a,cr)
 	end
 end
 
-function chkPs(p,mv,index,cr,i,j)
+function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables are local and are set to nil if not filled
 	s1=M[15][M[1][index][4]]
 	r,h=s1[18],s1[19]
 	bstDst=r
@@ -108,7 +108,7 @@ function chkPs(p,mv,index,cr,i,j)
 		cr=M[2][blkCr[i]]
 		dst,tmpA=chkLnDst(p,M[4][cr[1]],M[4][cr[2]])
 		if dst<bstDst then
-			if index==pIn and cr[4]==2 then -- only activate special if it's the player and the special is a walk over
+			if checkPlayerPosLoop==1 and cr[4]==2 then -- only activate special if it's the player and the special is a walk over
 				thinkers[M[8][M[9][cr[5]][1]][9]or#thinkers+1]={cr[5],1}-- if thinker exists, replace it, if not, create new one
 			end
 			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then
@@ -548,7 +548,7 @@ function onTick()
 			end
 			pp[9]=pTng[9]
 			for i=1,8 do
-				valid=chkPs(pp,trueVar,pIn)
+				valid=chkPs(pp,trueVar,pIn,i)
 			end
 			if valid then
 				for i=1,2 do

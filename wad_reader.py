@@ -141,6 +141,7 @@ class WADReader:
         sector.neighbouring_lowest_ceiling = None
         sector.neighbouring_highest_floor = None
         sector.neighbouring_lowest_floor = None
+        sector.neighbouring_linedefs = []
         return sector
 
     def read_sidedef(self, offset):

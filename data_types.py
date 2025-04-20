@@ -77,6 +77,7 @@ class Sector:
         'neighbouring_lowest_ceiling',
         'neighbouring_highest_floor',
         'neighbouring_lowest_floor',
+        'neighbouring_linedefs',
     ]
 
 

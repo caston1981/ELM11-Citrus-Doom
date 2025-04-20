@@ -182,13 +182,18 @@ def insert_thinker(thinker):
         return len(sector_thinkers)
 
 def find_sector(tag):
-    global level_wad
+    global level_wad,map_name
+
+    return_val = 0
 
     for index in range(len(level_wad.sectors)):
         i = level_wad.sectors[index]
         if i.tag == tag:
-            return index+1
-    return 0
+            if return_val != 0:
+                print("sector",index,"in level",map_name,"has duplicate tag of",tag,"which is the same as sector",return_val)
+            else:
+                return_val = index+1
+    return return_val
 
 if __name__ == '__main__':
     start_time=time.time()
@@ -704,6 +709,9 @@ if __name__ == '__main__':
                     s2.neighbouring_lowest_floor = s1.floor_height
                 else:
                     s2.neighbouring_lowest_floor = min(s2.neighbouring_lowest_floor,s1.floor_height)
+
+                s1.neighbouring_linedefs.append(index)
+                s2.neighbouring_linedefs.append(index)
             
 
         sector_thinkers=[] # format for thinkers is (targ sec, value to change (1 for floor, 2 for ceil), targ height, end delay, next thinker)
@@ -742,6 +750,31 @@ if __name__ == '__main__':
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
+
+            elif i.line_type==7 or i.line_type==8:
+                cur_sec = find_sector(i.sector_tag)
+
+                previous_secs = [cur_sec-1]
+                next_secs = [cur_sec-1]
+                while len(next_secs)>0:
+                    cur_sec=next_secs[0]
+                    for j in level_wad.sectors[cur_sec].neighbouring_linedefs:
+                        potential_sec = level_wad.sidedefs[level_wad.linedefs[j].back_sidedef_id-1].sector_id
+                        if level_wad.sectors[cur_sec].floor_texture == level_wad.sectors[potential_sec].floor_texture and not potential_sec in previous_secs:
+                            previous_secs.append(potential_sec)
+                            next_secs.append(potential_sec)
+                    next_secs.pop(0)
+
+                floor_height = level_wad.sectors[previous_secs[0]].floor_height
+                next_thinker = 0
+                for j in range(len(previous_secs)-1,-1,-1):
+                    cur_floor_height = floor_height+(j+1)*8
+                    cur_sec = previous_secs[j]+1
+                    thinker = (cur_sec, 1, cur_floor_height, 1, next_thinker)
+                    next_thinker = insert_thinker(thinker)
+
+                i.thinker_id = next_thinker
+                i.line_type = {7:1,8:2}[i.line_type]
 
             elif i.line_type==9: #S1 Floor Donut (not actually a donut yet)
                 cur_sec = find_sector(i.sector_tag)
