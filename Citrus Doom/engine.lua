@@ -109,7 +109,9 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 		dst,tmpA=chkLnDst(p,M[4][cr[1]],M[4][cr[2]])
 		if dst<bstDst then
 			if checkPlayerPosLoop==1 and cr[4]==2 then -- only activate special if it's the player and the special is a walk over
-				thinkers[M[8][M[9][cr[5]][1]][9]or#thinkers+1]={cr[5],1}-- if thinker exists, replace it, if not, create new one
+				a=M[9][cr[5]]
+				thinkers[M[8][a[1]][9]or#thinkers+1]={cr[5],1}-- if thinker exists, replace it, if not, create new one
+				cr[4]=a[6]--used to remove the link to the thinker for single-use specials
 			end
 			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then
 				bstDst=dst
@@ -474,7 +476,7 @@ function onTick()
 							angle=flr(at2(cr,cr[23])/45+0.5)*45
 							valid=falseVar
 							stg=1
-							while stg<5 and not valid do-- checks angles 0, 45, -45, 90, -90 relative to desired direction
+							while stg<5 and not valid do-- checks angles 0, 45, -45, 90, -90, 135, -135, 180 relative to desired direction
 								nm=add(cr,dVec(angle+M[19][2][stg],8))
 								nm[9]=cr[9]
 								stg=stg+1
@@ -484,9 +486,9 @@ function onTick()
 								cr[1]=nm[1]
 								cr[2]=nm[2]
 								cr[3]=angle
-								cr[9]=bounds[1]
 								cr[10]=trueVar
 							end
+							cr[9]=bounds[1]
 							a=dist(cr,cr[23])
 							if s1[13]>0 and chkRayCol(cr,cr[23],1)and mn(a,230)<rand()then
 								cr[6]=s1[13]

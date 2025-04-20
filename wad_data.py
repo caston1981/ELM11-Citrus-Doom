@@ -174,6 +174,8 @@ def div(a,b):
 
 def insert_thinker(thinker):
     global sector_thinkers
+
+    assert len(thinker)==6, "thinker is "+str(len(thinker))+" long, should be 6 long"
     
     if thinker in sector_thinkers:
         return sector_thinkers.index(thinker)+1
@@ -356,9 +358,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==-1:
+        if i==0:
             None
-            print(code.split("\n")[555-1])
+            print(code.split("\n")[352-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -714,7 +716,7 @@ if __name__ == '__main__':
                 s2.neighbouring_linedefs.append(index)
             
 
-        sector_thinkers=[] # format for thinkers is (targ sec, value to change (1 for floor, 2 for ceil), targ height, end delay, next thinker)
+        sector_thinkers=[] # format for thinkers is (targ sec, value to change (1 for floor, 2 for ceil), targ height, end delay, next thinker, number to replace linedef's action with)
         for index in range(len(level_wad.linedefs)): # compiles the sector thinkers
             i=level_wad.linedefs[index]
 
@@ -724,11 +726,11 @@ if __name__ == '__main__':
             s1=level_wad.sectors[s1i]
             s2=level_wad.sectors[s2i]
     
-            if i.line_type==1:
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 1, 0)
+            if i.line_type==1: #MR Door
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 1, 0, 1)
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker)
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker, 1)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -737,7 +739,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -746,7 +748,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -770,7 +772,7 @@ if __name__ == '__main__':
                 for j in range(len(previous_secs)-1,-1,-1):
                     cur_floor_height = floor_height+(j+1)*8
                     cur_sec = previous_secs[j]+1
-                    thinker = (cur_sec, 1, cur_floor_height, 1, next_thinker)
+                    thinker = (cur_sec, 1, cur_floor_height, 1, next_thinker, 0)
                     next_thinker = insert_thinker(thinker)
 
                 i.thinker_id = next_thinker
@@ -780,7 +782,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -789,10 +791,10 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0, 0)
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, TICKRATE*30, next_thinker)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, TICKRATE*30, next_thinker, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -801,7 +803,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -810,7 +812,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -819,7 +821,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -828,59 +830,59 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
             
-            elif i.line_type==26:
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 1, 0)
+            elif i.line_type==26: #MR Door Blue
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 1, 0, key_indexes["blue"])
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker)
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker, key_indexes["blue"])
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["blue"]
 
-            elif i.line_type==27:
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 1, 0)
+            elif i.line_type==27: #MR Door Yellow
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 1, 0, key_indexes["yellow"])
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker)
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker, key_indexes["yellow"])
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["yellow"]
 
-            elif i.line_type==28:
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 1, 0)
+            elif i.line_type==28: #MR Door Red
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 1, 0, key_indexes["red"])
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker)
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker, key_indexes["red"])
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["red"]
 
-            elif i.line_type==31:
+            elif i.line_type==31: #M1 Door Stay Open
 
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, 1, 0)
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
 
-            elif i.line_type==32:
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, 1, 0)
+            elif i.line_type==32: #M1 Door Stay Open Blue
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["blue"]
 
-            elif i.line_type==33:
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, 1, 0)
+            elif i.line_type==33: #M1 Door Stay Open Red
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["red"]
 
-            elif i.line_type==34:
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, 1, 0)
+            elif i.line_type==34: #M1 Door Stay Open Yellow
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-8, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["yellow"]
@@ -889,7 +891,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor+8, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor+8, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -898,7 +900,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -907,10 +909,10 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, 1, 0)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, 1, 0, 1)
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker, 1)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -919,10 +921,10 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].floor_height, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].floor_height, 1, 0, 1)
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, TICKRATE*3, next_thinker)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, TICKRATE*3, next_thinker, 1)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -931,10 +933,10 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, 1, 0)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, 1, 0, 1)
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker, 1)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -943,7 +945,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor+8, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor+8, 1, 0, 1)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -952,10 +954,10 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0, 2)
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, TICKRATE*30, next_thinker)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, TICKRATE*30, next_thinker, 2)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -964,7 +966,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, 1, 0, 2)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -973,7 +975,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0, 2)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -982,10 +984,10 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].floor_height, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].floor_height, 1, 0, 2)
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, TICKRATE*3, next_thinker)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, TICKRATE*3, next_thinker, 2)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -994,10 +996,10 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, 1, 0)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, 1, 0, 2)
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker, 2)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1006,7 +1008,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling, 1, 0, 2)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1015,7 +1017,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor+8, 1, 0)
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_highest_floor+8, 1, 0, 2)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1024,7 +1026,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1033,7 +1035,7 @@ if __name__ == '__main__':
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
                 
-                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0)
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1232,14 +1234,14 @@ if __name__ == '__main__':
             #print(len(i))
             new=(str(i)[1:-1]+",").replace(" ","")
             if len(cur)+len(new)>curmax:
-                packets.append(str(level_data_offset+9)+",5,"+str(curnum-1)+","+cur[:-1])
+                packets.append(str(level_data_offset+9)+",6,"+str(curnum-1)+","+cur[:-1])
                 cur = new
                 curnum = 1
             else:
                 cur += new
 
         if cur!="":
-            packets.append(str(level_data_offset+9)+",5,"+str(curnum)+","+cur[:-1])
+            packets.append(str(level_data_offset+9)+",6,"+str(curnum)+","+cur[:-1])
 
 
         cur=""
@@ -1479,7 +1481,7 @@ if __name__ == '__main__':
     
 
     misc_additions = [[1,2,9,6,11,12,19,3],
-                      [0,45,-45,90,-90],
+                      [0,45,-45,90,-90,135,-135,180],
                       [all_sprite_textures.index("STFST01")+1,],
                       [0,0,7,8,0,1,2,9,3],
                       [0,0,255],
@@ -1787,6 +1789,7 @@ if __name__ == '__main__':
                 
             i=wad.asset_data.wall_textures[index]
             switch=(str(wall_textures.index("SW2"+index[3:])+1) if index[0:3]=="SW1" else "0")
+            switch+=(str(wall_textures.index("SW1"+index[3:])+1) if index[0:3]=="SW2" else "0")
             width=len(i)//res_scale_cur
             height=len(i[0])//res_scale_cur
             cur = "21,"+str(width*height+5)+",1,"+str(width)+","+str(height)+","
