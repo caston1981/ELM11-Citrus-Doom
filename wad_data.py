@@ -234,7 +234,7 @@ if __name__ == '__main__':
     path_in = base_name+".xml"
     path_out = path_bits[0]+obj_name+path_bits[1]
 
-    wall_overrides={"EXITSIGN":1,"TEKWALL1":2,"EXITDOOR":2,"ORANGE_1":1,"KEYBOARD":1,"HOTAS2":1,"DIFFICUL":2} # used to make some walls higher quality than others
+    wall_overrides={"EXITSIGN":1,"EXITDOOR":2,"ORANGE_1":1,"KEYBOARD":1,"HOTAS2":1,"DIFFICUL":2} # used to make some walls higher quality than others
     sprite_overrides={"SHEL":1} # used to make some sprites higher quality than others, mostly generated automatically
                                 # manually adjusted the shotgun shell pickup since it looks weird at 1/2
     
@@ -360,7 +360,7 @@ if __name__ == '__main__':
         end = text.find(find_end,start)
         if i==0:
             None
-            print(code.split("\n")[352-1])
+            print(code.split("\n")[351-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -1788,8 +1788,10 @@ if __name__ == '__main__':
                 res_scale_cur = res_scale_walls
                 
             i=wad.asset_data.wall_textures[index]
-            switch=(str(wall_textures.index("SW2"+index[3:])+1) if index[0:3]=="SW1" else "0")
-            switch+=(str(wall_textures.index("SW1"+index[3:])+1) if index[0:3]=="SW2" else "0")
+            switch1=((wall_textures.index("SW2"+index[3:])+1) if index[0:3]=="SW1" else 0)
+            switch2=((wall_textures.index("SW1"+index[3:])+1) if index[0:3]=="SW2" else 0)
+            switch=str(switch1+switch2)
+            
             width=len(i)//res_scale_cur
             height=len(i[0])//res_scale_cur
             cur = "21,"+str(width*height+5)+",1,"+str(width)+","+str(height)+","
