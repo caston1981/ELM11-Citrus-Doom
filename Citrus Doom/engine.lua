@@ -51,6 +51,8 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 	s1=M[15][M[1][index][4]]
 	r,h=s1[18],s1[19]
 	bstDst=r
+	bounds=findMe(#M[7],p)
+	bt,tp=exp(bounds)
 	blkPs=sub(p,M[10][1])
 	blkCr=M[10][2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
 	for i,cr in ipairsVar(blkCr[0]) do
@@ -98,8 +100,6 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 	end
 			
 	hitThing=falseVar
-	bounds=findMe(#M[7],p)
-	bt,tp=exp(bounds)
 
 	if tp-bt<h or bt>p[9]+24then-- or tp<p[9]+h
 		return falseVar
@@ -411,9 +411,9 @@ function onTick()
 				M[10][i][0]={}
 			end
 			
-			for i,cr in ipairsVar(M[9])do
-				cr[6]=falseVar
-			end
+			--for i,cr in ipairsVar(M[9])do -- why did this exist?
+			--	cr[6]=falseVar
+			--end
 			
 			for i,v in ipairsVar(thinkers)do			
 				cr=M[9][v[1]]
@@ -430,6 +430,8 @@ function onTick()
 				end
 				pos[9]=i
 			end
+			
+			--pTng[7]=mx(5,pTng[7]) -- invulnerability
 			
 			for i,cr in ipairsVar(M[1])do
 				if cr then
@@ -476,7 +478,7 @@ function onTick()
 							angle=flr(at2(cr,cr[23])/45+0.5)*45
 							valid=falseVar
 							stg=1
-							while stg<5 and not valid do-- checks angles 0, 45, -45, 90, -90, 135, -135, 180 relative to desired direction
+							while stg<5 and not valid do-- checks angles 0, 45, -45, 90, -90 relative to desired direction
 								nm=add(cr,dVec(angle+M[19][2][stg],8))
 								nm[9]=cr[9]
 								stg=stg+1
@@ -487,6 +489,8 @@ function onTick()
 								cr[2]=nm[2]
 								cr[3]=angle
 								cr[10]=trueVar
+							else
+								chkPs(cr,falseVar,i)
 							end
 							cr[9]=bounds[1]
 							a=dist(cr,cr[23])

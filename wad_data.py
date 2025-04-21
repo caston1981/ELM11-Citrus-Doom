@@ -173,9 +173,11 @@ def div(a,b):
     return tuple([i/b for i in a])
 
 def insert_thinker(thinker):
-    global sector_thinkers
+    global sector_thinkers, map_name
 
     assert len(thinker)==6, "thinker is "+str(len(thinker))+" long, should be 6 long"
+
+    #print(map_name,thinker)
     
     if thinker in sector_thinkers:
         return sector_thinkers.index(thinker)+1
@@ -358,9 +360,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==0:
+        if i==-1:
             None
-            print(code.split("\n")[351-1])
+            print(code.split("\n")[576-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -1481,7 +1483,7 @@ if __name__ == '__main__':
     
 
     misc_additions = [[1,2,9,6,11,12,19,3],
-                      [0,45,-45,90,-90,135,-135,180],
+                      [0,45,-45,90,-90],
                       [all_sprite_textures.index("STFST01")+1,],
                       [0,0,7,8,0,1,2,9,3],
                       [0,0,255],
