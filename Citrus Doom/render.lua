@@ -360,7 +360,7 @@ function onTick()
 									render=v>0
 									calculate=trueVar
 
-									if (render or (n==3 and not (tpRnd and btRnd)))and (n==3 or double)thenb -- all the possible reasons to render
+									if (render or (n==3 and not (tpRnd and btRnd)))and (n==3 or double)then -- all the possible reasons to render
 										sky=falseVar
 										yOff=0
 										if n<3 then
