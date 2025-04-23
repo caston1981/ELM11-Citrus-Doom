@@ -18,8 +18,8 @@ function tan(a)return m.tan(a/180*pi)end
 function at2(a)return m.atan(a[2],a[1])*180/pi end
 function clmp(a,b,cr)return mn(mx(b,a),cr)end
 function rnd(a)return flr(a+0.5)end
-function dist(a,b)return sqrt(((a[1]-b[1])^2)+((a[2]-b[2])^2))end
-function rnd2(a)
+function dist(a,b)return sqrt(((a[1]-b[1])^2)+((a[2]-b[2])^2))end -- only checks horizontal distance
+function rnd2(a) -- rounds to nearest power of 2
 	a=a-1
 	a=a|(a>>1)
 	a=a|(a>>2)
@@ -44,24 +44,24 @@ LOD=400-- higher is more quality
 health=100
 mRandom=0
 transferCache={}
-bigNumb=32768
+bigNumb=32768 -- 2^15
 difficulty=3002
 fuzz=0
 screenBrightTimer=0
 
 tick=0
 
-pixelAspectCorrection=1.2
-fov=52
+pixelAspectCorrection=1.2 -- doom's pixels aren't actually meant to be square
+fov=52 -- half of fov, so real fov is 104. doom normally has an fov of 90 but it's higher to keep a similar vertical fov
 fovT=tan(fov)
-vMult=hghtH*pixelAspectCorrection*wdth/hght/fovT
+vMult=hghtH*pixelAspectCorrection*wdth/hght/fovT -- scales walls to vertically look right
 
 stg=1
 
 xAng={}
 for i=-wdthH,wdthH do xAng[i]=at2({1,i/wdthH*fovT})end
 
-function treeing(i)
+function treeing(i) -- sorting sectors using BSP tree
 	if i<bigNumb then
 		local g,si=M[7][i]
 		si=0<cross({g[3],g[4]},sub(pp[1],g))and 8 or 7
@@ -72,7 +72,7 @@ function treeing(i)
 	end
 end
 
-function findMe(i,a)
+function findMe(i,a) -- finding sub-sector a position is in using BSP tree
 	if i<bigNumb then
 		g=M[7][i]
 		return findMe(g[0<cross({g[3],g[4]},sub(a,g))and 8 or 7],a)
@@ -81,7 +81,7 @@ function findMe(i,a)
 	end
 end
 
-function findSec(a)
+function findSec(a) -- finds a sub sector's sector
 	g=M[5][M[6][a][2]]
 	return M[3][M[2][g[4]][g[5]+6]][6]
 end
@@ -90,7 +90,7 @@ function onTick()
 	mN=0
 
 	for j=1,3 do
-		if gB(9) and (not loaded)or not M[21]then
+		if gB(9) and (not loaded)or not M[21]then -- M[21] is the first thing loaded after the loading screen orange, halting loading when that's done
 			rom=property.getText(romCr.."")
 			if rom~="" then
 				i=1
@@ -143,7 +143,7 @@ function onTick()
 	end
 
 	if loaded then
-		init=init or gB(2)
+		init=init or gB(2) -- gB(2) says when the next level should be loaded
 		
 		
 
@@ -164,7 +164,7 @@ function onTick()
 			end
 		end
 		
-		if gB(1) then
+		if gB(1) then -- if new frame
 			switchedSwitch=0
 			weapon=gN(1)
 			health=gN(3)
@@ -202,13 +202,13 @@ function onTick()
 				for j=1,#tmp do
 					info=tmp[j]
 					cr=info[1]
-					if cr>(2^15) then
+					if cr>(2^15) then -- wall update
 						cr=M[8][cr-(2^15)]
 						cr[1]=info[2]
 						cr[2]=info[3]
-					elseif cr<0 then
+					elseif cr<0 then -- delete thing
 						while -cr>#M[1] do
-							M[1][#M[1]+1]=falseVar
+							M[1][#M[1]+1]=falseVar -- used to keep the render's thing indexing the same as the engines'
 						end
 						table.remove(M[1],-cr)
 					else
@@ -247,7 +247,7 @@ function onTick()
 						end
 					end
 					crMx=0
-					for j,v in ipairs({1,2,9}) do
+					for j,v in ipairs({1,2,9}) do -- move moving thing
 						cr[v]=cr[v]+cr[v+10]
 						crMx=crMx+cr[v+10]
 					end
@@ -257,7 +257,7 @@ function onTick()
 					end
 					
 					cr[15]=cr[15]+1
-					cr[20]=dist(cr,pp[1])
+					cr[20]=dist(cr,pp[1]) -- used for thing sorting
 					state=M[16][cr[6]]
 					if state~=nil then
 						if cr[15]>=state[2] and state[2]~=-1 then
@@ -265,7 +265,7 @@ function onTick()
 							cr[15]=0
 						end
 					end
-					thngs[cr[7]][#thngs[cr[7]]+1]=i
+					thngs[cr[7]][#thngs[cr[7]]+1]=i -- inserting thing in relevant sub-sector's thing collection
 				end
 				
 			end
@@ -282,7 +282,7 @@ function onTick()
 
 			ssecs={}
 			
-			treeing(#M[7])
+			treeing(#M[7]) -- sort sub-sectors
 
 			dpth={}
 			walls={}
@@ -300,92 +300,92 @@ function onTick()
 				cr=M[6][ssecs[i]]
 				vises[i]={}
 				walls[i]={}
-				thngsOrd[i]=thngs[ssecs[i]]
-				table.sort(thngsOrd[i],function(a,b)return M[1][a][20]>M[1][b][20]end)
+				thngsOrd[i]=thngs[ssecs[i]] -- because the sub-sectors are sorted, this also sorts the sub-sector-based thing collections
+				table.sort(thngsOrd[i],function(a,b)return M[1][a][20]>M[1][b][20]end) -- sort the things within a sub-sector
 				
 
 				for j=cr[2],cr[1]+cr[2]-1 do
 					seg=M[5][j]
 					line=M[2][seg[4]]
 
-					p1,p2=M[4][seg[1]],M[4][seg[2]]
-					pl1,pl2=sub(p1,pp[1]),sub(p2,pp[1])
+					p1,p2=M[4][seg[1]],M[4][seg[2]] -- positions of seg start and end points
+					pl1,pl2=sub(p1,pp[1]),sub(p2,pp[1]) -- positions relative to player
 					ga1=at2(pl1)
-					a1,a2=wrap(ga1-pp[3]),wrap(at2(pl2)-pp[3])
+					a1,a2=wrap(ga1-pp[3]),wrap(at2(pl2)-pp[3]) -- angles relative to player's rotation
 
-					if absFunc(a1)<90 or absFunc(a2)<90 then
-						a3,a4=clmp(a1,-fov,fov),clmp(a2,-fov,fov)
-						if absFunc(a1)>=90 or absFunc(a2)>=90 then
-							prod=cross(pl1,pl2)
-							if absFunc(a1)>=90 then
-								if prod>0 then a3=-fov else a3=fov end
-							else
-								if prod<0 then a4=-fov else a4=fov end
+					if absFunc(a1)<90 or absFunc(a2)<90 then -- if either end point is to the player's front
+						a3,a4=clmp(a1,-fov,fov),clmp(a2,-fov,fov) -- angles clamped to the player's fov
+						if absFunc(a1)>=90 or absFunc(a2)>=90 then -- entire if statement is used to fix behind-the-player rendering issues
+							prod=cross(pl1,pl2) -- e.g. if one of a wall's vertexes is visible to the player near the right of the screen,
+							if absFunc(a1)>=90 then --    then the other vertex being behind the player,
+								if prod>0 then a3=-fov else a3=fov end --    it shouldn't matter if the vertex is slightly to the left of the player
+							else --    or slightly to the right of the player
+								if prod<0 then a4=-fov else a4=fov end --    it should still render to the right side of the screen
 							end
 						end
 
-						x1,x2=rnd(tan(a3)/fovT*wdthH),rnd(tan(a4)/fovT*wdthH)
+						x1,x2=rnd(tan(a3)/fovT*wdthH),rnd(tan(a4)/fovT*wdthH) -- x position of wall vertexes on screen, note that zero is center and positive is left
 
 						if x1~=x2 then
 							d1,d2=dist(pp[1],p1),dist(pp[1],p2)
 
-							aNorm=seg[3]+90
+							aNorm=seg[3]+90 -- note that this texture mapping is heavily based on Coder Space's level viewer
 							aOff=aNorm-ga1
-							txOff1=d1*m.sin(aOff/180*pi)
-							d3=(d1*cos(aOff))
-							if a1~=a3 then 
-								d1=d3/cos(aNorm-(a3+pp[3]))
+							txOff1=d1*m.sin(aOff/180*pi) -- used for texture mapping (the wall is part of an infinitely long line, this is the distance from the closest point on the line to the wall's first vertex)
+							d3=(d1*cos(aOff)) -- shortest distance to the line the wall is on
+							if a1~=a3 then -- if first vertex has been clipped by the edge of the screen
+								d1=d3/cos(aNorm-(a3+pp[3])) -- re-find the distance to be to the point that's actually being shown on the screen
 							end
-							if a2~=a4 then 
-								d2=d3/cos(aNorm-(a4+pp[3]))
+							if a2~=a4 then -- if second vertex has been clipped by the edge of the screen
+								d2=d3/cos(aNorm-(a4+pp[3])) -- re-find the distance to be to the point that's actually being shown on the screen
 							end
 
-							d1,d2=d1*cos(a3),d2*cos(a4)
+							d1,d2=d1*cos(a3),d2*cos(a4) -- part of what turns it from a fisheye to rectilinear projection
 
 							k=seg[5]+6
 							front=(x1>x2)
-							if front and line[k]~=0 then
+							if front and line[k]~=0 then -- only render if it's the front of seg, and if the linedef's seg-specified sidedef exists
 
-								double=line[3]&4>0
+								double=line[3]&4>0 -- double-sided flag
 								if double then
-									sec1,sec2=M[8][M[3][line[6]][6]],M[8][M[3][line[7]][6]]
+									sec1,sec2=M[8][M[3][line[6]][6]],M[8][M[3][line[7]][6]] -- find neighboridn sectors
 								end
 
-								side=M[3][line[k]]
-								parts={side[3],side[4],side[5]}
+								side=M[3][line[k]] -- current sidedef
+								parts={side[3],side[4],side[5]} -- upper, lower, middle, texture indexes
 
-								sec,tpRnd,btRnd=M[8][side[6]]
+								sec,tpRnd,btRnd=M[8][side[6]] -- sets current sector, and tpRnd and btRnd to nil (works like false)
 
 								for n,v in ipairs(parts) do
 									render=v>0
 									calculate=trueVar
 
-									if (render or (n==3 and not (tpRnd and btRnd)))and (n==3 or double)then
+									if (render or (n==3 and not (tpRnd and btRnd)))and (n==3 or double)thenb -- all the possible reasons to render
 										sky=falseVar
 										yOff=0
 										if n<3 then
-											sky=n==1 and mx(sec1[4],sec2[4])==0
+											sky=n==1 and mx(sec1[4],sec2[4])==0 -- don't render if doing upper texture and both neighbouring sectors are sky
 											y1,y2=sec1[3-n],sec2[3-n]
 											calculate=(y1<y2)~=(n==2)~=(k==6)and y1~=y2 and sec1~=sec2
-											y1,y2=mn(y1,y2),mx(y1,y2)
+											y1,y2=mn(y1,y2),mx(y1,y2) -- make sure they're the right way up for rendering
 											if calculate then 
 												if n==1then
-													tpRnd=trueVar
+													tpRnd=trueVar -- unless both lower and upper textures have been rendered, it needs to do a middle for floor/ceiling reasons
 												else
-													btRnd=trueVar
-													yOff=line[3]&16>0 and mx(sec1[2],sec2[2])-y2 or 0
-												end
+													btRnd=trueVar -- also yes if only one is done, the middle texture one will attempt to do that one's ceiling/floor again
+													yOff=line[3]&16>0 and mx(sec1[2],sec2[2])-y2 or 0 -- used for correct unpegged bottom rendering
+												end -- poor bottom :(
 											end
 										else
 											if double then
 												y1,y2=mx(sec1[1],sec2[1]),mn(sec1[2],sec2[2])
-												calculate=sec1~=sec2
+												calculate=sec1~=sec2 -- don't need to do floor/ceiling if it's the same sector on both sides
 											else
 												y1,y2=sec[1],sec[2]
 											end
 										end
-										y1,y2=y1-pp[2],y2-pp[2]
-										ys1,ys2=y1*vMult,y2*vMult
+										y1,y2=y1-pp[2],y2-pp[2] -- makes the screen ys relative to the player's height
+										ys1,ys2=y1*vMult,y2*vMult -- and resizes them appropriately
 
 										if (calculate or render) and not sky then
 
@@ -394,7 +394,7 @@ function onTick()
 												txOff2=txOff2-tick
 											end
 
-											yb1,yt1=ys1/d1,ys2/d1
+											yb1,yt1=ys1/d1,ys2/d1 -- scales based on distance (note that this distance isn't direct distance)
 											yb2,yt2=ys1/d2,ys2/d2
 
 											xLast=0
@@ -403,13 +403,13 @@ function onTick()
 											if render then
 												cr=M[21][v][4]
 												if (seg[4]==switchedSwitch or difficulty==line[4]) and cr>0then
-													v=cr
+													v=cr -- for switches/buttons/whatever to have a different texture when pressed
 												end
 												resScl=M[21][v][3]
 												
 												flip=1
 												if (n==3 and line[3]&16>0) or (n==1 and line[3]&8==0) then
-													flip=-1
+													flip=-1 -- used to flip a texture's rendering direction, will always render the right way up tho
 												end
 											end
 
@@ -420,18 +420,18 @@ function onTick()
 												if x>=0 and x<=wdth-1 then
 													if i<dpth[x] then
 														lrp=(k-x1)/(x2-x1)
-														yb,yt=(yb1*(1-lrp)+yb2*lrp),(yt1*(1-lrp)+yt2*lrp)
+														yb,yt=(yb1*(1-lrp)+yb2*lrp),(yt1*(1-lrp)+yt2*lrp) -- lerping the y positions
 														if absFunc(yt+yb)-(yt-yb)<hght then
 															if render then
 																if yb~=yt then
 																	pass=trueVar
-																	cD=d3*tan(ang)
-																	cScl=mn(((absFunc(cD)+absFunc(d3))//LOD)+1,4)
-																	cSclH=mn(rnd2(flr(cScl/cos(ang))),16)
-																	cScl=rnd2(cScl)
-
-																	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cSclH))*cSclH
-																	dCur={x,hghtH-yb,hghtH-yt,v,xCur,y2-y1,sec[5],side[2]+yOff,trueVar,resScl*cScl,cScl,flip,not passL,n==3 and double}
+																	cD=d3*tan(ang) -- the distance-along-the-wall-line thing but with the current position on the wall instead of its first vertex
+																	cScl=mn(((absFunc(cD)+absFunc(d3))//LOD)+1,4) -- LOD based on kinda distance
+																	cSclH=mn(rnd2(flr(cScl/cos(ang))),16) -- horizontal-only LOD based on angle relative to the player
+																	cScl=rnd2(cScl) -- round
+																	
+																	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cSclH))*cSclH -- this entire set-up kinda sucks, should really figure out the next x position instead of checking each x separately
+																	dCur={x,hghtH-yb,hghtH-yt,v,xCur,y2-y1,sec[5],side[2]+yOff,trueVar,resScl*cScl,cScl,flip,not passL,n==3 and double} -- bit long innit
 																	if xCur>xLast or (not passL) or k==x2 then
 
 																		xLast=xCur-1+cSclH
@@ -442,15 +442,15 @@ function onTick()
 																end
 															end
 															
-															if calculate then
-																if n~=2 then
+															if calculate then -- floor/ceiling stuff
+																if n~=2 then -- ceiling
 																	if yt<clH[x]then
 																		vises[i][#vises[i]+1]={x,mx(yt,flH[x]),clH[x],sec,2}
 																	end
 																	if n==3then yNew=yt else yNew=yb end
 																	if clH[x]>yNew then clH[x]=yNew end
 																end
-																if n~=1 then
+																if n~=1 then -- floor
 																	if yb>flH[x]then
 																		vises[i][#vises[i]+1]={x,flH[x],mn(yb,clH[x]),sec,1}
 																	end
@@ -458,21 +458,21 @@ function onTick()
 																	if flH[x]<yNew then flH[x]=yNew end
 																end
 																if (clH[x]<=flH[x])or (n==3 and (not double)and render) then
-																	dpth[x]=i
+																	dpth[x]=i -- counts the ceiling meeting the floor as something you can't see past
 																	lnLft=lnLft-1
 																end
 															end
 														end
 													end
 												end
-												if (not pass) and passL then
+												if (not pass) and passL then -- lable cut-off vertical line of quads as cut off
 													passL=falseVar
 													walls[i][#walls[i]+1]=dLast
 													walls[i][#walls[i]][9]=falseVar
 												end
 											end
 											if #walls[i]>0 then
-												walls[i][#walls[i]][9]=falseVar
+												walls[i][#walls[i]][9]=falseVar -- lable the last line of quads as not linking to another
 											end
 										end
 									end
@@ -496,14 +496,14 @@ end
 
 function onDraw()
 	screenVar=screen
-	local tri,rec,stCl,text=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawText
+	local tri,rec,stCl,text=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawText --locals are faster because lua
 	mN=mN+1
 
-	if mN<=1 then
+	if mN<=1 then -- so it won't render on unnecessary displays, more useful in the past
 
 		if loaded then
 
-			tex=M[24][1]
+			tex=M[24][1] -- sky, should really be changed for non-90-fov rendering
 			tW,tH=tex[1],tex[2]
 			scl=wdth/tW
 			for i=0,tW do
@@ -518,13 +518,13 @@ function onDraw()
 				end
 			end
 
-			for i=#walls,1,-1 do
-				for j=1,#walls[i] do
-				v=walls[i][j]
+			for i=#walls,1,-1 do -- the entire wall rendering is rather weird for doom
+				for j=1,#walls[i] do --    it renders each texture pixel (texel) as one quad (2 triangles really), instead of drawing each screen pixel separately
+				v=walls[i][j] --    this makes rendering a lot faster, less important for current cpus but cruial for tolorable performance on my Ryzen 5 1600X
 				if v[9] or v[13] then
-					if v[9] then
-						v2=walls[i][j+1]
-					else
+					if v[9] then -- I don't know why more normal per-screen-pixel is so slow when I tried it before
+						v2=walls[i][j+1] --    tried just rendering 1 rect per pixel on a 9x5 screen (288x160 res) using 1 setcolor call and 1 rect call
+					else --    that barely stayed above 60tps, though of course it performs well enough on newer cpus
 						v2=v
 					end
 					tex=M[21][v[4]]
@@ -571,7 +571,7 @@ function onDraw()
 					end
 				end
 
-				for j,v in ipairs(vises[i]) do
+				for j,v in ipairs(vises[i]) do -- originally had texture rendering for the floor as well, but it was horrendously slow and I can't easily optimise it into quads
 					sec=v[4]
 					if sec[v[5]+2]~=0 then
 						tex=M[22][sec[v[5]+2]]
@@ -583,9 +583,9 @@ function onDraw()
 					end
 				end
 
-				for j=1,#thngsOrd[i] do
+				for j=1,#thngsOrd[i] do -- mostly self-explanatory thing rendering
 					cr=M[1][thngsOrd[i][j]]
-					if cr[6]~=0 then
+					if cr[6]~=0 then -- this is where (I think) most of the performace drops come from in more intense sections, rendering a room full of 12+ things is a lot of rects
 						pl1=sub(cr,pp[1])
 						d1=cr[20]
 						if d1>1 then
@@ -601,7 +601,7 @@ function onDraw()
 									tex=absFunc(tex)
 									tex=M[23][tex]
 									tW,tH=tex[1],tex[2]
-									cScl=d1<LOD and 1 or 2
+									cScl=d1<LOD and 1 or 2 -- LOD for things as a 2-stage approach
 									scl=wdthH/(fovT*d1)
 									sclV=scl*pixelAspectCorrection
 									yb=hghtH+(pp[2]-cr[9])/d1*vMult
@@ -611,8 +611,8 @@ function onDraw()
 									lght=state>0 and mn(M[8][cr[8]][5]+screenBrightOffset,1)^2.2 or 1
 									pxSize=scl*cScl
 									pxSizeV=pxSize*pixelAspectCorrection
-									if cr[4] and M[15][cr[4]][23]&8>0 then
-										for k=0,tW-1,cScl do
+									if cr[4] and M[15][cr[4]][23]&8>0 then -- to make sure fuzziness checks don't slow down rendering, it's only checked one
+										for k=0,tW-1,cScl do -- I have spare space here, might as well use it
 											x1=x2+k*scl*flip
 											if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
 												for n=0,tH-1,cScl do
