@@ -15,6 +15,7 @@ function sub(a,b)return{(a[1]-b[1]),(a[2]-b[2])}end
 function wrap(a)return ((a+180)%360)-180 end
 function cos(a)return m.cos(a/180*pi)end
 function tan(a)return m.tan(a/180*pi)end
+function at(a)return m.atan(a)*180/pi end
 function at2(a)return m.atan(a[2],a[1])*180/pi end
 function clmp(a,b,cr)return mn(mx(b,a),cr)end
 function rnd(a)return flr(a+0.5)end
@@ -348,7 +349,7 @@ function onTick()
 
 								double=line[3]&4>0 -- double-sided flag
 								if double then
-									sec1,sec2=M[8][M[3][line[6]][6]],M[8][M[3][line[7]][6]] -- find neighboridn sectors
+									sec1,sec2=M[8][M[3][line[6]][6]],M[8][M[3][line[7]][6]] -- find neighbouring sectors
 								end
 
 								side=M[3][line[k]] -- current sidedef
@@ -397,6 +398,7 @@ function onTick()
 											yb1,yt1=ys1/d1,ys2/d1 -- scales based on distance (note that this distance isn't direct distance)
 											yb2,yt2=ys1/d2,ys2/d2
 
+											--nextAngRender=0
 											xLast=0
 											passL=falseVar
 
@@ -414,7 +416,8 @@ function onTick()
 											end
 
 											for k=x1,x2,-1 do
-												ang=(aNorm-pp[3])-xAng[k]
+												screenAng=xAng[k]
+												ang=(aNorm-pp[3])-screenAng
 												x = wdthH-k
 												pass=falseVar
 												if x>=0 and x<=wdth-1 then
@@ -430,14 +433,31 @@ function onTick()
 																	cSclH=mn(rnd2(flr(cScl/cos(ang))),16) -- horizontal-only LOD based on angle relative to the player
 																	cScl=rnd2(cScl) -- round
 																	
-																	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cSclH))*cSclH -- this entire set-up kinda sucks, should really figure out the next x position instead of checking each x separately
+																	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cSclH))*cSclH -- turns out this isn't as bad as I expected, the revised code below doen't really help
 																	dCur={x,hghtH-yb,hghtH-yt,v,xCur,y2-y1,sec[5],side[2]+yOff,trueVar,resScl*cScl,cScl,flip,not passL,n==3 and double} -- bit long innit
 																	if xCur>xLast or (not passL) or k==x2 then
-
 																		xLast=xCur-1+cSclH
 																		passL=trueVar
 																		walls[i][#walls[i]+1]=dCur
 																	end
+																	
+																	--dCur={x,hghtH-yb,hghtH-yt,v,1,y2-y1,sec[5],side[2]+yOff,trueVar,1,1,flip,not passL,n==3 and double} -- bit long innit
+																	--if false and (screenAng>=nextAngRender or (not passL) or k==x2) then
+																	--	cD=d3*tan(ang) -- the distance-along-the-wall-line thing but with the current position on the wall instead of its first vertex
+																	--	cScl=mn(((absFunc(cD)+absFunc(d3))//LOD)+1,4) -- LOD based on kinda distance
+																	--	cSclH=mn(rnd2(flr(cScl/cos(ang))),16) -- horizontal-only LOD based on angle relative to the player
+																	--	cScl=rnd2(cScl) -- round
+																	--	
+																	--	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cSclH))*cSclH
+																	--	dCur[5]=xCur
+																	--	dCur[10]=resScl*cScl
+																	--	dCur[11]=cScl
+																	--	passL=trueVar
+																	--	walls[i][#walls[i]+1]=dCur
+																	--	
+																	--	nextDistAlongWall=cD+(resScl*cSclH)
+																	--	nextAngRender=wrap((aNorm-pp[3])+at(nextDistAlongWall/d3))
+																	--end
 																	dLast=dCur
 																end
 															end
@@ -601,7 +621,7 @@ function onDraw()
 									tex=absFunc(tex)
 									tex=M[23][tex]
 									tW,tH=tex[1],tex[2]
-									cScl=d1<LOD and 1 or 2 -- LOD for things as a 2-stage approach
+									cScl=mn(rnd2(d1//LOD+1),8)
 									scl=wdthH/(fovT*d1)
 									sclV=scl*pixelAspectCorrection
 									yb=hghtH+(pp[2]-cr[9])/d1*vMult

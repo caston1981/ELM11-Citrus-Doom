@@ -346,7 +346,7 @@ if __name__ == '__main__':
         file.close()
 
         print(name)
-        code = compress(code,print_vars=i==-1,delete_newlines=i<2)
+        code = compress(code,print_vars=i==-1,delete_newlines=i==1)
         print()
         
         find_start = ["""<c type="56"><object id="4" script='""",
