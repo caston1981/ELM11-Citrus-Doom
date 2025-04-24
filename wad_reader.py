@@ -36,7 +36,7 @@ class WADReader:
         read_1_byte = self.read_1_byte
 
         sound_header = self.read_sound_header(offset)
-        print(sound_header.format_number,sound_header.sample_count)
+        #print(sound_header.format_number,sound_header.sample_count)
 
         sound_map = []
         for i in range(sound_header.sample_count):

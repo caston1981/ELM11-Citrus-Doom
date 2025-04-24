@@ -617,44 +617,49 @@ function onDraw()
 								state=M[16][cr[6]][1]
 								if state~=0 and cr[6]~=1 then
 									tex=M[17][absFunc(state)][ang%8+1] --(cr[15]//10)%#tex+1
+									if tex==0 then
+										tex=M[17][absFunc(state)][1] -- for some reason cacos are bugged and don't have all their attacking rotation frame, but also don't lable their front one as for all directions
+									end
 									flip=tex<0 and -1 or 1
 									tex=absFunc(tex)
-									tex=M[23][tex]
-									tW,tH=tex[1],tex[2]
-									cScl=mn(rnd2(d1//LOD+1),8)
-									scl=wdthH/(fovT*d1)
-									sclV=scl*pixelAspectCorrection
-									yb=hghtH+(pp[2]-cr[9])/d1*vMult
-									yt=yb-tex[5]*sclV
-									x2=x1-flip*tex[4]*scl
-									scl,sclV=scl*tex[3],sclV*tex[3]
-									lght=state>0 and mn(M[8][cr[8]][5]+screenBrightOffset,1)^2.2 or 1
-									pxSize=scl*cScl
-									pxSizeV=pxSize*pixelAspectCorrection
-									if cr[4] and M[15][cr[4]][23]&8>0 then -- to make sure fuzziness checks don't slow down rendering, it's only checked one
-										for k=0,tW-1,cScl do -- I have spare space here, might as well use it
-											x1=x2+k*scl*flip
-											if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
-												for n=0,tH-1,cScl do
-													pix=tex[7+n+k*tH]
-													if pix~= 0 then
-														fuzz=fuzz%50+1
-														stCl(0,0,0,mn(75*M[13][2][fuzz],255))
-														rec(x1,yt+n*sclV,pxSize,pxSizeV)
+									if tex>0 then
+										tex=M[23][tex]
+										tW,tH=tex[1],tex[2]
+										cScl=mn(rnd2(d1//LOD+1),8)
+										scl=wdthH/(fovT*d1)
+										sclV=scl*pixelAspectCorrection
+										yb=hghtH+(pp[2]-cr[9])/d1*vMult
+										yt=yb-tex[5]*sclV
+										x2=x1-flip*tex[4]*scl
+										scl,sclV=scl*tex[3],sclV*tex[3]
+										lght=state>0 and mn(M[8][cr[8]][5]+screenBrightOffset,1)^2.2 or 1
+										pxSize=scl*cScl
+										pxSizeV=pxSize*pixelAspectCorrection
+										if cr[4] and M[15][cr[4]][23]&8>0 then -- to make sure fuzziness checks don't slow down rendering, it's only checked one
+											for k=0,tW-1,cScl do -- I have spare space here, might as well use it
+												x1=x2+k*scl*flip
+												if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
+													for n=0,tH-1,cScl do
+														pix=tex[7+n+k*tH]
+														if pix~= 0 then
+															fuzz=fuzz%50+1
+															stCl(0,0,0,mn(75*M[13][2][fuzz],255))
+															rec(x1,yt+n*sclV,pxSize,pxSizeV)
+														end
 													end
 												end
 											end
-										end
-									else
-										for k=0,tW-1,cScl do
-											x1=x2+k*scl*flip
-											if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
-												for n=0,tH-1,cScl do
-													pix=tex[7+n+k*tH]
-													if pix~= 0 then
-														col=M[20][pix]
-														stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-														rec(x1,yt+n*sclV,pxSize,pxSizeV)
+										else
+											for k=0,tW-1,cScl do
+												x1=x2+k*scl*flip
+												if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
+													for n=0,tH-1,cScl do
+														pix=tex[7+n+k*tH]
+														if pix~= 0 then
+															col=M[20][pix]
+															stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+															rec(x1,yt+n*sclV,pxSize,pxSizeV)
+														end
 													end
 												end
 											end

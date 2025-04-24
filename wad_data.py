@@ -201,12 +201,12 @@ def find_sector(tag):
 
 if __name__ == '__main__':
     start_time=time.time()
-    #,"weapons_at_start.wad","jump_to_crash_zone.wad"
-    file_name=["DOOM_less_fancy_linedefs.WAD","settings_map.wad"] # more rightwards ones overwrite leftwards ones
+    #,"weapons_at_start.wad","jump_to_crash_zone.wad","enemy_testing.wad"
+    file_name=["DOOM_less_fancy_linedefs.WAD","enemy_testing.wad","settings_map.wad"] # more rightwards ones overwrite leftwards ones
     #map_order=["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
     #map_order=["E1M2"]
     #map_order=["SET1"]+map_order
-    map_order=["SET1","E1M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
+    map_order=["SET1","E3M1","E1M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
     #map_order=["SET1","E1M1","E2M3"] # self explanitory, first level is the settings one
     wad = WADData(["wad/"+i for i in file_name], map_name=map_order[0])
     [print("loaded "+i) for i in file_name]
@@ -412,6 +412,10 @@ if __name__ == '__main__':
             pixels+=(cur.get_width()*cur.get_height())
             num+=1
             #pygame.image.save(cur,"./img/"+i+".png")
+
+    #for i in rotation_map:
+    #    if i[:4]=="HEAD":
+    #        print(sprite_rotations[rotation_map[i]-1])
     
     file = open("info_states.txt")
     info_states = file.read()
@@ -439,6 +443,7 @@ if __name__ == '__main__':
                      'A_TroopAttack':12,
                      'A_SargAttack':14,
                      'A_SkullAttack':16,
+                     'A_HeadAttack':17,
                      'A_BruisAttack':19,
                      'A_CyberAttack':21,
                    }
@@ -519,7 +524,8 @@ if __name__ == '__main__':
                 cur[j] = int(cur[j])
             except:
                 None
-
+        
+        
         cur[0]=cur[0][10:]
         if cur[0] in ammo_pickup_dict:
             cur.append(ammo_pickup_dict[cur[0]])
@@ -546,6 +552,8 @@ if __name__ == '__main__':
         #        print(j,cur[j])
 
         if cur[22] != 0:
+            if "MF_MISSILE" in cur[22]: # this is used so missiles enter their painstate when they die, thus allowing lost souls to live upon impact
+                cur[8]=cur[13]
             cur[22] = sum([spawn_flags[j] for j in cur[22].split("|")])
         
         #print(cur[17],cur[18])
@@ -898,6 +906,15 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
+            elif i.line_type==37: #W1 Floor To Lowest Adjacent Floor Change Texture and Type (doesn't change texture or type)
+                cur_sec = find_sector(i.sector_tag)
+                assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
+                
+                thinker = (cur_sec, 1, level_wad.sectors[cur_sec-1].neighbouring_lowest_floor, 1, 0, 0)
+                i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=2
+
             elif i.line_type==38: #W1 Floor To Lowest Adjacent Floor
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
@@ -907,6 +924,15 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
+            elif i.line_type==42: #SR Door Close
+                cur_sec = find_sector(i.sector_tag)
+                assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
+
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].floor_height, 1, 0, 1)
+                i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=1
+
             elif i.line_type==46: #GR Door (not gun activated)
                 cur_sec = find_sector(i.sector_tag)
                 assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
@@ -915,6 +941,15 @@ if __name__ == '__main__':
                 next_thinker = insert_thinker(thinker)
 
                 thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, TICKRATE*4, next_thinker, 1)
+                i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=1
+
+            elif i.line_type==61: #SR Door Stay Open
+                cur_sec = find_sector(i.sector_tag)
+                assert cur_sec != 0, "No sector has the tag "+str(i.sector_tag)+" used by linedef "+str(index)
+
+                thinker = (cur_sec, 2, level_wad.sectors[cur_sec-1].neighbouring_lowest_ceiling-8, 1, 0, 1)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1046,6 +1081,7 @@ if __name__ == '__main__':
                                                             35,#set light level
                                                             48,#moving texture
                                                             51,#secret exit
+                                                            52,#walkover exit
                                                             97,#teleport
                                                             ]:
                 print("unknown linedef type",i.line_type,"in level",map_name)
@@ -1377,6 +1413,8 @@ if __name__ == '__main__':
             temp_spawn = info_spawn[temp]
             if int(new[6])>0:
                 new[5]=temp_spawn[16]
+                if new[7].find("SKULL")>0:
+                    new[5]=20
                 #print(new[6])
             for k in [2,13]:
                 

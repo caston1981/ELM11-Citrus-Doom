@@ -255,11 +255,10 @@ function fireWeapon(source,index)
 	ramp=targ and (targ[9]-source[9])*crWeapon[6]/dist(targ,source)or 0
 	for i=1,crWeapon[12]do
 		a={}
-		for i=1,19 do
-			a[i]=0
+		for i=1,30 do
+			a[i]=source[i]
 		end
 		a[4]=crWeapon[8]
-		a[7]=1000
 		a[10]=trueVar
 		a[14]=index
 		
@@ -267,9 +266,6 @@ function fireWeapon(source,index)
 		vel=dVec(source[3]+spreadOff,crWeapon[6])
 		if crWeapon[7]>0then
 			M[1][#M[1]+1]=a
-			for j=1,3 do
-				a[j]=source[j]
-			end
 			s1=M[15][a[4]]
 			a[6]=s1[3]
 			a[9]=source[9]+32
@@ -492,7 +488,9 @@ function onTick()
 							else
 								chkPs(cr,falseVar,i)
 							end
-							cr[9]=bounds[1]
+							if s1[23]&4<1 then
+								cr[9]=bounds[1]
+							end
 							a=dist(cr,cr[23])
 							if s1[13]>0 and chkRayCol(cr,cr[23],1)and mn(a,230)<rand()then
 								cr[6]=s1[13]
@@ -517,7 +515,7 @@ function onTick()
 							cr[1]=cr[1]-cr[11]
 							cr[2]=cr[2]-cr[12]
 							cr[3]=0
-							cr[6]=M[15][cr[4]][14]
+							cr[6]=M[15][cr[4]][9] -- this uses pain state instead of death state to keep lost souls alive after impact
 							cr[10]=trueVar
 							cr[11]=0
 							cr[12]=0
