@@ -524,18 +524,19 @@ function onDraw()
 
 		if loaded then
 
-			tex=M[24][M[19][8][levelCr-3]] -- sky, should really be changed for non-90-fov rendering
+			tex=M[24][M[19][8][levelCr-3]]
 			tW,tH=tex[1],tex[2]
 			scl=wdth/ceil(tW*fovT)
-			for i=0,ceil(tW*fovT) do
+			scl2=scl*1
+			for i=0,ceil(tW*fovT),1 do
 				x1=(tW/2-i-1+pp[3]/90*tW)%tW
 				x2=(x1%1-1)*scl
 				x1=flr(x1)*tH
-				for j=0,tH-1 do
+				for j=0,tH-1,1 do
 					pix=tex[5+j+x1]
 					col=M[20][pix]
 					stCl(col[1],col[2],col[3])
-					rec(i*scl+x2,j*scl,scl,scl)
+					rec(i*scl+x2,j*scl,scl2,scl2)
 				end
 			end
 

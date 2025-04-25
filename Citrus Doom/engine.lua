@@ -109,9 +109,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 		dst,tmpA=chkLnDst(p,M[4][cr[1]],M[4][cr[2]])
 		if dst<bstDst then
 			if checkPlayerPosLoop==1 and cr[4]==2 then -- only activate special if it's the player and the special is a walk over
-				a=M[9][cr[5]]
-				thinkers[M[8][a[1]][9]or#thinkers+1]={cr[5],1}-- if thinker exists, replace it, if not, create new one
-				cr[4]=a[6]--used to remove the link to the thinker for single-use specials
+				summonThinker(cr[5])
 			end
 			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then
 				bstDst=dst
@@ -294,6 +292,13 @@ function fireWeapon(source,index)
 	end
 end
 
+function summonThinker(pos)
+	a=M[9][pos]
+	thinkers[M[8][a[1]][9]or#thinkers+1]={pos,1}-- if thinker exists, replace it, if not, create new one
+	cr[4]=a[6]--used to remove the link to the thinker for single-use specials
+	--if a[7]>0 then summonThinker(a[7])end
+end
+
 function onTick()
 	sB(9,gB(32))
 	sB(2,falseVar)
@@ -416,7 +421,7 @@ function onTick()
 				pos=M[8][cr[1]]
 				s1=pos[cr[2]]
 				if s1==cr[3] then
-					thinkers[i]=v[2]==cr[4]and{cr[5],0}or{v[1],v[2]+1}
+					thinkers[i]=v[2]==cr[4]and{cr[5],1}or{v[1],v[2]+1}
 					if cr[5]==0 then
 						tableRemove(thinkers,i)
 					end
@@ -607,7 +612,7 @@ function onTick()
 						valid=valid or M[12][1][i]>0 and pos==i
 					end
 					if pos==1 or valid then
-						thinkers[M[8][M[9][cr[5]][1]][9]or #thinkers+1]={cr[5],1}-- if thinker exists, replace it, if not, create new one
+						summonThinker(cr[5])
 					elseif pos==11then
 						init=trueVar
 						sB(2,trueVar)
