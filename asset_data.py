@@ -100,7 +100,7 @@ class Flat:
 
 
 class AssetData:
-    def __init__(self, wad_data):
+    def __init__(self, wad_data, skys):
         self.wad_data = wad_data
         self.reader = wad_data.reader
         self.get_lump_index = wad_data.get_lump_index
@@ -149,8 +149,7 @@ class AssetData:
         # --------------------------------------------------------------------------- #
         # sky
         self.sky_id = 'F_SKY1'
-        self.sky_tex_name = 'SKY1'
-        self.sky_tex = self.wall_textures[self.sky_tex_name]
+        self.sky_textures = [self.wall_textures[i] for i in skys]
         # --------------------------------------------------------------------------- #
 
     def get_flats(self, start_marker='F_START', end_marker='F_END'):

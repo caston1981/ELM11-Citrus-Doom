@@ -3,6 +3,7 @@ mx=m.max
 mn=m.min
 absFunc=m.abs
 flr=m.floor
+ceil=m.ceil
 sqrt=m.sqrt
 gN=input.getNumber
 gB=input.getBool
@@ -523,10 +524,10 @@ function onDraw()
 
 		if loaded then
 
-			tex=M[24][1] -- sky, should really be changed for non-90-fov rendering
+			tex=M[24][M[19][8][levelCr-3]] -- sky, should really be changed for non-90-fov rendering
 			tW,tH=tex[1],tex[2]
-			scl=wdth/tW
-			for i=0,tW do
+			scl=wdth/ceil(tW*fovT)
+			for i=0,ceil(tW*fovT) do
 				x1=(tW/2-i-1+pp[3]/90*tW)%tW
 				x2=(x1%1-1)*scl
 				x1=flr(x1)*tH

@@ -20,7 +20,7 @@ class WADData:
         'DONT_PEG_BOTTOM': 16, 'SECRET': 32, 'SOUND_BLOCK': 64, 'DONT_DRAW': 128, 'MAPPED': 256
     }
 
-    def __init__(self, WAD, map_name, import_textures=True):
+    def __init__(self, WAD, map_name, import_textures=True, skys=["SKY1"]):
         self.reader = WADReader(WAD)
 
         self.map_index = self.get_lump_index(lump_name=map_name)
@@ -82,7 +82,7 @@ class WADData:
         self.update_data()
         # ------------------------------- #
         if import_textures:
-            self.asset_data = AssetData(self)
+            self.asset_data = AssetData(self,skys)
             self.sounds = {}
             for i in ["DPBFG"]:
                 self.sounds[i] = self.asset_data.load_sound(i)
@@ -208,15 +208,12 @@ if __name__ == '__main__':
     #map_order=["SET1"]+map_order
     map_order=["SET1","E3M1","E1M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
     #map_order=["SET1","E1M1","E2M3"] # self explanitory, first level is the settings one
-    wad = WADData(["wad/"+i for i in file_name], map_name=map_order[0])
+    skys = {"E1":"SKY1","E2":"SKY2","E3":"SKY3","E4":"SKY4"}
+    sky_textures = [skys[i] for i in skys]
+    sky_order = [(sky_textures.index(skys[i[:2]] if i[:2] in skys else sky_textures[0])+1) for i in map_order]
+    #print(sky_order)
+    wad = WADData(["wad/"+i for i in file_name], map_name=map_order[0], skys=sky_textures)
     [print("loaded "+i) for i in file_name]
-    #wad.asset_data.textures
-    #print(wad.vertexes[wad.linedefs[0].start_vertex_id])
-    #print(wad.vertexes[wad.linedefs[0].end_vertex_id])
-    #print(len(wad.vertexes))
-    #print(len(wad.linedefs))
-    #print(wad.vertexes[0])
-    #print(wad.linedefs[0].start_vertex_id,wad.linedefs[0].end_vertex_id,wad.linedefs[0].flags,wad.linedefs[0].line_type,wad.linedefs[0].sector_tag,wad.linedefs[0].front_sidedef_id,wad.linedefs[0].back_sidedef_id)
     file = open("things.txt")
     text = file.read()
     file.close()
@@ -241,6 +238,8 @@ if __name__ == '__main__':
                                 # manually adjusted the shotgun shell pickup since it looks weird at 1/2
     
     orange = pygame.image.load("Orange.png")
+
+    
     
 
     #print(wad.sound)
@@ -257,6 +256,7 @@ if __name__ == '__main__':
     res_scale_sprites_weapons = 2
     res_scale_sprites_face = 1
     res_scale_sky = 4
+    sky_offset = 16
 
     TICKRATE = 35
 
@@ -270,7 +270,7 @@ if __name__ == '__main__':
     wall_avs = {}
     flat_avs = {}
     sprite_avs = {}
-    sky_av = 0
+    sky_avs = {}
     wall_looker = ["-"]+wall_textures
     flat_looker = ["-"]+flat_textures
     pixels = 0
@@ -1527,6 +1527,7 @@ if __name__ == '__main__':
                       [0,0,255],
                       [255,0,0],
                       [200,200,0],
+                      sky_order,
                       ]
     for index in range(len(misc_additions)):
         i=misc_additions[index]
@@ -1561,7 +1562,7 @@ if __name__ == '__main__':
     #print(sprite_overrides)
 
     checksum = str(wall_overrides)+str(sprite_overrides)
-    checksum += str(res_scale_walls)+str(res_scale_flats)+str(res_scale_sprites)+str(res_scale_sky)+str(file_name)
+    checksum += str(res_scale_walls)+str(res_scale_flats)+str(res_scale_sprites)+str(res_scale_sky)+str(file_name)+str(sky_offset)
     
     try:
         file = open("cache.txt")
@@ -1717,35 +1718,35 @@ if __name__ == '__main__':
             
 
         
+        for index in range(len(sky_textures)):
+            i=wad.asset_data.sky_textures[index]
+            width=len(i)//res_scale_sky
+            height=len(i[0])//res_scale_sky
 
-        i=wad.asset_data.sky_tex
-        width=len(i)//res_scale_sky
-        height=len(i[0])//res_scale_sky
+            av=(0,0,0)
+            av_num=0
+            
+            for j in range(width):
+                for k in range(height):
 
-        av=(0,0,0)
-        av_num=0
-        
-        for j in range(width):
-            for k in range(height):
+                    colour=tuple(i[j*res_scale_sky][k*res_scale_sky])
+                    av=add(av,colour)
+                    av_num+=1
+                    if not (colour in colourmap):
+                        colourmap.append(colour)
+                        colourmap_useage.append(1)
+                    else:
+                        colourmap_useage[colourmap.index(colour)] += 1
+            av=div(av,av_num)
+            
+            av=tuple([flr(i) for i in av])
+            if not (av in colourmap):
+                colourmap.append(av)
+                colourmap_useage.append(1)
+            else:
+                colourmap_useage[colourmap.index(av)] += 1
 
-                colour=tuple(i[j*res_scale_sky][k*res_scale_sky])
-                av=add(av,colour)
-                av_num+=1
-                if not (colour in colourmap):
-                    colourmap.append(colour)
-                    colourmap_useage.append(1)
-                else:
-                    colourmap_useage[colourmap.index(colour)] += 1
-        av=div(av,av_num)
-        
-        av=tuple([flr(i) for i in av])
-        if not (av in colourmap):
-            colourmap.append(av)
-            colourmap_useage.append(1)
-        else:
-            colourmap_useage[colourmap.index(av)] += 1
-
-        sky_av=colourmap.index(av)
+            sky_avs[index]=colourmap.index(av)
 
         
 
@@ -1759,8 +1760,9 @@ if __name__ == '__main__':
             flat_avs[i] = colourmap[2].index(flat_avs[i])
         for i in sprite_avs:
             sprite_avs[i] = colourmap[2].index(sprite_avs[i])
+        for i in sky_avs:
+            sky_avs[i] = colourmap[2].index(sky_avs[i])
         
-        sky_av = colourmap[2].index(sky_av)
         colourmap = colourmap[1]
 
         print("colourmap complete")
@@ -1937,27 +1939,28 @@ if __name__ == '__main__':
         print(t, "text boxes of sprite textures")
         
         t=0
-        i=wad.asset_data.sky_tex
-        width=len(i)//res_scale_sky
-        height=len(i[0])//res_scale_sky-(8//res_scale_sky)#bottom pixels are just purple
-        cur="24,"+str(width*height+4)+",1,"+str(width)+","+str(height)+","+str(res_scale_sky)+","+str(sky_av)
+        for index in range(len(sky_textures)):
+            i=wad.asset_data.sky_textures[index]
+            width=len(i)//res_scale_sky
+            height=len(i[0])//res_scale_sky-(sky_offset//res_scale_sky)-(8//res_scale_sky)#bottom pixels are just purple
+            cur="24,"+str(width*height+4)+",1,"+str(width)+","+str(height)+","+str(res_scale_sky)+","+str(sky_avs[index])
 
-        if len(temp_packets[-1])+len(cur)+1 <= curmax:
-            temp_packets[-1]+=(","+cur)
-        else:
-            temp_packets.append(cur)
-            t+=1
-        
-        for j in range(width):
-            for k in range(height):
-                colour=tuple(i[j*res_scale_sky][k*res_scale_sky])
-                cur = str(colourmap.index(colour)+1)
-                
-                if len(temp_packets[-1])+len(cur)+1 <= curmax:
-                    temp_packets[-1]+=(","+cur)
-                else:
-                    temp_packets.append(cur)
-                    t+=1
+            if len(temp_packets[-1])+len(cur)+1 <= curmax:
+                temp_packets[-1]+=(","+cur)
+            else:
+                temp_packets.append(cur)
+                t+=1
+            
+            for j in range(width):
+                for k in range(height):
+                    colour=tuple(i[j*res_scale_sky][k*res_scale_sky+sky_offset])
+                    cur = str(colourmap.index(colour)+1)
+                    
+                    if len(temp_packets[-1])+len(cur)+1 <= curmax:
+                        temp_packets[-1]+=(","+cur)
+                    else:
+                        temp_packets.append(cur)
+                        t+=1
         
         print(t, "text boxes of sky textures")
         
