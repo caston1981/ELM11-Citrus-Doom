@@ -360,7 +360,7 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==1:
+        if i==-1:
             None
             print(code.split("\n")[48-1])
             
@@ -913,7 +913,6 @@ if __name__ == '__main__':
                 for sec in cur_secs:
                     thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
-                    print(thinker)
 
                 i.line_type=2
 
@@ -1028,7 +1027,6 @@ if __name__ == '__main__':
 
                     thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, TICKRATE*3, next_thinker, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
-                    print(thinker)
 
                 i.line_type=2
 

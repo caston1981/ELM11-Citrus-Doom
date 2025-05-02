@@ -109,7 +109,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 		dst,tmpA=chkLnDst(p,M[4][cr[1]],M[4][cr[2]])
 		if dst<bstDst then
 			if checkPlayerPosLoop==1 and cr[4]==2 then -- only activate special if it's the player and the special is a walk over
-				summonThinker(cr[5])
+				summonThinker(cr,cr[5])
 			end
 			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then
 				bstDst=dst
@@ -292,11 +292,11 @@ function fireWeapon(source,index)
 	end
 end
 
-function summonThinker(pos)
+function summonThinker(cr,pos)
 	a=M[9][pos]
 	thinkers[M[8][a[1]][9]or#thinkers+1]={pos,1}-- if thinker exists, replace it, if not, create new one
 	cr[4]=a[6]--used to remove the link to the thinker for single-use specials
-	--if a[7]>0 then summonThinker(a[7])end
+	a=a[7]>0 and summonThinker(cr,a[7])
 end
 
 function onTick()
@@ -612,7 +612,7 @@ function onTick()
 						valid=valid or M[12][1][i]>0 and pos==i
 					end
 					if pos==1 or valid then
-						summonThinker(cr[5])
+						summonThinker(cr,cr[5])
 					elseif pos==11then
 						init=trueVar
 						sB(2,trueVar)
