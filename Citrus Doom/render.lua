@@ -145,7 +145,7 @@ function onTick()
 	end
 
 	if loaded then
-		init=init or gB(2) -- gB(2) says when the next level should be loaded
+		init=init or gB(2)
 		
 		
 

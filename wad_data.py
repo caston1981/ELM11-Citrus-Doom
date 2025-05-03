@@ -205,7 +205,7 @@ if __name__ == '__main__':
     #map_order=["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
     #map_order=["E1M2"]
     #map_order=["SET1"]+map_order
-    map_order=["SET1","E1M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
+    map_order=["SET1","E1M1","E3M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
     #map_order=["SET1"]+["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(4*9)]
     #map_order=["SET1","E1M1","E2M3"] # self explanitory, first level is the settings one
     skys = {"E1":"SKY1","E2":"SKY2","E3":"SKY3","E4":"SKY4"}
@@ -798,6 +798,11 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
+            elif i.line_type==11: #Normal Exit
+                i.thinker_id = 0
+                
+                i.line_type=1
+
             elif i.line_type==16: #W1 Door Close Then Open 30 Sec Later
                 cur_secs = find_sector(i.sector_tag)
                 
@@ -946,6 +951,11 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
+            elif i.line_type==52: #Walkover Exit
+                i.thinker_id = 0
+                
+                i.line_type=2
+
             elif i.line_type==61: #SR Door Stay Open
                 cur_secs = find_sector(i.sector_tag)
                 
@@ -1078,11 +1088,9 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif 0<i.line_type<3000 and not i.line_type in [11,#normal exit
-                                                            35,#set light level
+            elif 0<i.line_type<3000 and not i.line_type in [35,#set light level
                                                             48,#moving texture
                                                             51,#secret exit
-                                                            52,#walkover exit
                                                             97,#teleport
                                                             ]:
                 print("unknown linedef type",i.line_type,"in level",map_name)

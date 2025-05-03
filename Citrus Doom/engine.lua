@@ -293,10 +293,15 @@ function fireWeapon(source,index)
 end
 
 function summonThinker(cr,pos)
-	a=M[9][pos]
-	thinkers[M[8][a[1]][9]or#thinkers+1]={pos,1}-- if thinker exists, replace it, if not, create new one
-	cr[4]=a[6]--used to remove the link to the thinker for single-use specials
-	a=a[7]>0 and summonThinker(cr,a[7])
+	if pos>0 then
+		a=M[9][pos]
+		thinkers[M[8][a[1]][9]or#thinkers+1]={pos,1}-- if thinker exists, replace it, if not, create new one
+		cr[4]=a[6]--used to remove the link to the thinker for single-use specials
+		a=a[7]>0 and summonThinker(cr,a[7])
+	else
+		init=trueVar
+		sB(2,trueVar)
+	end
 end
 
 function onTick()
@@ -613,9 +618,6 @@ function onTick()
 					end
 					if pos==1 or valid then
 						summonThinker(cr,cr[5])
-					elseif pos==11then
-						init=trueVar
-						sB(2,trueVar)
 					elseif pos>3000 and pos<3005then
 						difficulty=flr(pos-3000)
 					end
