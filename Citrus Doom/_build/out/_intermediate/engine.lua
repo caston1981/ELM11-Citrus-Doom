@@ -294,11 +294,15 @@ function fireWeapon(source,index)
 end
 
 function summonThinker(cr,pos)
-	if pos>0 then
+	if pos>-1 then
 		a=M[9][pos]
-		thinkers[M[8][a[1]][9]or#thinkers+1]={pos,1}-- if thinker exists, replace it, if not, create new one
-		cr[4]=a[6]--used to remove the link to the thinker for single-use specials
-		a=a[7]>0 and summonThinker(cr,a[7])
+		if a[1]==0 and pTng[11]*cr[10][2]-pTng[12]*cr[10][1]>0  then
+			return
+		end
+		s1=M[8][a[1]]
+		thinkers[s1 and s1[9]or#thinkers+1]={pos,1}-- if thinker exists, replace it, if not, create new one
+		cr[4]=a[7]--used to remove the link to the thinker for single-use specials
+		a=a[8]>0 and summonThinker(cr,a[8])
 	else
 		init=trueVar
 		sB(2,trueVar)
@@ -399,6 +403,7 @@ function onTick()
 				s1,s2=M[8][M[3][cr[6]][6]],M[8][M[3][cr[7]][6]]
 				cr[8]=mx(s1[1],s2[1])
 				cr[9],s1[9],s2[9]=mn(s1[2],s2[2])
+				cr[10]=sub(M[4][cr[2]],M[4][cr[1]])
 			else
 				cr[8],cr[9]=0,0
 			end
@@ -424,16 +429,16 @@ function onTick()
 			
 			for i,v in ipairsVar(thinkers)do			
 				cr=M[9][v[1]]
-				pos=M[8][cr[1]]
+				pos=M[8][cr[1]]or pTng
 				s1=pos[cr[2]]
-				if s1==cr[3] then
-					thinkers[i]=v[2]==cr[4]and{cr[5],1}or{v[1],v[2]+1}
-					if cr[5]==0 then
+				if abs(s1-cr[3])<0.1then
+					thinkers[i]=v[2]==cr[5]and{cr[6],1}or{v[1],v[2]+1}
+					if cr[6]==0 then
 						tableRemove(thinkers,i)
 					end
 				else
 					pos[8]=pos[8]or s1~=v
-					pos[cr[2]]=clmp(cr[3],s1-2,s1+2)
+					pos[cr[2]]=clmp(cr[3],s1-cr[4],s1+cr[4])
 				end
 				pos[9]=i
 			end
