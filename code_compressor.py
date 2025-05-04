@@ -15,17 +15,57 @@ def compress(text,print_vars=False,delete_newlines=False):
     counts = []
 
     print("\t",len(text),"initial characters")
-
     
     while text.count("--")>0:
         start = text.index("--")
         end = text.index("\n",start)
         text = text[:start]+text[end:]
-        
+
+      
+    
+
+    text = text.replace("\t","")
+
+    valid = not delete_newlines
+    while not valid:
+        new = text.replace("\n\n","\n")
+        valid = new == text
+        text = new
+
+    valid = False
+    while not valid:
+        new = text.replace(" \n","\n")
+        valid = new == text
+        text = new
+
+    valid = False
+    while not valid:
+        new = text.replace("\n ","\n")
+        valid = new == text
+        text = new
+    
+    if text[0]==" ":
+        text = text[1:]
+    if text[0]=="\n":
+        text = text[1:]
+    #print([text[:25]])  
+
+    if text[2:5]=='=""':
+        bad_var = text[0:2]
+        text = text[5:]
+        text = text.replace(bad_var,'""')
+
+    if text[1:4]=='=""':
+        bad_var = text[1]
+        text = text[4:]
+        text = text.replace(bad_var,'""')
+
+    
 
     cur=""
     valid=True
-    for i in text:
+    for index in range(len(text)):
+        i=text[index]
         
         
         if i in include or (i in includeNum and cur!=""):
@@ -40,7 +80,7 @@ def compress(text,print_vars=False,delete_newlines=False):
                         counts.append(1)
                     
                 cur=""
-                valid=i!="."
+                valid=(i!="." or text[index:index+2]=="..")
                 
 
         if i == '"':
@@ -86,7 +126,7 @@ def compress(text,print_vars=False,delete_newlines=False):
             cur=i+cur
         else:
             if cur!="":
-                valid=i!="."
+                valid=(i!="." or text[index-1:index+1]=="..")
                 if valid and (not cur in exclude) and (not cur[0] in includeNum) and (not is_string):
                     text = text[:index+1] + replacements[variables.index(cur)] + text[index+len(cur)+1:]
                 cur=""
@@ -95,25 +135,7 @@ def compress(text,print_vars=False,delete_newlines=False):
         if i == '"':
             is_string = not is_string
 
-    text = text.replace("\t","")
-
-    valid = not delete_newlines
-    while not valid:
-        new = text.replace("\n\n","\n")
-        valid = new == text
-        text = new
-
-    valid = False
-    while not valid:
-        new = text.replace(" \n","\n")
-        valid = new == text
-        text = new
-
-    valid = False
-    while not valid:
-        new = text.replace("\n ","\n")
-        valid = new == text
-        text = new
+    
 
     print("\t",len(text),"end characters")
 

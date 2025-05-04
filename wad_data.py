@@ -205,8 +205,8 @@ if __name__ == '__main__':
     #map_order=["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
     #map_order=["E1M2"]
     #map_order=["SET1"]+map_order
-    map_order=["SET1","E1M1","E3M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
-    #map_order=["SET1"]+["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(4*9)]
+    map_order=["SET1","E1M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
+    #map_order=["SET1"]+["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
     #map_order=["SET1","E1M1","E2M3"] # self explanitory, first level is the settings one
     skys = {"E1":"SKY1","E2":"SKY2","E3":"SKY3","E4":"SKY4"}
     sky_textures = [skys[i] for i in skys]
@@ -336,7 +336,7 @@ if __name__ == '__main__':
     text = file.read()
     file.close()
 
-    path_root = ".\\"+obj_name+"\\"
+    path_root = ".\\"+obj_name+"\\_build\\out\\release\\"
     print()
 
     for i in range(3):
@@ -346,7 +346,7 @@ if __name__ == '__main__':
         file.close()
 
         print(name)
-        code = compress(code,print_vars=i==-1,delete_newlines=i==1)
+        code = compress(code,print_vars=i==-1,delete_newlines=True)
         print()
         
         find_start = ["""<c type="56"><object id="4" script='""",
@@ -1094,6 +1094,7 @@ if __name__ == '__main__':
                                                             97,#teleport
                                                             ]:
                 print("unknown linedef type",i.line_type,"in level",map_name)
+                None
 
             
         
@@ -1993,10 +1994,12 @@ if __name__ == '__main__':
 
     
     parts = packets
-    print(len(parts),"text boxes total")
     sizes = [len(i) for i in packets]
+    print(len(parts),"text boxes total")
+    print("hypothetically could be",sum(sizes)/4096,"text boxes")
     print("largest text box is",max(sizes))
     print("average text box is",sum(sizes)/len(sizes))
+    
     
     #[(print(i) if (len(i)==largest) else 0) for i in packets]
     
