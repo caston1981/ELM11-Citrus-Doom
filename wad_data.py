@@ -169,8 +169,14 @@ def sq(a):
 def add(a,b):
     return tuple([a[i]+b[i] for i in range(len(a))])
 
+def sub(a,b):
+    return tuple([a[i]-b[i] for i in range(len(a))])
+
 def div(a,b):
     return tuple([i/b for i in a])
+
+def cross(a,b):
+    return a[0]*b[1]-a[1]*b[0]
 
 def insert_thinker(thinker):
     global sector_thinkers, map_name
@@ -197,6 +203,16 @@ def find_sector(tag):
                 return_val.append(index+1)
     
     return return_val
+
+def find_me(i,a):
+    if i<32768:
+        g=level_wad.nodes[i]
+        if 0>cross([g.dx_partition,g.dy_partition],sub(a,[g.x_partition,g.y_partition])):
+            return find_me(g.front_child_id,a)
+        else:
+            return find_me(g.back_child_id,a)
+    else:
+        return i-32768
 
 if __name__ == '__main__':
     start_time=time.time()
@@ -360,9 +376,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==1:
+        if i==-1:
             None
-            print(code.split("\n")[204-1])
+            print(code.split("\n")[86-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -661,7 +677,8 @@ if __name__ == '__main__':
         #                           26:32-18,27:34-18,28:33-18, #open often to stay open, but treated as open often
         #                           31:1,
         #                           }
-                
+
+        
 
         for index in range(len(level_wad.linedefs)):
             i=level_wad.linedefs[index]
@@ -724,6 +741,27 @@ if __name__ == '__main__':
 
                 s1.neighbouring_linedefs.append(index)
                 s2.neighbouring_linedefs.append(index)
+
+        for index in range(len(level_wad.things)):
+            i = level_wad.things[index]
+
+            #print(i.type)
+            if i.type == 14:
+                #print("wo")
+                sub_sec = level_wad.sub_sectors[find_me(len(level_wad.nodes)-1,i.pos)]
+                seg = level_wad.segments[sub_sec.first_seg_id]
+                linedef = level_wad.linedefs[seg.linedef_id]
+                if seg.direction == 0:
+                    sidedef = linedef.front_sidedef_id
+                else:
+                    sidedef = linedef.back_sidedef_id
+                sidedef = level_wad.sidedefs[sidedef]
+                #print(sidedef.sector_id)
+                sector = level_wad.sectors[sidedef.sector_id]
+                sector.things_inside.append(index)
+                
+            
+
             
 
         sector_thinkers=[] # format for thinkers is (targ sec, value to change (1 for floor, 2 for ceil), targ height, movement per tick, end delay, next thinker, number to replace linedef's action with, thinker to summon when being summoned)
@@ -1062,12 +1100,22 @@ if __name__ == '__main__':
                 i.line_type=2
 
             elif i.line_type==97: #WR Teleporter
-                i.line_type=2
-                for j in [(1,0),(2,0),(3,0)]:
-                    thinker = (0, j[0], j[1], 9999999, 1, 0, 2, i.thinker_id)
-                    i.thinker_id = insert_thinker(thinker)
+                cur_secs = find_sector(i.sector_tag)
 
-                i.line_type=2
+                i.line_type=0
+                
+                if len(cur_secs)>0:
+                    cur_sec = level_wad.sectors[cur_secs[0]-1]
+                    
+                    if len(cur_sec.things_inside)>0:
+                        cur_thing = level_wad.things[cur_sec.things_inside[0]]
+                        for j in [(1,cur_thing.pos[0]),(2,cur_thing.pos[1]),(3,cur_thing.angle),(9,cur_sec.floor_height)]:
+                            thinker = (0, j[0], j[1], 9999999, 1, 0, 2, i.thinker_id)
+                            i.thinker_id = insert_thinker(thinker)
+                        #print("found tp targ")
+
+                        i.line_type=2
+                    
 
             elif i.line_type==98: #WR Floor To 8 Above Heighest Adjacent Floor Fast (not fast)
                 cur_secs = find_sector(i.sector_tag)
