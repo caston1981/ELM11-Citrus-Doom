@@ -15,4 +15,11 @@ Thanks to:
 * [Chocolate Doom](https://www.chocolate-doom.org/) for being a very good point of comparison for what my remake should be like
 * [decino](https://www.youtube.com/@decino)'s [yellow Doom Mechanics videos](https://youtube.com/playlist?list=PLYZp53E4M0t_1C8D_b_rAC_8AGYX8cWDB&si=x0TPLpT5qH4mPT6D) for general (mostly object-interation and enemy logic) info
 * [Ultimate Doom Builder](https://ultimatedoombuilder.github.io/) for being a much less annoying map editor than Slade, used for settings map
+* [LifeBoatAPI](https://marketplace.visualstudio.com/items?itemName=NameousChangey.lifeboatapi) for being a better (though buggier) code compressor than my own
 * Friends for amoral support
+
+Smaller help from:
+
+* u/delelelelelelelele on the SW subreddit for suggesting the storage of data in text boxes
+* u/alyxms on the SW subreddit for help with getting the colour correction right (well, good enough)
+* Trapdoor and senty the flag on the SW Discord server, they suggested and helped set up LifeBoat
