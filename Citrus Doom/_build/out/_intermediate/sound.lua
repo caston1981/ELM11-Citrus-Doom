@@ -116,7 +116,6 @@ function onTick()
 	end
 
 	if loaded then
-		init=init or gB(2)
 		
 		
 		
@@ -150,6 +149,10 @@ function onTick()
 		--
 		if gB(1) then
 			tick=tick+1
+			if gN(9)>0 then
+				init=trueVar
+				levelCr=gN(9)
+			end
 			if init then
 				for i=1,10 do
 					M[i]=M[i+10*levelCr]
@@ -157,6 +160,7 @@ function onTick()
 				levelCr=levelCr+1
 				init=falseVar
 			end
+			
 			
 			if health>0 then
 				if weapon~=gN(1)then
@@ -269,6 +273,7 @@ function onTick()
 					face=41
 				end
 			end
+			
 		end
 		
 

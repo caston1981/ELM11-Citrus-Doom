@@ -304,7 +304,8 @@ function summonThinker(cr,pos)
 		end
 	else
 		init=trueVar
-		sB(2,trueVar)
+		levelCr=-pos
+		out[9]=-pos
 	end
 end
 

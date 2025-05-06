@@ -145,9 +145,10 @@ function onTick()
 	end
 
 	if loaded then
-		init=init or gB(2)
-		
-		
+		if gN(9)>0 then
+			init=trueVar
+			levelCr=gN(9)
+		end
 
 		
 		if health>0 and not init then
@@ -170,6 +171,7 @@ function onTick()
 			switchedSwitch=0
 			weapon=gN(1)
 			health=gN(3)
+			
 			tick=tick+1
 			if init then
 				for i=1,10 do
@@ -177,6 +179,7 @@ function onTick()
 				end
 				levelCr=levelCr+1
 			end
+			
 			if gN(2)>0 then
 				cr=M[2][gN(2)]
 				if cr then
@@ -270,11 +273,13 @@ function onTick()
 					thngs[cr[7]][#thngs[cr[7]]+1]=i -- inserting thing in relevant sub-sector's thing collection
 				end
 				
+				
 			end
 			
 			
 			init=falseVar
-
+			
+			
 			
 			cr=M[1][pIn]
 			pp[1]={cr[1],cr[2]}

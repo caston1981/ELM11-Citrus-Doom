@@ -858,7 +858,10 @@ if __name__ == '__main__':
                 i.line_type=2
 
             elif i.line_type==11: #Normal Exit
-                i.thinker_id = -1
+                if i.sector_tag == 0:
+                    i.thinker_id = -(map_name_index+4)
+                else:
+                    i.thinker_id = -(map_name_index+3+i.sector_tag)
                 
                 i.line_type=1
 
@@ -1115,7 +1118,7 @@ if __name__ == '__main__':
                 i.line_type=1
 
             elif i.line_type==52: #Walkover Exit
-                i.thinker_id = -1
+                i.thinker_id = -(map_name_index+4)
                 
                 i.line_type=2
 
