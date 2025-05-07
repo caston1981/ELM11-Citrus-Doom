@@ -263,7 +263,7 @@ if __name__ == '__main__':
     force_new_cache = False
 
     packets = []
-    curmax = 4000
+    curmax = 8192
     res_scale_walls = 4
     res_scale_flats = 4
     res_scale_sprites = 2
@@ -378,7 +378,7 @@ if __name__ == '__main__':
         end = text.find(find_end,start)
         if i==-1:
             None
-            print(code.split("\n")[86-1])
+            print(code.split("\n")[122-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -1366,16 +1366,7 @@ if __name__ == '__main__':
                 curnum+=1
                 #print(state,len(sprite_textures))
             
-                new=(str([i.pos[0],i.pos[1],i.angle,begining,i.flags,state])[1:-1]+",").replace(" ","")
-                if len(cur)+len(new)>curmax:
-                    packets.append(str(level_data_offset+1)+",6,"+str(curnum-1)+","+cur[:-1])
-                    cur = new
-                    curnum = 1
-                else:
-                    cur += new
-        
-        packets.append(str(level_data_offset+1)+",6,"+str(curnum)+","+cur[:-1])
-
+                packets.append((level_data_offset+1,[i.pos[0],i.pos[1],i.angle,begining,i.flags,state]))
 
 
         
@@ -1395,15 +1386,8 @@ if __name__ == '__main__':
             
                 
             
-            new=(str([i.start_vertex_id+1,i.end_vertex_id+1,i.flags,i.line_type,i.thinker_id,i.front_sidedef_id,i.back_sidedef_id])[1:-1]+",").replace(" ","")
-            if len(cur)+len(new)>curmax:
-                packets.append(str(level_data_offset+2)+",7,"+str(curnum-1)+","+cur[:-1])
-                cur = new
-                curnum = 1
-            else:
-                cur += new
-                
-        packets.append(str(level_data_offset+2)+",7,"+str(curnum)+","+cur[:-1])
+            packets.append((level_data_offset+2,[i.start_vertex_id+1,i.end_vertex_id+1,i.flags,i.line_type,i.thinker_id,i.front_sidedef_id,i.back_sidedef_id]))
+
 
         cur=""
         curnum=0 
@@ -1412,15 +1396,7 @@ if __name__ == '__main__':
             
             curnum+=1
             
-            new=(str([i.x_offset,i.y_offset,wall_looker.index(i.upper_texture),wall_looker.index(i.lower_texture),wall_looker.index(i.middle_texture),i.sector_id+1])[1:-1]+",").replace(" ","")
-            if len(cur)+len(new)>curmax:
-                packets.append(str(level_data_offset+3)+",6,"+str(curnum-1)+","+cur[:-1])
-                cur = new
-                curnum = 1
-            else:
-                cur += new
-
-        packets.append(str(level_data_offset+3)+",6,"+str(curnum)+","+cur[:-1])
+            packets.append((level_data_offset+3,[i.x_offset,i.y_offset,wall_looker.index(i.upper_texture),wall_looker.index(i.lower_texture),wall_looker.index(i.middle_texture),i.sector_id+1]))
 
         
         cur=""
@@ -1430,15 +1406,7 @@ if __name__ == '__main__':
 
             curnum+=1
             
-            new=(str(i)[1:-1]+",").replace(" ","")
-            if len(cur)+len(new)>curmax:
-                packets.append(str(level_data_offset+4)+",2,"+str(curnum-1)+","+cur[:-1])
-                cur = new
-                curnum = 1
-            else:
-                cur += new
-                
-        packets.append(str(level_data_offset+4)+",2,"+str(curnum)+","+cur[:-1])
+            packets.append((level_data_offset+4,i))
 
 
         cur=""
@@ -1448,16 +1416,8 @@ if __name__ == '__main__':
             
             curnum+=1
             
-            new=(str([i.start_vertex_id+1,i.end_vertex_id+1,round(i.angle),i.linedef_id+1,i.direction,i.offset])[1:-1]+",").replace(" ","")
-            if len(cur)+len(new)>curmax:
-                packets.append(str(level_data_offset+5)+",6,"+str(curnum-1)+","+cur[:-1])
-                cur = new
-                curnum = 1
-            else:
-                cur += new
-                
-        packets.append(str(level_data_offset+5)+",6,"+str(curnum)+","+cur[:-1])
-
+            packets.append((level_data_offset+5,[i.start_vertex_id+1,i.end_vertex_id+1,round(i.angle),i.linedef_id+1,i.direction,i.offset]))
+            
         
         cur=""
         curnum=0 
@@ -1466,15 +1426,7 @@ if __name__ == '__main__':
             
             curnum+=1
             
-            new=(str([i.seg_count,round(i.first_seg_id+1)])[1:-1]+",").replace(" ","")
-            if len(cur)+len(new)>curmax:
-                packets.append(str(level_data_offset+6)+",2,"+str(curnum-1)+","+cur[:-1])
-                cur = new
-                curnum = 1
-            else:
-                cur += new
-                
-        packets.append(str(level_data_offset+6)+",2,"+str(curnum)+","+cur[:-1])
+            packets.append((level_data_offset+6,[i.seg_count,round(i.first_seg_id+1)]))
 
         
         cur=""
@@ -1484,17 +1436,8 @@ if __name__ == '__main__':
             
             curnum+=1
             
-            new=(str([i.x_partition,i.y_partition,i.dx_partition,i.dy_partition,0,0,i.front_child_id+1,i.back_child_id+1])[1:-1]+",").replace(" ","")
-            if len(cur)+len(new)>curmax:
-                packets.append(str(level_data_offset+7)+",8,"+str(curnum-1)+","+cur[:-1])
-                cur = new
-                curnum = 1
-            else:
-                cur += new
-                
-        packets.append(str(level_data_offset+7)+",8,"+str(curnum)+","+cur[:-1])
-        #print(level_wad.asset_data.sky_id)
-        #halt
+            packets.append((level_data_offset+7,[i.x_partition,i.y_partition,i.dx_partition,i.dy_partition,0,0,i.front_child_id+1,i.back_child_id+1]))
+
         
         cur=""
         curnum=0 
@@ -1515,15 +1458,7 @@ if __name__ == '__main__':
 
             #[floor_h, ceil_h, floor_t, ceil_t, light, type, tag, refresh, surrounding_ceil_h, stage, timer]
             
-            new=(str([i.floor_height,i.ceil_height,cur_floor,cur_ceil,i.light_level,i.type,i.tag])[1:-1]+",").replace(" ","")
-            if len(cur)+len(new)>curmax:
-                packets.append(str(level_data_offset+8)+",7,"+str(curnum-1)+","+cur[:-1])
-                cur = new
-                curnum = 1
-            else:
-                cur += new
-                
-        packets.append(str(level_data_offset+8)+",7,"+str(curnum)+","+cur[:-1])
+            packets.append((level_data_offset+8,[i.floor_height,i.ceil_height,cur_floor,cur_ceil,i.light_level,i.type,i.tag]))
 
 
         cur=""
@@ -1532,16 +1467,7 @@ if __name__ == '__main__':
 
             curnum+=1
             #print(len(i))
-            new=(str(i)[1:-1]+",").replace(" ","")
-            if len(cur)+len(new)>curmax:
-                packets.append(str(level_data_offset+9)+",8,"+str(curnum-1)+","+cur[:-1])
-                cur = new
-                curnum = 1
-            else:
-                cur += new
-
-        if cur!="":
-            packets.append(str(level_data_offset+9)+",8,"+str(curnum)+","+cur[:-1])
+            packets.append((level_data_offset+9,i))
 
 
         cur=""
@@ -1555,30 +1481,11 @@ if __name__ == '__main__':
             curnum+=1
 
             if len(i)>0:
-                new=(str(i)[1:-1]+",").replace(" ","")
+                packets.append((level_data_offset+10,i))
             else:
                 new=""
+                print("DSFSDFDFS")
             
-            if len(cur)+len(new)>curmax or len(i)!=curlen:
-                maybe_packet = str(level_data_offset+10)+","+str(curlen)+","+str(curnum-1)+","+cur[:-1]
-                if cur=="":
-                    maybe_packet = maybe_packet[:-1]
-                if len(maybe_packet)+len(packets[-1])+1 <= curmax:
-                    packets[-1] += (","+maybe_packet)
-                else:
-                    packets.append(maybe_packet)
-                cur = new
-                curnum = 1
-                curlen=len(i)
-            else:
-                cur += new
-
-        maybe_packet = str(level_data_offset+10)+","+str(curlen)+","+str(curnum)+","+cur[:-1]
-        if cur=="":
-            maybe_packet = maybe_packet[:-1]
-        packets.append(maybe_packet)
-
-    print(len(packets), "text boxes of level data")
 
 
     cur=""
@@ -1587,14 +1494,7 @@ if __name__ == '__main__':
         i=health_pickup_list[index][1]
         curnum+=1
         
-        new=(str(i)[1:-1]+",").replace(" ","")
-        if len(cur)+len(new)>curmax:
-            packets.append("11,"+str(len(i))+","+str(curnum-1)+","+cur[:-1])
-            cur = new
-            curnum = 1
-        else:
-            cur += new
-    packets.append("11,"+str(len(i))+","+str(curnum)+","+cur[:-1])
+        packets.append((11,i))
     
     
     cur=""
@@ -1603,14 +1503,7 @@ if __name__ == '__main__':
         i=ammo_pickup_list[index]
         curnum+=1
         
-        new=(str(i)[1:-1]+",").replace(" ","")
-        if len(cur)+len(new)>curmax:
-            packets.append("12,"+str(len(i))+","+str(curnum-1)+","+cur[:-1])
-            cur = new
-            curnum = 1
-        else:
-            cur += new
-    packets.append("12,"+str(len(i))+","+str(curnum)+","+cur[:-1])
+        packets.append((12,i))
 
 
     file = open("random.txt")
@@ -1618,15 +1511,12 @@ if __name__ == '__main__':
     file.close()
 
     random = random.split("\n")
-    cur = "13,256,1"
+    cur = []
     for i in random:
         i = i.split(" ")
-        cur += (","+i[1])
+        cur.append(int(i[1]))
+    packets.append((13,cur))
 
-    if len(packets[-1])+len(cur)+1 <= curmax:
-        packets[-1]+=(","+cur)
-    else:
-        packets.append(cur)
 
     file = open("fuzz.txt")
     fuzz = file.read()
@@ -1635,19 +1525,17 @@ if __name__ == '__main__':
     fuzz = fuzz.replace("\n    ","")
 
     fuzz = fuzz.split(",")
-    cur = "13,50,1"
+    cur = []
     darkness = 1
     for i in fuzz:
         if not "-" in i:
             darkness = 1
-        cur += (","+str(darkness))
+        cur.append(darkness)
         darkness += 1
     #print(cur)
 
-    if len(packets[-1])+len(cur)+1 <= curmax:
-        packets[-1]+=(","+cur)
-    else:
-        packets.append(cur)
+    packets.append((13,cur))
+
     
 
     file = open("weapons.txt")
@@ -1705,16 +1593,7 @@ if __name__ == '__main__':
                 new[j] = int(new[j])
         #print(new)
         #halt
-       
-        new=(str(new)[1:-1]+",").replace(" ","")
-        if len(cur)+len(new)>curmax:
-            packets.append("15,"+str(curlen)+","+str(curnum-1)+","+cur[:-1])
-            cur = new
-            curnum = 1
-        else:
-            cur += new
-            
-    packets.append("14,"+str(curlen)+","+str(curnum)+","+cur[:-1])
+        packets.append((14,new))
 
     ""
     cur=""
@@ -1723,14 +1602,7 @@ if __name__ == '__main__':
         i=info_spawn[index]
         curnum+=1
         
-        new=(str(i)[1:-1]+",").replace(" ","")
-        if len(cur)+len(new)>curmax:
-            packets.append("15,"+str(len(i))+","+str(curnum-1)+","+cur[:-1])
-            cur = new
-            curnum = 1
-        else:
-            cur += new
-    packets.append("15,"+str(len(i))+","+str(curnum)+","+cur[:-1])
+        packets.append((15,i))
 
     
     cur=""
@@ -1743,14 +1615,7 @@ if __name__ == '__main__':
 
         curnum+=1
         
-        new=(str(i)[1:-1]+",").replace(" ","")
-        if len(cur)+len(new)>curmax:
-            packets.append("16,5,"+str(curnum-1)+","+cur[:-1])
-            cur = new
-            curnum = 1
-        else:
-            cur += new
-    packets.append("16,5,"+str(curnum)+","+cur[:-1])
+        packets.append((16,i))
     
     
     cur=""
@@ -1760,17 +1625,9 @@ if __name__ == '__main__':
         
         curnum+=1
         
-        new=(str(i)[1:-1]+",").replace(" ","")
-        if len(cur)+len(new)>curmax:
-            packets.append("17,8,"+str(curnum-1)+","+cur[:-1])
-            cur = new
-            curnum = 1
-        else:
-            cur += new
-            
-    packets.append("17,8,"+str(curnum)+","+cur[:-1])
+        packets.append((17,i))
 
-
+    """
     for index in wad.sounds:
         i=wad.sounds[index]
         
@@ -1780,6 +1637,7 @@ if __name__ == '__main__':
             packets.append(new)
         else:
             packets[-1]+=(","+new)
+    """
     
 
     misc_additions = [[1,2,9,6,11,12,19,3],
@@ -1794,12 +1652,7 @@ if __name__ == '__main__':
     for index in range(len(misc_additions)):
         i=misc_additions[index]
         
-        new="19,"+str(len(i))+",1,"+((str(i)[1:-1]).replace(" ",""))
-        #print(new)
-        if len(new)+len(packets[-1])+1>curmax:
-            packets.append(new)
-        else:
-            packets[-1]+=(","+new)
+        packets.append((19,i))
 
     
     cur=""
@@ -1809,15 +1662,7 @@ if __name__ == '__main__':
         
         curnum+=1
         
-        new=(str(i)[1:-1]+",").replace(" ","")
-        if len(cur)+len(new)>curmax:
-            packets.append("29,5,"+str(curnum-1)+","+cur[:-1])
-            cur = new
-            curnum = 1
-        else:
-            cur += new
-            
-    packets.append("29,5,"+str(curnum)+","+cur[:-1])
+        packets.append((29,i))
     
     
 
@@ -2039,50 +1884,24 @@ if __name__ == '__main__':
             
             curnum+=1
             
-            new=(str(i)[1:-1]+",").replace(" ","")
-            if len(cur)+len(new)>curmax:
-                temp_packets.append("20,3,"+str(curnum-1)+","+cur[:-1])
-                cur = new
-                curnum = 1
-            else:
-                cur += new
+            temp_packets.append((20,i))
 
-        temp_packets.append("20,3,"+str(curnum)+","+cur[:-1])
-
-
-                
-        
-
-        
 
         t=0
         i=orange
         width=i.get_width()
         height=i.get_height()
-        cur="25,"+str(width*height+4)+",1,"+str(width)+","+str(height)+","+str(1)+","+str(orange_av)
-
-        if len(temp_packets[-1])+len(cur)+1 <= curmax:
-            temp_packets[-1]+=(","+cur)
-        else:
-            temp_packets.append(cur)
-            t+=1
+        cur=[width,height,1,orange_av]
         
         for j in range(width):
             for k in range(height):
                 colour=i.get_at((j,k))
                 colour=colour[:3]
                 if colour != trans_colour:
-                    cur = str(colourmap.index(colour)+1)
+                    cur.append(colourmap.index(colour)+1)
                 else:
-                    cur = "0"
-                
-                if len(temp_packets[-1])+len(cur)+1 <= curmax:
-                    temp_packets[-1]+=(","+cur)
-                else:
-                    temp_packets.append(cur)
-                    t+=1
-        
-        print(t, "text boxes of orange")
+                    cur.append(0)
+        temp_packets.append((25,cur))        
         
         t=0
         for index in wall_textures:
@@ -2098,32 +1917,19 @@ if __name__ == '__main__':
             
             width=len(i)//res_scale_cur
             height=len(i[0])//res_scale_cur
-            cur = "21,"+str(width*height+5)+",1,"+str(width)+","+str(height)+","
-            cur+= str(res_scale_cur)+","+switch+","+str(wall_avs[index]+1)
+            cur = [width,height,res_scale_cur,switch,wall_avs[index]+1]
 
-            if len(temp_packets)==0:
-                temp_packets.append(cur)
-            elif len(temp_packets[-1])+len(cur)+1 <= curmax:
-                temp_packets[-1]+=(","+cur)
-            else:
-                temp_packets.append(cur)
-                t+=1
+            
             
             for j in range(width):
                 for k in range(height):
                     colour=tuple(i[j*res_scale_cur][k*res_scale_cur])
                     if colour != trans_colour:
-                        cur = str(colourmap.index(colour)+1)
+                        cur.append(colourmap.index(colour)+1)
                     else:
-                        cur = "0"
+                        cur.append(0)
                     
-                    if len(temp_packets[-1])+len(cur)+1 <= curmax:
-                        temp_packets[-1]+=(","+cur)
-                    else:
-                        temp_packets.append(cur)
-                        t+=1
-        
-        print(t, "text boxes of wall textures")
+            temp_packets.append((21,cur))
         
         t=0
         for index in flat_textures:
@@ -2131,29 +1937,20 @@ if __name__ == '__main__':
             i=wad.asset_data.flat_textures[index]
             width=len(i)//res_scale_flats
             height=len(i[0])//res_scale_flats
-            cur="22,"+str(width*height+4)+",1,"+str(width)+","+str(height)+","+str(res_scale_flats)+","+str(flat_avs[index]+1)
+            cur=[width,height,res_scale_flats,flat_avs[index]+1]
 
-            if len(temp_packets[-1])+len(cur)+1 <= curmax:
-                temp_packets[-1]+=(","+cur)
-            else:
-                temp_packets.append(cur)
-                t+=1
             
             for j in range(width):
                 for k in range(height):
                     colour=tuple(i[j*res_scale_flats][k*res_scale_flats])
                     if colour != trans_colour:
-                        cur = str(colourmap.index(colour)+1)
+                        cur.append(colourmap.index(colour)+1)
                     else:
-                        cur = "0"
-                    
-                    if len(temp_packets[-1])+len(cur)+1 <= curmax:
-                        temp_packets[-1]+=(","+cur)
-                    else:
-                        temp_packets.append(cur)
-                        t+=1
+                        cur.append(0)
 
-        print(t, "text boxes of flat textures")
+            temp_packets.append((22,cur))
+
+        
         
         t=0
         for index in all_sprite_textures:
@@ -2170,61 +1967,39 @@ if __name__ == '__main__':
             
             width=i.get_width()//res_scale_cur
             height=i.get_height()//res_scale_cur
-            cur = "23,"+str(width*height+6)+",1,"+str(width)+","+str(height)+","+str(res_scale_cur)+","
-            cur+= str(header.left_offset)+","+str(header.top_offset)+","+str(sprite_avs[index]+1)
+            cur=[width,height,res_scale_cur,header.left_offset,header.top_offset,sprite_avs[index]+1]
             
             #if index=="TROOH5" or True:
             #    #print(header.left_offset,header.top_offset)
             #    print(res_scale_cur,(width,height),(i.get_width(),i.get_height()),(header.width,header.height))
-            
-            if len(temp_packets[-1])+len(cur)+1 <= curmax:
-                temp_packets[-1]+=(","+cur)
-            else:
-                temp_packets.append(cur)
-                t+=1
+
             
             for j in range(width):
                 for k in range(height):
                     colour=i.get_at((j*res_scale_cur,k*res_scale_cur))
                     colour=colour[:3]
                     if colour != trans_colour:
-                        cur = str(colourmap.index(colour)+1)
+                        cur.append(colourmap.index(colour)+1)
                     else:
-                        cur = "0"
-                    
-                    if len(temp_packets[-1])+len(cur)+1 <= curmax:
-                        temp_packets[-1]+=(","+cur)
-                    else:
-                        temp_packets.append(cur)
-                        t+=1
-
-        print(t, "text boxes of sprite textures")
+                        cur.append(0)
+            temp_packets.append((23,cur))
         
         t=0
         for index in range(len(sky_textures)):
             i=wad.asset_data.sky_textures[index]
             width=len(i)//res_scale_sky
             height=len(i[0])//res_scale_sky-(sky_offset//res_scale_sky)-(8//res_scale_sky)#bottom pixels are just purple
-            cur="24,"+str(width*height+4)+",1,"+str(width)+","+str(height)+","+str(res_scale_sky)+","+str(sky_avs[index])
+            cur=[width,height,res_scale_sky,sky_avs[index]]
 
-            if len(temp_packets[-1])+len(cur)+1 <= curmax:
-                temp_packets[-1]+=(","+cur)
-            else:
-                temp_packets.append(cur)
-                t+=1
-            
+
             for j in range(width):
                 for k in range(height):
                     colour=tuple(i[j*res_scale_sky][k*res_scale_sky+sky_offset])
-                    cur = str(colourmap.index(colour)+1)
+                    cur.append(colourmap.index(colour)+1)
                     
-                    if len(temp_packets[-1])+len(cur)+1 <= curmax:
-                        temp_packets[-1]+=(","+cur)
-                    else:
-                        temp_packets.append(cur)
-                        t+=1
+            temp_packets.append((24,cur))
         
-        print(t, "text boxes of sky textures")
+        
         
             
 
@@ -2242,13 +2017,40 @@ if __name__ == '__main__':
         file.close()
         print("textures cached")
 
-    packets = cache[1] + packets
+    packets = cache[1] + packets + [(0,[])]
 
     
-    parts = packets
-    sizes = [len(i) for i in packets]
+    parts = []
+    cur=[]
+    for index in range(len(packets)):
+        i = packets[index]
+        #if i[0]==31:
+        #    print(i)
+        if len(cur)==0 or len(cur[0][1])!=len(i[1]) or cur[0][0]!=i[0] or index==len(packets)-1:
+            if len(cur)>0:
+                out_numbs = [cur[0][0],len(cur[0][1]),len(cur)]
+                for j in cur:
+                    for k in j[1]:
+                        out_numbs.append(k)
+
+                for j in out_numbs:
+                    temp = (str(j)+",").replace(" ","")
+                    if len(parts)==0 or len(parts[-1])+len(temp)>curmax:
+                        if len(parts)>0:
+                            parts[-1]=parts[-1]
+                        parts.append(temp)
+                    else:
+                        parts[-1] = parts[-1]+temp
+            cur=[i]
+        else:
+            cur.append(i)
+
+
+
+    
+    sizes = [len(i) for i in parts]
     print(len(parts),"text boxes total")
-    print("hypothetically could be",sum(sizes)/4096,"text boxes")
+    print("hypothetically could be",sum(sizes)/curmax,"text boxes")
     print("largest text box is",max(sizes))
     print("average text box is",sum(sizes)/len(sizes))
     

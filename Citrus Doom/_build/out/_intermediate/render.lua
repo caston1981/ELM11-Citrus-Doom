@@ -529,7 +529,7 @@ function onDraw()
 	if mN<=1 then -- so it won't render on unnecessary displays, more useful in the past
 
 		if loaded then
-
+			
 			tex=M[24][M[19][8][levelCr-3]]
 			tW,tH=tex[1],tex[2]
 			scl=wdth/ceil(tW*fovT)

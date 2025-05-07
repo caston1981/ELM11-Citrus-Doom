@@ -163,7 +163,7 @@ function onTick()
 			
 			
 			if health>0 then
-				if weapon~=gN(1)then
+				if weapon~=gN(1) and gN(1)>0then
 					weaponObjects={}
 					cr={}
 					cr[1]=M[29][gN(1)]

@@ -380,6 +380,7 @@ function onTick()
 				for j=7,20 do
 					cr[j]=0
 				end
+				test=cr[5]+1
 				cr[7]=M[15][cr[4]][4]-- health
 				cr[9],cr[10]=findMe(#M[7],cr)[1]-- vertical position
 				--cr[10]=falseVar-- send update to render block, set to nil above which counts as false
