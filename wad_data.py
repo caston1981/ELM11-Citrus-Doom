@@ -1913,7 +1913,7 @@ if __name__ == '__main__':
             i=wad.asset_data.wall_textures[index]
             switch1=((wall_textures.index("SW2"+index[3:])+1) if index[0:3]=="SW1" else 0)
             switch2=((wall_textures.index("SW1"+index[3:])+1) if index[0:3]=="SW2" else 0)
-            switch=str(switch1+switch2)
+            switch=switch1+switch2
             
             width=len(i)//res_scale_cur
             height=len(i[0])//res_scale_cur
@@ -2019,6 +2019,13 @@ if __name__ == '__main__':
 
     packets = cache[1] + packets + [(0,[])]
 
+    #big_packet = []
+    #for i in packets:
+    #    big_packet += [len(str(int(j))+",") for j in i[1]]
+    #print(max(big_packet))
+    #print(min(big_packet))
+    #print(sum(big_packet)/len(big_packet))
+    #print(sum(big_packet),len(big_packet))
     
     parts = []
     cur=[]
@@ -2034,7 +2041,8 @@ if __name__ == '__main__':
                         out_numbs.append(k)
 
                 for j in out_numbs:
-                    temp = (str(j)+",").replace(" ","")
+                    temp = str(int(j))
+                    temp = temp[:-1]+chr(ord(temp[-1])+17)
                     if len(parts)==0 or len(parts[-1])+len(temp)>curmax:
                         if len(parts)>0:
                             parts[-1]=parts[-1]

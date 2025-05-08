@@ -10,6 +10,7 @@ sN=output.setNumber
 pi=m.pi
 falseVar=false
 trueVar=true
+str=string
 
 function cross(a,b)return a[1]*b[2]-a[2]*b[1]end
 function sub(a,b)return{(a[1]-b[1]),(a[2]-b[2])}end
@@ -67,44 +68,43 @@ function onTick()
 			if rom~="" then
 				i=1
 				nm=""
-				cr=string.sub(rom,i,i)
-				while cr~=""or nm~=""do
-					if cr==","or cr==""then
-						nm=nm+0
-
-						if stg==1 then
+				cr=str.sub(rom,i,i)
+				while cr~=""do
+					pos=str.byte(cr)
+					if pos>64 or cr==""then
+						nm=(nm..(pos-65))+0
+						if stg==1then
 							crI=nm
-							if M[nm]==nil then
+							if M[nm]==nilVar then
 								M[nm]={}
 							end
 							stg=2
-						elseif stg==2 then
-							l=nm
+						elseif stg==2then
+							intH=nm
 							crL=0
 							stg=3
-						elseif stg==3 then
+						elseif stg==3then
 							cnt=nm
 							stg=4
 						else
-							if crL==0 then
-								crL=l
+							if crL==0then
+								crL=intH
 								cnt=cnt-1
 								crM={}
 								M[crI][#M[crI]+1]=crM
 							end
 							crM[#crM+1]=nm
 							crL=crL-1
-							if mx(crL,cnt)==0 then
+							if mx(crL,cnt)==0then
 								stg=1
 							end
 						end
-
 						nm=""
 					else
 						nm=nm.. cr
 					end
 					i=i+1
-					cr=string.sub(rom,i,i)
+					cr=str.sub(rom,i,i)
 				end
 
 				romCr=romCr+1

@@ -12,6 +12,7 @@ falseVar=false
 ipairsVar=ipairs
 abs=m.abs
 tableRemove=table.remove
+str=string
 
 function add(a,b)return{(a[1]+b[1]),(a[2]+b[2])}end
 function sub(a,b)return{(a[1]-b[1]),(a[2]-b[2])}end
@@ -320,10 +321,11 @@ function onTick()
 			if rom~="" then
 				i=1
 				nm=""
-				cr=string.sub(rom,i,i)
-				while nm.. cr~=""do
-					if cr==","or cr==""then
-						nm=nm+0
+				cr=str.sub(rom,i,i)
+				while cr~=""do
+					pos=str.byte(cr)
+					if pos>64 or cr==""then
+						nm=(nm..(pos-65))+0
 						if stg==1then
 							crI=nm
 							if M[nm]==nilVar then
@@ -355,7 +357,7 @@ function onTick()
 						nm=nm.. cr
 					end
 					i=i+1
-					cr=string.sub(rom,i,i)
+					cr=str.sub(rom,i,i)
 				end
 
 				romCr=romCr+1
