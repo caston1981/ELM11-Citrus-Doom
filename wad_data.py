@@ -739,6 +739,17 @@ if __name__ == '__main__':
                 else:
                     s2.neighbouring_lowest_floor = min(s2.neighbouring_lowest_floor,s1.floor_height)
 
+
+                if s1.neighbouring_lowest_light == None:
+                    s1.neighbouring_lowest_light = s2.light_level
+                else:
+                    s1.neighbouring_lowest_light = min(s1.neighbouring_lowest_light,s2.light_level)
+
+                if s2.neighbouring_lowest_light == None:
+                    s2.neighbouring_lowest_light = s1.light_level
+                else:
+                    s2.neighbouring_lowest_light = min(s2.neighbouring_lowest_light,s1.light_level)
+
                 s1.neighbouring_linedefs.append(index)
                 s2.neighbouring_linedefs.append(index)
 
@@ -859,10 +870,19 @@ if __name__ == '__main__':
                 i.line_type=2
 
             elif i.line_type==11: #Normal Exit
-                if i.sector_tag == 0:
+                secret_returns = {"E1M9":"E1M4","E2M9":"E2M6","E3M9":"E3M7","E4M9":"E4M3"}
+                if map_name in secret_returns:
+                    i.thinker_id = -(map_order.index(secret_returns[map_name])+3)
+                elif i.sector_tag == 0:
                     i.thinker_id = -(map_name_index+4)
                 else:
                     i.thinker_id = -(map_name_index+3+i.sector_tag)
+                
+                i.line_type=1
+
+            elif i.line_type==51: #Secret Exit
+                
+                i.thinker_id = -(map_order.index(map_name[0:3]+"9")+3)
                 
                 i.line_type=1
 
@@ -1035,6 +1055,15 @@ if __name__ == '__main__':
 
                 i.line_type=key_indexes["yellow"]
 
+            elif i.line_type==35: #W1 Light To 35
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs:
+                    thinker = (sec, 5, 35, 35, 1, 0, 0, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=2
+
             elif i.line_type==36: #W1 Floor To 8 Above Heighest Adjacent Floor Fast (not fast)
                 cur_secs = find_sector(i.sector_tag)
                 
@@ -1168,6 +1197,15 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
+            elif i.line_type==60: #SR Floor To Lowest Adjacent Floor
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs:
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, 1, 0, 1, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=1
+
             elif i.line_type==61: #SR Door Stay Open
                 cur_secs = find_sector(i.sector_tag)
                 
@@ -1210,11 +1248,20 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
-            elif i.line_type==70: #SR Floor To 8 Above Heighest Adjacent Floor Fast (not fast)
+            elif i.line_type==70: #SR Floor To 8 Above Higher Adjacent Floor Fast (not fast, uses highest)
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
                     thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 2, 1, 0, 1, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=1
+
+            elif i.line_type==71: #S1 Floor To 8 Above Higher Adjacent Floor Fast (not fast, uses highest)
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs:
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 2, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1375,6 +1422,28 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
+            elif i.line_type==104: #W1 Light To Lowest Adjacent Level
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs:
+                    targ = level_wad.sectors[sec-1].neighbouring_lowest_light
+                    thinker = (sec, 5, targ, targ, 1, 0, 0, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=2
+
+            elif i.line_type==105: #WR Door Fast (not fast)
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs:
+                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 2, 0)
+                    next_thinker = insert_thinker(thinker)
+
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, TICKRATE*4, next_thinker, 2, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=2
+
             elif i.line_type==109: #W1 Door Stay Open Fast (not fast)
                 cur_secs = find_sector(i.sector_tag)
                 
@@ -1496,14 +1565,21 @@ if __name__ == '__main__':
 
                 i.line_type=key_indexes["yellow"]
 
+            elif i.line_type==137: #S1 Door Stay Open Yellow Key Fast (not fast)
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs:
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, 1, 0, 0, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=key_indexes["yellow"]
+
             elif 0<i.line_type<3000 and not i.line_type in [25,#crush slow start walkover
-                                                            35,#set light level
                                                             48,#moving texture
-                                                            51,#secret exit
                                                             73,#crush slow start
                                                             74,#crush stop
                                                             77,#crush start
-                                                            125,#teleport monsters only, monsters can't teleport so who cares
+                                                            125,126,#teleport monsters only, monsters can't teleport so who cares
                                                             ]:
                 print("unknown linedef type",i.line_type,"in level",map_name)
                 None
