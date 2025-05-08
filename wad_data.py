@@ -222,7 +222,7 @@ if __name__ == '__main__':
     #map_order=["E1M2"]
     #map_order=["SET1"]+map_order
     #map_order=["SET1","E2M3","E1M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
-    map_order=["SET1"]+["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
+    map_order=["SET1"]+["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(4*9)]
     #map_order=["SET1","E1M1","E2M3"] # self explanitory, first level is the settings one
     skys = {"E1":"SKY1","E2":"SKY2","E3":"SKY3","E4":"SKY4"}
     sky_textures = [skys[i] for i in skys]
@@ -2026,9 +2026,12 @@ if __name__ == '__main__':
     #print(min(big_packet))
     #print(sum(big_packet)/len(big_packet))
     #print(sum(big_packet),len(big_packet))
-    
+
+    type_map = {20:"colours",21:"wall textures",22:"flat textures",23:"sprites",24:"sky textures",25:"orange"}
     parts = []
     cur=[]
+    t=0
+    tt=0
     for index in range(len(packets)):
         i = packets[index]
         #if i[0]==31:
@@ -2043,20 +2046,30 @@ if __name__ == '__main__':
                 for j in out_numbs:
                     temp = str(int(j))
                     temp = temp[:-1]+chr(ord(temp[-1])+17)
-                    if len(parts)==0 or len(parts[-1])+len(temp)>curmax:
+                    temp_len = len(temp)
+                    if len(parts)==0 or len(parts[-1])+temp_len>curmax:
                         if len(parts)>0:
                             parts[-1]=parts[-1]
                         parts.append(temp)
                     else:
                         parts[-1] = parts[-1]+temp
+                    t+=temp_len
+                    tt+=temp_len
+                    
+                
+                if i[0]!=cur[0][0] and cur[0][0] in type_map:
+                    print(t//1024,"KiB of "+type_map[cur[0][0]])
+                    t=0
             cur=[i]
         else:
             cur.append(i)
+            
 
 
 
     
     sizes = [len(i) for i in parts]
+    print(tt//1024,"KiB total")
     print(len(parts),"text boxes total")
     print("hypothetically could be",sum(sizes)/curmax,"text boxes")
     print("largest text box is",max(sizes))
