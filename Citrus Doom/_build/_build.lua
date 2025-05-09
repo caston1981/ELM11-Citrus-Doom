@@ -36,15 +36,15 @@ local _builder = LifeBoatAPI.Tools.Builder:new(rootDirs, outputDir, luaDocsMCPat
 
 if onLBBuildStarted then onLBBuildStarted(_builder, params, LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom]])) end
 
-if onLBBuildFileStarted then onLBBuildFileStarted(_builder, params, LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom]]), [[sound.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\sound.lua]])) end
-
-local combinedText, outText, outFile = _builder:buildMicrocontroller([[sound.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\sound.lua]]), params)
-if onLBBuildFileComplete then onLBBuildFileComplete(LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom]]), [[sound.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\sound.lua]]), outFile, combinedText, outText) end
-
 if onLBBuildFileStarted then onLBBuildFileStarted(_builder, params, LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom]]), [[render.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\render.lua]])) end
 
 local combinedText, outText, outFile = _builder:buildMicrocontroller([[render.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\render.lua]]), params)
 if onLBBuildFileComplete then onLBBuildFileComplete(LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom]]), [[render.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\render.lua]]), outFile, combinedText, outText) end
+
+if onLBBuildFileStarted then onLBBuildFileStarted(_builder, params, LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom]]), [[sound.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\sound.lua]])) end
+
+local combinedText, outText, outFile = _builder:buildMicrocontroller([[sound.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\sound.lua]]), params)
+if onLBBuildFileComplete then onLBBuildFileComplete(LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom]]), [[sound.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\sound.lua]]), outFile, combinedText, outText) end
 
 if onLBBuildFileStarted then onLBBuildFileStarted(_builder, params, LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom]]), [[engine.lua]], LifeBoatAPI.Tools.Filepath:new([[c:\Users\Waity5\Documents\GitHub\Citrus-Doom\Citrus Doom\engine.lua]])) end
 

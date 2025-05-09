@@ -15,6 +15,7 @@ str=string
 function cross(a,b)return a[1]*b[2]-a[2]*b[1]end
 function sub(a,b)return{(a[1]-b[1]),(a[2]-b[2])}end
 function wrap(a)return ((a+180)%360)-180 end
+function sin(a)return m.sin(a/180*pi)end
 function cos(a)return m.cos(a/180*pi)end
 function tan(a)return m.tan(a/180*pi)end
 function at(a)return m.atan(a)*180/pi end
@@ -51,6 +52,7 @@ bigNumb=32768 -- 2^15
 difficulty=3002
 fuzz=0
 screenBrightTimer=0
+vsTex=trueVar
 
 tick=0
 
@@ -296,7 +298,8 @@ function onTick()
 
 			dpth={}
 			walls={}
-			vises={}
+			floors={}
+			ceils={}
 			clH={}
 			flH={}
 			thngsOrd={}
@@ -308,7 +311,8 @@ function onTick()
 			i=1
 			while i<=#ssecs and lnLft>0 do
 				cr=M[6][ssecs[i]]
-				vises[i]={}
+				floors[i]={}
+				ceils[i]={}
 				walls[i]={}
 				thngsOrd[i]=thngs[ssecs[i]] -- because the sub-sectors are sorted, this also sorts the sub-sector-based thing collections
 				table.sort(thngsOrd[i],function(a,b)return M[1][a][20]>M[1][b][20]end) -- sort the things within a sub-sector
@@ -341,7 +345,7 @@ function onTick()
 
 							aNorm=seg[3]+90 -- note that this texture mapping is heavily based on Coder Space's level viewer
 							aOff=aNorm-ga1
-							txOff1=d1*m.sin(aOff/180*pi) -- used for texture mapping (the wall is part of an infinitely long line, this is the distance from the closest point on the line to the wall's first vertex)
+							txOff1=d1*sin(aOff) -- used for texture mapping (the wall is part of an infinitely long line, this is the distance from the closest point on the line to the wall's first vertex)
 							d3=(d1*cos(aOff)) -- shortest distance to the line the wall is on
 							if a1~=a3 then -- if first vertex has been clipped by the edge of the screen
 								d1=d3/cos(aNorm-(a3+pp[3])) -- re-find the distance to be to the point that's actually being shown on the screen
@@ -474,14 +478,14 @@ function onTick()
 															if calculate then -- floor/ceiling stuff
 																if n~=2 then -- ceiling
 																	if yt<clH[x]then
-																		vises[i][#vises[i]+1]={x,mx(yt,flH[x]),clH[x],sec,2}
+																		ceils[i][#ceils[i]+1]={x,mx(yt,flH[x]),clH[x],sec,2}
 																	end
 																	if n==3then yNew=yt else yNew=yb end
 																	if clH[x]>yNew then clH[x]=yNew end
 																end
 																if n~=1 then -- floor
 																	if yb>flH[x]then
-																		vises[i][#vises[i]+1]={x,flH[x],mn(yb,clH[x]),sec,1}
+																		floors[i][#floors[i]+1]={x,flH[x],mn(yb,clH[x]),sec,1}
 																	end
 																	if n==3then yNew=yb else yNew=yt end
 																	if flH[x]<yNew then flH[x]=yNew end
@@ -527,6 +531,7 @@ function onDraw()
 	screenVar=screen
 	local tri,rec,stCl,text=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawText --locals are faster because lua
 	mN=mN+1
+	vises={floors,ceils}
 
 	if mN<=1 then -- so it won't render on unnecessary displays, more useful in the past
 
@@ -600,16 +605,72 @@ function onDraw()
 
 					end
 				end
+				
+				for a=1,2 do
+					cr=vises[a]
+					cache={}
+					bt,tp,vg=hght,-hght
+					
+					for j,v in ipairs(cr[i]) do
+						bt=mn(bt,v[2])
+						tp=mx(tp,v[3])
+						vg=v
+					end
+					if vg then
+						sec=vg[4]
+						height=(sec[vg[5]]-pp[2])
+						p_dir_x = cos(pp[3])
+						p_dir_y = sin(pp[3])
+						for iy=flr(bt+hghtH),ceil(tp+hghtH) do
+							z = vMult * height / (hghtH - iy)
+										
+							px = p_dir_x * z - pp[1][1]
+							py = p_dir_y * z - pp[1][2]
+						
+							l_x = -p_dir_y * z + px
+							l_y = p_dir_x * z + py
+							r_x = p_dir_y * z + px
+							r_y = -p_dir_x * z + py
+			
+							dx = (r_x - l_x) / wdth
+							dy = (r_y - l_y) / wdth
 
-				for j,v in ipairs(vises[i]) do -- originally had texture rendering for the floor as well, but it was horrendously slow and I can't easily optimise it into quads
-					sec=v[4]
-					if sec[v[5]+2]~=0 then
-						tex=M[22][sec[v[5]+2]]
-						x=v[1]
-						lght=mn(sec[5]+screenBrightOffset,1)^2.2
-						col=M[20][tex[4]]
-						stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-						screen.drawLine(x,-v[3]+hghtH-1,x,-v[2]+hghtH)
+							cache[iy]={dx,dy,l_x,l_y}
+						end
+
+						for j,v in ipairs(cr[i]) do -- originally had texture rendering for the floor as well, but it was horrendously slow and I can't easily optimise it into quads
+							
+							if sec[v[5]+2]~=0 then
+								lght=mn(sec[5]+screenBrightOffset,1)^2.2
+								tex=M[22][sec[v[5]+2]]
+								x=v[1]
+								
+								if vsTex then
+									xg=wdthH-(wdthH-x)*fovT
+									bt,tp=flr(v[2]+hghtH),ceil(v[3]+hghtH)
+									
+									resScl = tex[3]
+								
+									for iy=bt,tp do
+										cacheCur=cache[iy]
+										
+										tx = (cacheCur[3] + cacheCur[1] * xg)//resScl
+										ty = (cacheCur[4] + cacheCur[2] * xg + 8)//resScl
+										
+										pix=3 + (ty%tex[1]) + tex[1]*(tx%tex[2])
+										col=M[20][tex[pix]]
+										if col then
+											stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+											rec(x,-iy+hght,1,1)
+										end
+									end
+								--else
+								--	col=M[20][tex[4]]
+								--	stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+								--	screen.drawLine(x,-v[2]+hghtH,x,-v[3]+hghtH)
+								end
+							end
+						end
 					end
 				end
 
