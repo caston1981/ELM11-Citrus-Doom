@@ -388,7 +388,30 @@ if __name__ == '__main__':
     
     
     
-    
+    flat_animations = {}
+    flat_replacements = {}
+    for i in ["NUKAGE","FWATER","LAVA","BLOOD"]:
+        if i+"1" in flat_textures:
+            cur = 2
+            while i+str(cur) in flat_textures:
+                flat_replacements[i+str(cur)] = i+"1"
+                cur += 1
+            cur -= 1
+            #print(i+str(cur))
+            flat_animations[i+"1"] = cur
+
+    wall_animations = {}
+    wall_replacements = {}
+    for i in ["BLODGR","BLODRIP","FIREBLU","FIREMAG","GSTFONT","ROCKRED","SLADRIP","WFALL"]:
+        if i+"1" in wall_textures:
+            cur = 2
+            while i+str(cur) in wall_textures:
+                wall_replacements[i+str(cur)] = i+"1"
+                cur += 1
+            cur -= 1
+            #print(i+str(cur))
+            wall_animations[i+"1"] = cur
+        
     
     
     
@@ -678,6 +701,26 @@ if __name__ == '__main__':
         #                           31:1,
         #                           }
 
+        for index in range(len(level_wad.sectors)):
+            i=level_wad.sectors[index]
+            
+            if i.ceil_texture in flat_replacements:
+                i.ceil_texture = flat_replacements[i.ceil_texture]
+                
+            if i.floor_texture in flat_replacements:
+                i.floor_texture = flat_replacements[i.floor_texture]
+
+        for index in range(len(level_wad.sidedefs)):
+            i=level_wad.sidedefs[index]
+
+            if i.lower_texture in wall_replacements:
+                i.lower_texture = wall_replacements[i.lower_texture]
+                
+            if i.upper_texture in wall_replacements:
+                i.upper_texture = wall_replacements[i.upper_texture]
+                
+            if i.middle_texture in wall_replacements:
+                i.middle_texture = wall_replacements[i.middle_texture]
         
 
         for index in range(len(level_wad.linedefs)):
@@ -2145,6 +2188,11 @@ if __name__ == '__main__':
                 res_scale_cur = wall_overrides[index]
             else:
                 res_scale_cur = res_scale_walls
+
+            if index in wall_animations:
+                frames = wall_animations[index]
+            else:
+                frames = 1
                 
             i=wad.asset_data.wall_textures[index]
             switch1=((wall_textures.index("SW2"+index[3:])+1) if index[0:3]=="SW1" else 0)
@@ -2153,7 +2201,7 @@ if __name__ == '__main__':
             
             width=len(i)//res_scale_cur
             height=len(i[0])//res_scale_cur
-            cur = [width,height,res_scale_cur,switch,wall_avs[index]+1]
+            cur = [width,height,res_scale_cur,switch,frames,wall_avs[index]+1]
 
             
             
@@ -2171,9 +2219,14 @@ if __name__ == '__main__':
         for index in flat_textures:
                 
             i=wad.asset_data.flat_textures[index]
+            if index in flat_animations:
+                frames = flat_animations[index]
+            else:
+                frames = 1
+            
             width=len(i)//res_scale_flats
             height=len(i[0])//res_scale_flats
-            cur=[width,height,res_scale_flats,flat_avs[index]+1]
+            cur=[width,height,res_scale_flats,frames,flat_avs[index]+1]
 
             
             for j in range(width):

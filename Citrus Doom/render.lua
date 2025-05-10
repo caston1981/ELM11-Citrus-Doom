@@ -175,6 +175,8 @@ function onTick()
 			health=gN(3)
 			
 			tick=tick+1
+			animationFrame=tick//10
+
 			if init then
 				for i=1,10 do
 					M[i]=M[i+10*levelCr]
@@ -563,6 +565,7 @@ function onDraw()
 						v2=v
 					end
 					tex=M[21][v[4]]
+					tex=M[21][v[4]+(animationFrame%tex[5])]
 					flip=v[12]
 					y=mn(flip,0)
 					x=v[1]
@@ -588,7 +591,7 @@ function onDraw()
 						kN=crM(k+yScl,fin)
 						k2N=crM(k2+yScl2,fin2)
 
-						pix=tex[6+((y*v[11]+v[8]//tex[3])%tex[2])+tex[2]*(v[5]%tex[1])]
+						pix=tex[7+((y*v[11]+v[8]//tex[3])%tex[2])+tex[2]*(v[5]%tex[1])]
 						col=M[20][pix]
 						if col then
 							stCl(col[1]*lght,col[2]*lght,col[3]*lght)
@@ -617,7 +620,7 @@ function onDraw()
 						vg=v
 						tex=M[22][v[4][a+2]]
 						if tex and not vsTex then
-							col=M[20][tex[4]]
+							col=M[20][tex[5]]
 							stCl(col[1]*lght,col[2]*lght,col[3]*lght)
 							screen.drawLine(x,-v[2]+hghtH,x,-v[3]+hghtH)
 						end
@@ -648,7 +651,9 @@ function onDraw()
 							
 							if sec[a+2]~=0 then
 								lght=mn(sec[5]+screenBrightOffset,1)^2.2
-								tex=M[22][sec[a+2]]
+								b=sec[a+2]
+								tex=M[22][b]
+								tex=M[22][b+(animationFrame%tex[4])]
 								x=v[1]
 								
 								xg=wdthH-(wdthH-x)*fovT
@@ -662,7 +667,7 @@ function onDraw()
 									tx = (cacheCur[3] + cacheCur[1] * xg)//resScl
 									ty = (cacheCur[4] + cacheCur[2] * xg)//resScl
 									
-									pix=5 + (ty%tex[1]) + tex[1]*(tx%tex[2])
+									pix=6 + (ty%tex[1]) + tex[1]*(tx%tex[2])
 									col=M[20][tex[pix]]
 									if col then
 										stCl(col[1]*lght,col[2]*lght,col[3]*lght)
