@@ -50,7 +50,8 @@ function findMe(i,a,cr)
 end
 
 function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables are local and are set to nil if not filled
-	s1=M[15][M[1][index][4]]
+	collObject = M[1][index]
+	s1=M[15][collObject[4]]
 	r,h=s1[18],s1[19]
 	bstDst=r
 	bounds=findMe(#M[7],p)
@@ -59,7 +60,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 	blkCr=M[10][2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
 	for i,cr in ipairsVar(blkCr[0]) do
 		pos=M[1][cr]
-		if cr~=index and pos and M[1][index][14]~=cr then
+		if cr~=index and pos and collObject[14]~=cr then
 			dst=dist(pos,p)
 			s2=M[15][pos[4]]
 			if pos[20] then
@@ -297,9 +298,9 @@ end
 function summonThinker(cr,pos)
 	if pos>-1 then
 		a=M[9][pos]
-		if a[1]>0 or pTng[31]*cr[10][2]-pTng[32]*cr[10][1]<0 then
+		if a[1]>0 or collObject[31]*cr[10][2]-collObject[32]*cr[10][1]<0 then
 			b=M[8][a[1]]
-			thinkers[b and b[30]or#thinkers+1]={pos,1}-- if thinker exists, replace it, if not, create new one
+			thinkers[b and b[30]or#thinkers+1]={pos,1,b or collObject}-- if thinker exists, replace it, if not, create new one
 			cr[4]=a[7]--used to remove the link to the thinker for single-use specials
 			a=a[8]>0 and summonThinker(cr,a[8])
 		end
@@ -379,7 +380,7 @@ function onTick()
 			end
 			levelCr=levelCr+1
 			for i,cr in ipairsVar(M[1])do
-				for j=7,20 do
+				for j=7,40 do
 					cr[j]=0
 				end
 				test=cr[5]+1
@@ -432,13 +433,13 @@ function onTick()
 			
 			for i,v in ipairsVar(thinkers)do			
 				cr=M[9][v[1]]
-				pos=M[8][cr[1]]or pTng
+				pos=v[3]
 				a=cr[2]
 				s1=pos[a]
-				pos[a]=clmp(cr[3],s1-cr[4],s1+cr[4])
+				pos[a]=clmp(cr[3],s1-cr[4],s1+cr[4])+0
 				s1=pos[a]
 				if abs(s1-cr[3])<0.1then
-					thinkers[i]=v[2]==cr[5]and{cr[6],1}or{v[1],v[2]+1}
+					thinkers[i]=v[2]==cr[5]and{cr[6],1,pos}or{v[1],v[2]+1,pos}
 					if cr[6]==0 then
 						tableRemove(thinkers,i)
 					end
@@ -502,8 +503,10 @@ function onTick()
 								valid=chkPs(nm,falseVar,i)and bounds[1]>=nm[9]-24
 							end
 							if valid then
-								cr[1]=nm[1]
-								cr[2]=nm[2]
+								for j=1,2 do
+									cr[30+i]=nm[i]-cr[i]
+									cr[i]=nm[i]
+								end
 								cr[3]=angle
 								cr[10]=trueVar
 							else
@@ -733,6 +736,5 @@ function onDraw()
 			text(240,a,flr(M[12][1][i]))
 			text(230,a,M[12][1][13+i])
 		end
-		text(26,143,mn(difficulty,3))
 	end
 end

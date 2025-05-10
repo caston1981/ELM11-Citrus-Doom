@@ -292,6 +292,8 @@ if __name__ == '__main__':
     pixels = 0
     num = 0
 
+    monster_usable = 512
+
     blockmap_skip_first = False
 
     trans_colour = (152, 0, 136)
@@ -376,9 +378,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==0:
+        if i==1:
             None
-            print(code.split("\n")[364-1])
+            print(code.split("\n")[290-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -829,7 +831,7 @@ if __name__ == '__main__':
             s2=level_wad.sectors[s2i]
             i.thinker_id = 0
     
-            if i.line_type==1: #MR Door
+            if i.line_type==1: #MR Door Also Monsters
                 thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 2, 1, 0, 1, 0)
                 next_thinker = insert_thinker(thinker)
 
@@ -837,6 +839,8 @@ if __name__ == '__main__':
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
+
+                i.flags+=monster_usable
 
             elif i.line_type==2: #W1 Door Stay Open
                 cur_secs = find_sector(i.sector_tag)
@@ -900,7 +904,7 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
-            elif i.line_type==10: #W1 Lift Also Monsters (not monsters)
+            elif i.line_type==10: #W1 Lift Also Monsters
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
@@ -911,6 +915,8 @@ if __name__ == '__main__':
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
+
+                i.flags+=monster_usable
 
             elif i.line_type==11: #Normal Exit
                 secret_returns = {"E1M9":"E1M4","E2M9":"E2M6","E3M9":"E3M7","E4M9":"E4M3"}
@@ -1134,7 +1140,7 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif i.line_type==39: #W1 Teleporter
+            elif i.line_type==39: #W1 Teleporter Also Monsters
                 cur_secs = find_sector(i.sector_tag)
 
                 i.line_type=0
@@ -1150,6 +1156,8 @@ if __name__ == '__main__':
                         #print("found tp targ")
 
                         i.line_type=2
+
+                i.flags+=monster_usable
 
             elif i.line_type==40: # W1 Ceiling To Highest Adjacent Ceiling
                 cur_secs = find_sector(i.sector_tag)
@@ -1368,7 +1376,7 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif i.line_type==88: #WR Lift Also Monsters (not monsters)
+            elif i.line_type==88: #WR Lift Also Monsters
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
@@ -1379,6 +1387,8 @@ if __name__ == '__main__':
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
+
+                i.flags+=monster_usable
 
             elif i.line_type==89: #WR Stop Moving Floor
                 cur_secs = find_sector(i.sector_tag)
@@ -1617,7 +1627,10 @@ if __name__ == '__main__':
 
                 i.line_type=key_indexes["yellow"]
 
-            elif 0<i.line_type<3000 and not i.line_type in [25,#crush slow start walkover
+            elif i.line_type>=3000:
+                i.thinker_id = i.sector_tag
+
+            elif i.line_type>0 and not i.line_type in [25,#crush slow start walkover
                                                             48,#moving texture
                                                             73,#crush slow start
                                                             74,#crush stop

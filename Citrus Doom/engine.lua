@@ -732,6 +732,5 @@ function onDraw()
 			text(240,a,flr(M[12][1][i]))
 			text(230,a,M[12][1][13+i])
 		end
-		text(26,143,mn(difficulty,3))
 	end
 end

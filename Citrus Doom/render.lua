@@ -52,7 +52,6 @@ bigNumb=32768 -- 2^15
 difficulty=3002
 fuzz=0
 screenBrightTimer=0
-vsTex=trueVar
 
 tick=0
 
@@ -102,9 +101,9 @@ function onTick()
 				nm=""
 				cr=str.sub(rom,i,i)
 				while cr~=""do
-					pos=str.byte(cr)
-					if pos>64 or cr==""then
-						nm=(nm..(pos-65))+0
+					b=str.byte(cr)
+					if b>64 or cr==""then
+						nm=(nm..(b-65))+0
 						if stg==1then
 							crI=nm
 							if M[nm]==nilVar then
@@ -190,9 +189,12 @@ function onTick()
 			if gN(2)>0 then
 				cr=M[2][gN(2)]
 				if cr then
-					if cr[4]>3004 then
+					a=cr[4]
+					if a==3008 then
+						vsTex=cr[5]==1
+					elseif a>3004 then
 						LOD=mx(LOD+3*(cr[4]-3006),1)
-					elseif cr[4]>3000 then
+					elseif a>3000 then
 						difficulty=cr[4]
 					end
 					switchedSwitch=gN(2)
@@ -693,9 +695,6 @@ function onDraw()
 								state=M[16][cr[6]][1]
 								if state~=0 and cr[6]~=1 then
 									tex=M[17][absFunc(state)][ang%8+1] --(cr[15]//10)%#tex+1
-									if tex==0 then
-										tex=M[17][absFunc(state)][1] -- for some reason cacos are bugged and don't have all their attacking rotation frame, but also don't lable their front one as for all directions
-									end
 									flip=tex<0 and -1 or 1
 									tex=absFunc(tex)
 									if tex>0 then

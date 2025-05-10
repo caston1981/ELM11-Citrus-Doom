@@ -52,6 +52,7 @@ LOD=400
 health=100
 yellow=0
 red=0
+difficulty=3002
 transferCache={}
 weaponObjects={}
 
@@ -211,8 +212,10 @@ function onTick()
 			if gN(2)>0 then
 				cr=M[2][gN(2)]
 				if cr then
-					if cr[4]>3004 then
+					if cr[4]>3004 and cr[4]<3008 then
 						LOD=mx(LOD+3*(cr[4]-3006),1)
+					elseif cr[4]>3000 then
+						difficulty=cr[4]
 					end
 				end
 			end
@@ -358,6 +361,7 @@ function onDraw()
 			text(1,143,"DIF:")
 			text(1,149,"LOD:")
 			text(26,149,flr(LOD))
+			text(26,143,mn(difficulty-3000,3))
 		end
 		
 		text(1,131,"ROM:")
