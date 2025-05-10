@@ -378,7 +378,7 @@ if __name__ == '__main__':
         end = text.find(find_end,start)
         if i==0:
             None
-            print(code.split("\n")[383-1])
+            print(code.split("\n")[364-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"

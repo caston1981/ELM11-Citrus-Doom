@@ -479,14 +479,14 @@ function onTick()
 															if calculate then -- floor/ceiling stuff
 																if n~=2 then -- ceiling
 																	if yt<clH[x]then
-																		ceils[i][#ceils[i]+1]={x,mx(yt,flH[x]),clH[x],sec,2}
+																		ceils[i][#ceils[i]+1]={x,mx(yt,flH[x]),clH[x],sec}
 																	end
 																	if n==3then yNew=yt else yNew=yb end
 																	if clH[x]>yNew then clH[x]=yNew end
 																end
 																if n~=1 then -- floor
 																	if yb>flH[x]then
-																		floors[i][#floors[i]+1]={x,flH[x],mn(yb,clH[x]),sec,1}
+																		floors[i][#floors[i]+1]={x,flH[x],mn(yb,clH[x]),sec}
 																	end
 																	if n==3then yNew=yb else yNew=yt end
 																	if flH[x]<yNew then flH[x]=yNew end
@@ -616,10 +616,16 @@ function onDraw()
 						bt=mn(bt,v[2])
 						tp=mx(tp,v[3])
 						vg=v
+						tex=M[22][v[4][a+2]]
+						if tex and not vsTex then
+							col=M[20][tex[4]]
+							stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+							screen.drawLine(x,-v[2]+hghtH,x,-v[3]+hghtH)
+						end
 					end
-					if vg then
+					if vg and vsTex then
 						sec=vg[4]
-						height=(sec[vg[5]]-pp[2])
+						height=(sec[a]-pp[2])
 						p_dir_x = cos(pp[3])
 						p_dir_y = sin(pp[3])
 						for iy=flr(bt+hghtH),ceil(tp+hghtH) do
@@ -639,36 +645,30 @@ function onDraw()
 							cache[iy]={dx,dy,l_x,l_y}
 						end
 
-						for j,v in ipairs(cr[i]) do -- originally had texture rendering for the floor as well, but it was horrendously slow and I can't easily optimise it into quads
+						for j,v in ipairs(cr[i]) do
 							
-							if sec[v[5]+2]~=0 then
+							if sec[a+2]~=0 then
 								lght=mn(sec[5]+screenBrightOffset,1)^2.2
-								tex=M[22][sec[v[5]+2]]
+								tex=M[22][sec[a+2]]
 								x=v[1]
 								
-								if vsTex then
-									xg=wdthH-(wdthH-x)*fovT
-									bt,tp=flr(v[2]+hghtH),ceil(v[3]+hghtH)
-									
-									resScl = tex[3]
+								xg=wdthH-(wdthH-x)*fovT
+								bt,tp=flr(v[2]+hghtH),ceil(v[3]+hghtH)
 								
-									for iy=bt,tp do
-										cacheCur=cache[iy]
-										
-										tx = (cacheCur[3] + cacheCur[1] * xg)//resScl
-										ty = (cacheCur[4] + cacheCur[2] * xg + 8)//resScl
-										
-										pix=3 + (ty%tex[1]) + tex[1]*(tx%tex[2])
-										col=M[20][tex[pix]]
-										if col then
-											stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-											rec(x,-iy+hght,1,1)
-										end
+								resScl = tex[3]
+							
+								for iy=bt,tp do
+									cacheCur=cache[iy]
+									
+									tx = (cacheCur[3] + cacheCur[1] * xg)//resScl
+									ty = (cacheCur[4] + cacheCur[2] * xg)//resScl
+									
+									pix=5 + (ty%tex[1]) + tex[1]*(tx%tex[2])
+									col=M[20][tex[pix]]
+									if col then
+										stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+										rec(x,-iy+hght,1,1)
 									end
-								--else
-								--	col=M[20][tex[4]]
-								--	stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-								--	screen.drawLine(x,-v[2]+hghtH,x,-v[3]+hghtH)
 								end
 							end
 						end
@@ -707,31 +707,22 @@ function onDraw()
 										lght=state>0 and mn(M[8][cr[8]][5]+screenBrightOffset,1)^2.2 or 1
 										pxSize=scl*cScl
 										pxSizeV=pxSize*pixelAspectCorrection
-										if cr[4] and M[15][cr[4]][23]&8>0 then -- to make sure fuzziness checks don't slow down rendering, it's only checked one
-											for k=0,tW-1,cScl do -- I have spare space here, might as well use it
-												x1=x2+k*scl*flip
-												if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
-													for n=0,tH-1,cScl do
-														pix=tex[7+n+k*tH]
-														if pix~= 0 then
+										fuzzy=cr[4] and M[15][cr[4]][23]&8>0
+										
+										for k=0,tW-1,cScl do -- was originally 2 separate loops for fuzzy and non fuzzy things
+											x1=x2+k*scl*flip -- now is 1 loop to save space, hopefully it doesn't impact performance too much
+											if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
+												for n=0,tH-1,cScl do
+													pix=tex[7+n+k*tH]
+													if pix~= 0 then
+														if fuzzy then
 															fuzz=fuzz%50+1
 															stCl(0,0,0,mn(75*M[13][2][fuzz],255))
-															rec(x1,yt+n*sclV,pxSize,pxSizeV)
-														end
-													end
-												end
-											end
-										else
-											for k=0,tW-1,cScl do
-												x1=x2+k*scl*flip
-												if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
-													for n=0,tH-1,cScl do
-														pix=tex[7+n+k*tH]
-														if pix~= 0 then
+														else
 															col=M[20][pix]
 															stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-															rec(x1,yt+n*sclV,pxSize,pxSizeV)
 														end
+														rec(x1,yt+n*sclV,pxSize,pxSizeV)
 													end
 												end
 											end
