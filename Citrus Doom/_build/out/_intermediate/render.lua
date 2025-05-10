@@ -623,9 +623,10 @@ function onDraw()
 						vg=v
 						tex=M[22][v[4][a+2]]
 						if tex and not vsTex then
+							lght=mn(v[4][5]+screenBrightOffset,1)^2.2
 							col=M[20][tex[5]]
 							stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-							screen.drawLine(x,-v[2]+hghtH,x,-v[3]+hghtH)
+							screen.drawLine(v[1],-v[2]+hghtH,v[1],-v[3]+hghtH)
 						end
 					end
 					if vg and vsTex then

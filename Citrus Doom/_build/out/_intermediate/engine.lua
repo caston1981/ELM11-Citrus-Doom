@@ -504,8 +504,8 @@ function onTick()
 							end
 							if valid then
 								for j=1,2 do
-									cr[30+i]=nm[i]-cr[i]
-									cr[i]=nm[i]
+									cr[30+j]=nm[j]-cr[j]
+									cr[j]=nm[j]
 								end
 								cr[3]=angle
 								cr[10]=trueVar
