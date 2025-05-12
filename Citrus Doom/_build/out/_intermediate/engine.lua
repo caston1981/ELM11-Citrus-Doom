@@ -45,24 +45,24 @@ function findMe(i,a,cr)
 		return findMe(cr[cr[3]*(a[2]-cr[2])-cr[4]*(a[1]-cr[1])>0 and 8 or 7],a)
 	else
 		i=M[5][M[6][i-32768][2]]
-		return M[8][M[3][M[2][i[4]][i[5]+6]][6]]
+		return M8[M[3][M[2][i[4]][i[5]+6]][6]]
 	end
 end
 
 function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables are local and are set to nil if not filled
-	collObject = M[1][index]
-	s1=M[15][collObject[4]]
+	collObject = M1[index]
+	s1=M15[collObject[4]]
 	r,h=s1[18],s1[19]
 	bstDst=r
 	bounds=findMe(#M[7],p)
 	bt,tp=exp(bounds)
-	blkPs=sub(p,M[10][1])
-	blkCr=M[10][2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
+	blkPs=sub(p,M10[1])
+	blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
 	for i,cr in ipairsVar(blkCr[0]) do
-		pos=M[1][cr]
+		pos=M1[cr]
 		if cr~=index and pos and collObject[14]~=cr then
 			dst=dist(pos,p)
-			s2=M[15][pos[4]]
+			s2=M15[pos[4]]
 			if pos[20] then
 				x1=dst-s2[18]
 				if x1<bstDst and s2[23]&1>0 and (s1[23]&1>0 or (p[9]+h<pos[9] or p[9]>pos[9]+s2[19])==falseVar)then
@@ -78,10 +78,10 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 				if dst<50then
 					a=s2[25]
 					if a>0then
-						for n,v in ipairsVar(M[12][a])do
-							if v>0 and M[12][1][n]<M[12][2][n]then
-								pos=M[12]
-								M[1][cr]=falseVar
+						for n,v in ipairsVar(M12[a])do
+							if v>0 and M12[1][n]<M12[2][n]then
+								pos=M12
+								M1[cr]=falseVar
 								pos[1][n]=flr(mn(pos[1][n]+v,pos[2][n]))
 								if clmp(n,5,12)==n then
 									weapon=n-4
@@ -95,7 +95,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 						for n=7,8 do
 							pTng[n]=clmp(pTng[n]+a[n*2-13],pTng[n],a[n*2-12])
 						end
-						M[1][cr]=falseVar
+						M1[cr]=falseVar
 					end
 				end
 			end
@@ -109,7 +109,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 	end
 	for i=1,#blkCr do
 		cr=M[2][blkCr[i]]
-		dst,tmpA=chkLnDst(p,M[4][cr[1]],M[4][cr[2]])
+		dst,tmpA=chkLnDst(p,M4[cr[1]],M4[cr[2]])
 		if dst<bstDst then
 			if checkPlayerPosLoop==1 and (cr[3]&512>0 or index==pIn) and (cr[4]==2 or index~=pIn) then -- 512 is the monster-usable tag, which is the only thing monsters care about
 				summonThinker(cr,cr[5])
@@ -169,8 +169,8 @@ function chkRayCol(p1,p2,level,index,cr)
 	h1,h2=p1[9]+32,p2[9]+32
 	valid=falseVar
 	for i,cr in ipairsVar(M[2])do
-		x3y3=M[4][cr[1]]
-		x43,y43=exp(sub(M[4][cr[2]],x3y3))
+		x3y3=M4[cr[1]]
+		x43,y43=exp(sub(M4[cr[2]],x3y3))
 		x13,y13=exp(sub(p1,x3y3))
 		crMl=y43*x21-x43*y21
 		uA=(x43*y13-y43*x13)/crMl
@@ -196,9 +196,9 @@ function chkRayCol(p1,p2,level,index,cr)
 	
 	if level>1 then
 		if level==3 then
-			for i,cr in ipairsVar(M[1]) do
+			for i,cr in ipairsVar(M1) do
 				if cr and i~=index then
-					s1=M[15][cr[4]]
+					s1=M15[cr[4]]
 					if s1[23]&1>0 and cr[20] then
 						dst=dist(p1,cr)
 						if dst<crDst then
@@ -234,7 +234,7 @@ function rand()
 end
 
 function damageThing(cr,i)-- thing array, damage, function declaration variables are local so the most common should be used
-	s1=M[15][cr[4]]
+	s1=M15[cr[4]]
 	if s1[23]&2>0 and cr[7]>0 then
 		cr[8]=cr[8]-(i+1)//2
 		cr[7]=cr[7]-i//2+mn(cr[8],0)
@@ -266,8 +266,8 @@ function fireWeapon(source,index)
 		spreadOff=(rand()/128-1)*crWeapon[10]
 		vel=dVec(source[3]+spreadOff,crWeapon[6])
 		if crWeapon[7]>0then
-			M[1][#M[1]+1]=a
-			s1=M[15][a[4]]
+			M1[#M1+1]=a
+			s1=M15[a[4]]
 			a[6]=s1[3]
 			a[9]=source[9]+32
 			a[11]=vel[1]
@@ -280,14 +280,14 @@ function fireWeapon(source,index)
 			thingExists,wall,pos=chkRayCol(source,pos,3,index)
 			if not thingExists then
 				posOff=sub(pos,dVec(source[3]+spreadOff,1))
-				M[1][#M[1]+1]=a
+				M1[#M1+1]=a
 				a[1]=posOff[1]
 				a[2]=posOff[2]
-				a[6]=M[15][a[4]][3]
+				a[6]=M15[a[4]][3]
 				a[9]=pos[3]
 				a[19]=1
 				if valid then
-					a=M[1][wall]
+					a=M1[wall]
 					damageThing(a,crWeapon[9]*((rand()&3)+2))
 				end
 			end
@@ -299,7 +299,7 @@ function summonThinker(cr,pos)
 	if pos>-1 then
 		a=M[9][pos]
 		if a[1]>0 or collObject[31]*cr[10][2]-collObject[32]*cr[10][1]<0 then
-			b=M[8][a[1]]
+			b=M8[a[1]]
 			thinkers[b and b[30]or#thinkers+1]={pos,1,b or collObject}-- if thinker exists, replace it, if not, create new one
 			cr[4]=a[7]--used to remove the link to the thinker for single-use specials
 			a=a[8]>0 and summonThinker(cr,a[8])
@@ -375,16 +375,22 @@ function onTick()
 			for i=1,10 do
 				M[i]=M[i+10*levelCr]
 			end
+			M1=M[1]
+			M4=M[4]
+			M8=M[8]
+			M10=M[10]
+			M12=M[12]
+			M15=M[15]
 			for i=14,16 do
-				M[12][1][i]=0
+				M12[1][i]=0
 			end
 			levelCr=levelCr+1
-			for i,cr in ipairsVar(M[1])do
+			for i,cr in ipairsVar(M1)do
 				for j=7,40 do
 					cr[j]=0
 				end
 				test=cr[5]+1
-				cr[7]=M[15][cr[4]][4]-- health
+				cr[7]=M15[cr[4]][4]-- health
 				cr[9],cr[10]=findMe(#M[7],cr)[1]-- vertical position
 				--cr[10]=falseVar-- send update to render block, set to nil above which counts as false
 				--cr[20]=trueVar-- alive state, set to zero above which counts as true
@@ -396,16 +402,16 @@ function onTick()
 					pIn=i
 					pTng=cr
 				elseif cr[5]&difficulty<1then
-					M[1][i]=falseVar
+					M1[i]=falseVar
 				end
 			end
-			blockmapLim=M[10][1][3]
+			blockmapLim=M10[1][3]
 		end
 
 		for i,cr in ipairsVar(M[2])do -- refresh walls
-			cr[10]=sub(M[4][cr[2]],M[4][cr[1]])
+			cr[10]=sub(M4[cr[2]],M4[cr[1]])
 			if cr[3]&4>0 then
-				s1,s2=M[8][M[3][cr[6]][6]],M[8][M[3][cr[7]][6]]
+				s1,s2=M8[M[3][cr[6]][6]],M8[M[3][cr[7]][6]]
 				cr[8]=mx(s1[1],s2[1])
 				cr[9],s1[30],s2[30]=mn(s1[2],s2[2])
 			else
@@ -423,8 +429,8 @@ function onTick()
 		if timePassage>=0 then
 			timePassage=timePassage-1/35
 			
-			for i=2,#M[10]do
-				M[10][i][0]={}
+			for i=2,#M10 do
+				M10[i][0]={}
 			end
 			
 			--for i,cr in ipairsVar(M[9])do -- why did this exist?
@@ -451,13 +457,13 @@ function onTick()
 			
 			--pTng[7]=mx(5,pTng[7]) -- invulnerability
 			
-			for i,cr in ipairsVar(M[1])do
+			for i,cr in ipairsVar(M1)do
 				if cr then
 					for j,v in ipairsVar({1,2,9})do-- updates position based on velocity
 						cr[v]=cr[v]+cr[v+10]
 					end
 					cr[15]=cr[15]+1
-					s1=M[15][cr[4]]
+					s1=M15[cr[4]]
 					if cr[7]<=0 and cr[20]then
 						cr[15]=0
 						cr[6]=s1[cr[7]<=-s1[4] and s1[15]>1 and 15or 14]-- to gib or not to gib
@@ -469,7 +475,7 @@ function onTick()
 							end
 							pos[4]=s1[27]
 							pos[6]=s1[28]
-							M[1][#M[1]+1]=pos
+							M1[#M1+1]=pos
 						end
 					end
 					state=M[16][cr[6]]
@@ -479,7 +485,7 @@ function onTick()
 						cr[15]=0
 						state3=M[16][cr[6]][3]
 						if state3==1 then-- explode logic
-							for i,stg in ipairsVar(M[1]) do
+							for i,stg in ipairsVar(M1) do
 								if stg then
 									nm=128-dist(cr,stg)
 									if nm>0 then
@@ -539,7 +545,7 @@ function onTick()
 							cr[1]=cr[1]-cr[11]
 							cr[2]=cr[2]-cr[12]
 							cr[3]=0
-							cr[6]=M[15][cr[4]][9] -- this uses pain state instead of death state to keep lost souls alive after impact
+							cr[6]=M15[cr[4]][9] -- this uses pain state instead of death state to keep lost souls alive after impact
 							cr[10]=trueVar
 							cr[11]=0
 							cr[12]=0
@@ -548,10 +554,10 @@ function onTick()
 						end
 					end
 					if cr[6]==1then
-						M[1][i]=falseVar
+						M1[i]=falseVar
 					else
-						blkPs=sub(cr,M[10][1])
-						blkCr=M[10][2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
+						blkPs=sub(cr,M10[1])
+						blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
 						if blkCr~=nilVar then
 							blkCr[0][#blkCr[0]+1]=i
 						end
@@ -560,7 +566,7 @@ function onTick()
 			end
 			
 			for i=1,8 do
-				if gB(i)and M[12][1][i+4]>0then
+				if gB(i)and M12[1][i+4]>0then
 					weapon=i
 				end
 			end
@@ -595,7 +601,7 @@ function onTick()
 				end
 			end
 			
-			ammo=M[12][1]
+			ammo=M12[1]
 			pos=crWeapon[1]
 			if gB(31) and weaponFireDelay<=0 and (pos==0 or ammo[pos]>=crWeapon[2])then -- player shooting logic
 				sB(3,trueVar) -- announces player is firing
@@ -604,11 +610,11 @@ function onTick()
 					ammo[pos]=ammo[pos]-crWeapon[2]
 				end
 				rampBst,targ=2048
-				for i,cr in ipairsVar(M[1])do -- vertical auto aim
+				for i,cr in ipairsVar(M1)do -- vertical auto aim
 					if i~=pIn and cr and chkView(pTng,cr,10)then
 						dst=dist(cr,pTng)
 						if dst<rampBst then
-							if M[15][cr[4]][23]&2>0then
+							if M15[cr[4]][23]&2>0then
 								targ=cr
 								rampBst=dst
 							end
@@ -629,7 +635,7 @@ function onTick()
 					out[2]=wall
 					pos,valid=cr[4]
 					for i=14,16 do-- used for keyed doors
-						valid=valid or M[12][1][i]>0 and pos==i
+						valid=valid or M12[1][i]>0 and pos==i
 					end
 					if pos==1 or valid then
 						summonThinker(cr,cr[5])
@@ -639,7 +645,7 @@ function onTick()
 				end
 			end
 
-			--for i,cr in ipairsVar(M[8])do -- moves doors, old implementation
+			--for i,cr in ipairsVar(M8)do -- moves doors, old implementation
 			--	if cr[10]then
 			--		if cr[10]>2then
 			--			cr[2]=cr[2]-2
@@ -678,11 +684,11 @@ function onTick()
 		i=sndLst
 		running=trueVar
 		slt=1
-		ttEnd=#M[1]+#M[8]
+		ttEnd=#M1+#M8
 		while slt<3 and running do
 			pos=slt*9+5
-			if i<=#M[1] then
-				cr=M[1][i]
+			if i<=#M1 then
+				cr=M1[i]
 				if i~=pIn then
 					if cr then
 						if cr[10] then
@@ -695,16 +701,16 @@ function onTick()
 						end
 					else
 						out[pos]=-i
-						tableRemove(M[1],i)
+						tableRemove(M1,i)
 						slt=slt+1
 						ttEnd=ttEnd-1
 					end
 				end
 			else
-				cr=M[8][i-#M[1]]
+				cr=M8[i-#M1]
 				if cr[8] then
 					cr[8]=falseVar
-					out[pos]=i-#M[1]+2^15
+					out[pos]=i-#M1+2^15
 					out[pos+1]=cr[1]
 					out[pos+2]=cr[2]
 					slt=slt+1
@@ -733,8 +739,8 @@ function onDraw()
 	if loaded then
 		for i=1,4 do
 			a=124+i*7
-			text(240,a,flr(M[12][1][i]))
-			text(230,a,M[12][1][13+i])
+			text(240,a,flr(M12[1][i]))
+			text(230,a,M12[1][13+i])
 		end
 	end
 end

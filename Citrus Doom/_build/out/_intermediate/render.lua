@@ -181,8 +181,10 @@ function onTick()
 				for i=1,10 do
 					M[i]=M[i+10*levelCr]
 				end
-				for i=1,#M[8] do
-					M[8][i][5]=M[8][i][5]/255
+				M1=M[1]
+				M8=M[8]
+				for i=1,#M8 do
+					M8[i][5]=M8[i][5]/255
 				end
 				levelCr=levelCr+1
 			end
@@ -218,19 +220,19 @@ function onTick()
 					info=tmp[j]
 					cr=info[1]
 					if cr>(2^15) then -- wall update
-						cr=M[8][cr-(2^15)]
+						cr=M8[cr-(2^15)]
 						cr[1]=info[2]
 						cr[2]=info[3]
 					elseif cr<0 then -- delete thing
-						while -cr>#M[1] do
-							M[1][#M[1]+1]=falseVar -- used to keep the render's thing indexing the same as the engines'
+						while -cr>#M1 do
+							M1[#M1+1]=falseVar -- used to keep the render's thing indexing the same as the engines'
 						end
-						table.remove(M[1],-cr)
+						table.remove(M1,-cr)
 					else
-						if not M[1][cr] then
-							M[1][cr]={}
+						if not M1[cr] then
+							M1[cr]={}
 						end
-						cr=M[1][cr]
+						cr=M1[cr]
 						for k=1,8 do
 							cr[M[19][1][k]]=info[k+1]-- M[19][1] is 1,2,9,6,11,12,19,3
 						end
@@ -245,14 +247,14 @@ function onTick()
 			for i=1,#M[6]do
 				thngs[i]={}
 			end
-			for i=1,#M[1] do
-				cr=M[1][i]
+			for i=1,#M1 do
+				cr=M1[i]
 				
 				if cr then
 					if init then
 						cr[7]=findMe(#M[7],cr)
 						cr[8]=findSec(cr[7])
-						cr[9]=M[8][cr[8]][1]
+						cr[9]=M8[cr[8]][1]
 						cr[11]=0
 						cr[12]=0
 						cr[15]=0
@@ -291,7 +293,7 @@ function onTick()
 			
 			
 			
-			cr=M[1][pIn]
+			cr=M1[pIn]
 			pp[1]={cr[1],cr[2]}
 			pp[2]=cr[9]+41
 			pp[3]=cr[3]
@@ -320,7 +322,7 @@ function onTick()
 				ceils[i]={}
 				walls[i]={}
 				thngsOrd[i]=thngs[ssecs[i]] -- because the sub-sectors are sorted, this also sorts the sub-sector-based thing collections
-				table.sort(thngsOrd[i],function(a,b)return M[1][a][20]>M[1][b][20]end) -- sort the things within a sub-sector
+				table.sort(thngsOrd[i],function(a,b)return M1[a][20]>M1[b][20]end) -- sort the things within a sub-sector
 				
 
 				for j=cr[2],cr[1]+cr[2]-1 do
@@ -367,13 +369,13 @@ function onTick()
 
 								double=line[3]&4>0 -- double-sided flag
 								if double then
-									sec1,sec2=M[8][M[3][line[6]][6]],M[8][M[3][line[7]][6]] -- find neighbouring sectors
+									sec1,sec2=M8[M[3][line[6]][6]],M8[M[3][line[7]][6]] -- find neighbouring sectors
 								end
 
 								side=M[3][line[k]] -- current sidedef
 								parts={side[3],side[4],side[5]} -- upper, lower, middle, texture indexes
 
-								sec,tpRnd,btRnd=M[8][side[6]] -- sets current sector, and tpRnd and btRnd to nil (works like false)
+								sec,tpRnd,btRnd=M8[side[6]] -- sets current sector, and tpRnd and btRnd to nil (works like false)
 
 								for n,v in ipairs(parts) do
 									render=v>0
@@ -684,7 +686,7 @@ function onDraw()
 				end
 
 				for j=1,#thngsOrd[i] do -- mostly self-explanatory thing rendering
-					cr=M[1][thngsOrd[i][j]]
+					cr=M1[thngsOrd[i][j]]
 					if cr[6]~=0 then -- this is where (I think) most of the performace drops come from in more intense sections, rendering a room full of 12+ things is a lot of rects
 						pl1=sub(cr,pp[1])
 						d1=cr[20]
@@ -709,7 +711,7 @@ function onDraw()
 										yt=yb-tex[5]*sclV
 										x2=x1-flip*tex[4]*scl
 										scl,sclV=scl*tex[3],sclV*tex[3]
-										lght=state>0 and mn(M[8][cr[8]][5]+screenBrightOffset,1)^2.2 or 1
+										lght=state>0 and mn(M8[cr[8]][5]+screenBrightOffset,1)^2.2 or 1
 										pxSize=scl*cScl
 										pxSizeV=pxSize*pixelAspectCorrection
 										fuzzy=cr[4] and M[15][cr[4]][23]&8>0

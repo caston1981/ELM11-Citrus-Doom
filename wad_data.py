@@ -217,7 +217,7 @@ def find_me(i,a):
 if __name__ == '__main__':
     start_time=time.time()
     #,"weapons_at_start.wad","jump_to_crash_zone.wad","enemy_testing.wad"
-    file_name=["DOOM.WAD","settings_map.wad","weapons_at_start.wad"] # more rightwards ones overwrite leftwards ones
+    file_name=["DOOM.WAD","settings_map.wad"] # more rightwards ones overwrite leftwards ones
     #map_order=["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
     #map_order=["E1M2"]
     #map_order=["SET1"]+map_order
@@ -362,7 +362,17 @@ if __name__ == '__main__':
         file = open(path_root+name)
         code = file.read()
         file.close()
+        #print(code)
 
+        if False:
+            m_var=code[code.find("={}")-1]
+            
+            for j in range(0,30):
+                cur=m_var+"["+str(j)+"]"
+                
+                if cur in code:
+                    print(cur,"found",code.count(cur),"times")
+                
         print(name)
         code = compress(code,print_vars=i==-1,delete_newlines=True)
         print()
@@ -378,9 +388,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==1:
+        if i==-1:
             None
-            print(code.split("\n")[46-1])
+            print(code.split("\n")[289-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
