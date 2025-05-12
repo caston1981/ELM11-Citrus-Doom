@@ -380,7 +380,7 @@ if __name__ == '__main__':
         end = text.find(find_end,start)
         if i==1:
             None
-            print(code.split("\n")[336-1])
+            print(code.split("\n")[46-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -807,14 +807,16 @@ if __name__ == '__main__':
                 sub_sec = level_wad.sub_sectors[find_me(len(level_wad.nodes)-1,i.pos)]
                 seg = level_wad.segments[sub_sec.first_seg_id]
                 linedef = level_wad.linedefs[seg.linedef_id]
+                #print(seg.direction)
                 if seg.direction == 0:
                     sidedef = linedef.front_sidedef_id
                 else:
                     sidedef = linedef.back_sidedef_id
-                sidedef = level_wad.sidedefs[sidedef]
+                sidedef = level_wad.sidedefs[sidedef-1]
                 #print(sidedef.sector_id)
                 sector = level_wad.sectors[sidedef.sector_id]
                 sector.things_inside.append(index)
+                #print(sidedef.sector_id,map_name,index)
                 
             
 
@@ -1146,10 +1148,13 @@ if __name__ == '__main__':
                 i.line_type=0
                 
                 if len(cur_secs)>0:
-                    cur_sec = level_wad.sectors[cur_secs[0]-1]
+                    targs=[]
+                    for sec in cur_secs:
+                        cur_sec = level_wad.sectors[sec-1]
+                        targs+=cur_sec.things_inside
                     
-                    if len(cur_sec.things_inside)>0:
-                        cur_thing = level_wad.things[cur_sec.things_inside[0]]
+                    if len(targs)>0:
+                        cur_thing = level_wad.things[targs[0]]
                         for j in [(1,cur_thing.pos[0]),(2,cur_thing.pos[1]),(3,cur_thing.angle),(9,cur_sec.floor_height)]:
                             thinker = (0, j[0], j[1], 9999999, 1, 0, 0, i.thinker_id)
                             i.thinker_id = insert_thinker(thinker)
@@ -1157,7 +1162,7 @@ if __name__ == '__main__':
 
                         i.line_type=2
 
-                i.flags+=monster_usable
+                        i.flags+=monster_usable
 
             elif i.line_type==40: # W1 Ceiling To Highest Adjacent Ceiling
                 cur_secs = find_sector(i.sector_tag)
@@ -1421,22 +1426,30 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif i.line_type==97: #WR Teleporter
+            elif i.line_type==97: #WR Teleporter Also Monsters
                 cur_secs = find_sector(i.sector_tag)
 
                 i.line_type=0
                 
                 if len(cur_secs)>0:
-                    cur_sec = level_wad.sectors[cur_secs[0]-1]
+                    targs=[]
+                    for sec in cur_secs:
+                        cur_sec = level_wad.sectors[sec-1]
+                        targs+=cur_sec.things_inside
                     
-                    if len(cur_sec.things_inside)>0:
-                        cur_thing = level_wad.things[cur_sec.things_inside[0]]
+                    if len(targs)>0:
+                        cur_thing = level_wad.things[targs[0]]
                         for j in [(1,cur_thing.pos[0]),(2,cur_thing.pos[1]),(3,cur_thing.angle),(9,cur_sec.floor_height)]:
                             thinker = (0, j[0], j[1], 9999999, 1, 0, 2, i.thinker_id)
                             i.thinker_id = insert_thinker(thinker)
                         #print("found tp targ")
 
                         i.line_type=2
+
+                        i.flags+=monster_usable
+
+                if i.line_type==0:
+                    print("tp targ not found in",map_name,"linedef",index,"sector tag",i.sector_tag)
                     
 
             elif i.line_type==98: #WR Floor To 8 Above Heighest Adjacent Floor Fast (not fast)
@@ -1576,6 +1589,56 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
+            elif i.line_type==125: #W1 Teleporter Monsters Only (not monsters only)
+                cur_secs = find_sector(i.sector_tag)
+
+                i.line_type=0
+                
+                if len(cur_secs)>0:
+                    targs=[]
+                    for sec in cur_secs:
+                        cur_sec = level_wad.sectors[sec-1]
+                        targs+=cur_sec.things_inside
+                    
+                    if len(targs)>0:
+                        cur_thing = level_wad.things[cur_sec.things_inside[0]]
+                        for j in [(1,cur_thing.pos[0]),(2,cur_thing.pos[1]),(3,cur_thing.angle),(9,cur_sec.floor_height)]:
+                            thinker = (0, j[0], j[1], 9999999, 1, 0, 0, i.thinker_id)
+                            i.thinker_id = insert_thinker(thinker)
+                        #print("found tp targ")
+
+                        i.line_type=3 # monsters only care if a linedef is tagged as monster usable
+
+                        i.flags+=monster_usable
+                        
+                if i.line_type==0:
+                    print("tp targ not found in",map_name,"linedef",index,"sector tag",i.sector_tag)
+
+            elif i.line_type==126: #WR Teleporter Monsters Only (not monsters only)
+                cur_secs = find_sector(i.sector_tag)
+
+                i.line_type=0
+                
+                if len(cur_secs)>0:                    
+                    targs=[]
+                    for sec in cur_secs:
+                        cur_sec = level_wad.sectors[sec-1]
+                        targs+=cur_sec.things_inside
+                    
+                    if len(targs)>0:
+                        cur_thing = level_wad.things[targs[0]]
+                        for j in [(1,cur_thing.pos[0]),(2,cur_thing.pos[1]),(3,cur_thing.angle),(9,cur_sec.floor_height)]:
+                            thinker = (0, j[0], j[1], 9999999, 1, 0, 2, i.thinker_id)
+                            i.thinker_id = insert_thinker(thinker)
+                        #print("found tp targ")
+
+                        i.line_type=3
+
+                        i.flags+=monster_usable
+                        
+                if i.line_type==0:
+                    print("tp targ not found in",map_name,"linedef",index,"sector tag",i.sector_tag)
+
             elif i.line_type==133: #S1 Door Stay Open Blue Fast (not fast)
                 cur_secs = find_sector(i.sector_tag)
                 
@@ -1635,7 +1698,6 @@ if __name__ == '__main__':
                                                             73,#crush slow start
                                                             74,#crush stop
                                                             77,#crush start
-                                                            125,126,#teleport monsters only, monsters can't teleport so who cares
                                                             ]:
                 print("unknown linedef type",i.line_type,"in level",map_name)
                 None
