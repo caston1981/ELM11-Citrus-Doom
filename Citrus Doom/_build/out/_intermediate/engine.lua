@@ -83,7 +83,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 								pos=M[12]
 								M[1][cr]=falseVar
 								pos[1][n]=flr(mn(pos[1][n]+v,pos[2][n]))
-								if clmp(n,5,11)==n then
+								if clmp(n,5,12)==n then
 									weapon=n-4
 								end
 							end
@@ -111,7 +111,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 		cr=M[2][blkCr[i]]
 		dst,tmpA=chkLnDst(p,M[4][cr[1]],M[4][cr[2]])
 		if dst<bstDst then
-			if checkPlayerPosLoop==1 and (cr[3]&512>0 or index==pIn) and (cr[4]==2 or index~=pIn) then -- only activate special if it's the player and the special is a walk over
+			if checkPlayerPosLoop==1 and (cr[3]&512>0 or index==pIn) and (cr[4]==2 or index~=pIn) then -- 512 is the monster-usable tag, which is the only thing monsters care about
 				summonThinker(cr,cr[5])
 			end
 			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then

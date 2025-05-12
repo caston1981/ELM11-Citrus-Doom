@@ -66,7 +66,7 @@
 	S_BFGUP,
 	S_BFGDOWN,
 	S_BFG,
-	S_BFG1,
+	S_BFG2,
 	S_BFGFLASH1
     },
     {

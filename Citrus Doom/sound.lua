@@ -58,6 +58,7 @@ weaponObjects={}
 tick=0
 stg=1
 mN=0
+fireCooldown=0
 init=trueVar
 
 function onTick()
@@ -173,11 +174,21 @@ function onTick()
 					weaponObjects[1]=cr
 				end
 				weapon=gN(1)
+
+				fire=gB(3)
+				if fire and weapon==5 then
+					if fireCooldown<=0 then
+						fireCooldown=7
+					else
+						fire=false
+					end
+				end
+				fireCooldown=fireCooldown-1
 				
-				if gB(3)then
+				if fire then
 					cr=weaponObjects[1]
 					cr[2]=M[16][cr[1][4]]
-					cr[3]=0
+					cr[3]=-1
 				end
 			end
 			
@@ -185,7 +196,12 @@ function onTick()
 				cr=weaponObjects[i]
 				if cr[3]==0 then
 					if cr[2][3]==4 then
-						weaponObjects[#weaponObjects+1]={cr[1],M[16][cr[1][5]],2}
+						if weapon==5 and fireCooldown<5 then
+							offset=1
+						else
+							offset=0
+						end
+						weaponObjects[#weaponObjects+1]={cr[1],M[16][cr[1][5]+offset],2}
 					end
 				end
 				cr[3]=cr[3]+1

@@ -82,7 +82,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 								pos=M[12]
 								M[1][cr]=falseVar
 								pos[1][n]=flr(mn(pos[1][n]+v,pos[2][n]))
-								if clmp(n,5,11)==n then
+								if clmp(n,5,12)==n then
 									weapon=n-4
 								end
 							end

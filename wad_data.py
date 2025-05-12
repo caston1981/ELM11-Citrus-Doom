@@ -217,7 +217,7 @@ def find_me(i,a):
 if __name__ == '__main__':
     start_time=time.time()
     #,"weapons_at_start.wad","jump_to_crash_zone.wad","enemy_testing.wad"
-    file_name=["DOOM.WAD","settings_map.wad"] # more rightwards ones overwrite leftwards ones
+    file_name=["DOOM.WAD","settings_map.wad","weapons_at_start.wad"] # more rightwards ones overwrite leftwards ones
     #map_order=["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
     #map_order=["E1M2"]
     #map_order=["SET1"]+map_order
