@@ -302,8 +302,8 @@ function onTick()
 			pp[3]=cr[3]
 
 			ppSec=findMe(#M[7],pp[1])
-			pp[2]=ppSec[9]+41
-			ppLght=mn(ppSec[5]/255+screenBrightOffset,1)^1.8-- the lower-than-2.2 corection factor means the weapon is brighter than the environment
+			pp[2]=ppSec[1]+41
+			ppLght=mn(ppSec[5]/255,1)^1.3-- the lower-than-2.2 corection factor means the weapon is brighter than the environment
 			
 			
 			if tick%16==1 then

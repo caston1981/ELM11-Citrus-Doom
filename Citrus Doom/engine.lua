@@ -310,6 +310,21 @@ function summonThinker(cr,pos)
 	end
 end
 
+function autoAim()
+	rampBst,targ=2048
+	for i,cr in ipairsVar(M1)do -- vertical auto aim
+		if i~=pIn and cr and chkView(pTng,cr,10)then
+			dst=dist(cr,pTng)
+			if dst<rampBst then
+				if M15[cr[4]][23]&2>0then
+					targ=cr
+					rampBst=dst
+				end
+			end
+		end
+	end
+end
+
 function onTick()
 	sB(9,gB(32))
 	sB(2,falseVar)
@@ -527,6 +542,14 @@ function onTick()
 							if a<64 and s1[12]>0then
 								cr[6]=s1[12]
 							end
+						elseif state3==5then-- bfg tracers
+							for i=1,11 do
+								pTng[3]=pTng[3]+M[19][9][i]
+								crWeapon=M[14][23]
+								autoAim()
+								fireWeapon(pTng,pIn)
+							end
+							pTng[3]=pTng[3]-20
 						elseif state3>9then-- attack logic
 							cr[3]=at2(cr,cr[23])
 							crWeapon=M[14][state3]
@@ -608,18 +631,7 @@ function onTick()
 				if pos>0then -- drain ammo
 					ammo[pos]=ammo[pos]-crWeapon[2]
 				end
-				rampBst,targ=2048
-				for i,cr in ipairsVar(M1)do -- vertical auto aim
-					if i~=pIn and cr and chkView(pTng,cr,10)then
-						dst=dist(cr,pTng)
-						if dst<rampBst then
-							if M15[cr[4]][23]&2>0then
-								targ=cr
-								rampBst=dst
-							end
-						end
-					end
-				end
+				autoAim()
 				
 				fireWeapon(pTng,pIn)
 			end
