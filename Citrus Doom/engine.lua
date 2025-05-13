@@ -448,9 +448,9 @@ function onTick()
 					if cr[6]==0 then
 						tableRemove(thinkers,i)
 					end
-				else
-					pos[8]=pos[8]or s1~=v
 				end
+				pos[10]=pos[10]or s1~=v
+				
 				pos[30]=i
 			end
 			
@@ -707,11 +707,13 @@ function onTick()
 				end
 			else
 				cr=M8[i-#M1]
-				if cr[8] then
-					cr[8]=falseVar
+				if cr[10] then
+					cr[10]=falseVar
 					out[pos]=i-#M1+2^15
-					out[pos+1]=cr[1]
-					out[pos+2]=cr[2]
+					for j=1,6 do
+						out[pos+j]=cr[j]
+					end
+					
 					slt=slt+1
 				end
 			end

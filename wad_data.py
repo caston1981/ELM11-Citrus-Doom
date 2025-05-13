@@ -388,9 +388,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==-1:
+        if i==2:
             None
-            print(code.split("\n")[289-1])
+            print(code.split("\n")[202-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -721,6 +721,17 @@ if __name__ == '__main__':
                 
             if i.floor_texture in flat_replacements:
                 i.floor_texture = flat_replacements[i.floor_texture]
+            
+
+            if i.ceil_texture != wad.asset_data.sky_id:
+                i.ceil_texture = flat_looker.index(i.ceil_texture)
+            else:
+                i.ceil_texture = 0
+
+            if i.floor_texture != wad.asset_data.sky_id:
+                i.floor_texture = flat_looker.index(i.floor_texture)
+            else:
+                i.floor_texture = 0
 
         for index in range(len(level_wad.sidedefs)):
             i=level_wad.sidedefs[index]
@@ -807,6 +818,9 @@ if __name__ == '__main__':
 
                 s1.neighbouring_linedefs.append(index)
                 s2.neighbouring_linedefs.append(index)
+                s1.neighbouring_sectors.append(s2i+1)
+                s2.neighbouring_sectors.append(s1i+1)
+                
 
         for index in range(len(level_wad.things)):
             i = level_wad.things[index]
@@ -907,11 +921,29 @@ if __name__ == '__main__':
 
                 i.line_type = {7:1,8:2,127:1}[i.line_type]
 
-            elif i.line_type==9: #S1 Floor Donut (not actually a donut yet)
+            elif i.line_type==9: #S1 Floor Donut (doesn't change type)
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, 1, 0, 0, i.thinker_id)
+                    sec2=0
+                    sec3=0
+                    for potential_sec in level_wad.sectors[sec-1].neighbouring_sectors:
+                        if potential_sec!=sec:
+                            sec2 = potential_sec
+
+                    for potential_sec in level_wad.sectors[sec2-1].neighbouring_sectors:
+                        if potential_sec!=sec and potential_sec!=sec2:
+                            sec3 = potential_sec
+                    assert sec2!=0
+                    assert sec3!=0
+
+                    thinker = (sec2, 1, level_wad.sectors[sec3-1].floor_height, 1, 1, 0, 0, 0)
+                    next_thinker = insert_thinker(thinker)
+
+                    thinker = (sec2, 3, level_wad.sectors[sec3-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+                        
+                    thinker = (sec, 1, level_wad.sectors[sec3-1].floor_height, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -995,11 +1027,20 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif i.line_type==20: #S1 Floor To Higher Floor Change Text (highest floor, no change tex)
+            elif i.line_type==20: #S1 Floor To Higher Floor Change Text (highest floor)
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, i.thinker_id)
+                    sec2=0
+                    for potential_sec in level_wad.sectors[sec-1].neighbouring_sectors:
+                        if potential_sec!=sec and level_wad.sectors[sec-1].neighbouring_highest_floor==level_wad.sectors[potential_sec-1].floor_height:
+                            sec2=potential_sec
+                    assert sec2!=0
+
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, 0)
+                    next_thinker = insert_thinker(thinker)
+                            
+                    thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1016,11 +1057,18 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
-            elif i.line_type==22: #W1 Floor To Higher Floor Change Text (highest floor, no change tex)
+            elif i.line_type==22: #W1 Floor To Higher Floor Change Text (highest floor)
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, i.thinker_id)
+                    for potential_sec in level_wad.sectors[sec-1].neighbouring_sectors:
+                        if potential_sec!=sec and level_wad.sectors[sec-1].neighbouring_highest_floor==level_wad.sectors[potential_sec-1].floor_height:
+                            sec2=potential_sec
+                    
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, 0)
+                    next_thinker = insert_thinker(thinker)
+
+                    thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1120,7 +1168,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 5, 35, 35, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 5, 35, 255, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1134,11 +1182,20 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif i.line_type==37: #W1 Floor To Lowest Adjacent Floor Change Texture and Type (doesn't change texture or type)
+            elif i.line_type==37: #W1 Floor To Lowest Adjacent Floor Change Texture and Type (doesn't change type)
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, 1, 0, 0, i.thinker_id)
+                    sec2=0
+                    for potential_sec in level_wad.sectors[sec-1].neighbouring_sectors:
+                        if potential_sec!=sec and level_wad.sectors[sec-1].neighbouring_lowest_floor==level_wad.sectors[potential_sec-1].floor_height:
+                            sec2=potential_sec
+                    assert sec2!=0
+                    
+                    thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, 0, 0, i.thinker_id)
+                    next_thinker = insert_thinker(thinker)
+                    
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, 1, next_thinker, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1254,7 +1311,7 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif i.line_type==59: #W1 Floor Up 24Change Texture And Type (doesn't change texture or type)
+            elif i.line_type==59: #W1 Floor Up 24 Change Texture And Type (doesn't change texture or type)
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
@@ -1503,7 +1560,7 @@ if __name__ == '__main__':
                 
                 for sec in cur_secs:
                     targ = level_wad.sectors[sec-1].neighbouring_lowest_light
-                    thinker = (sec, 5, targ, targ, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 5, targ, 255, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1599,7 +1656,7 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
-            elif i.line_type==125: #W1 Teleporter Monsters Only (not monsters only)
+            elif i.line_type==125: #W1 Teleporter Monsters Only
                 cur_secs = find_sector(i.sector_tag)
 
                 i.line_type=0
@@ -1624,7 +1681,7 @@ if __name__ == '__main__':
                 if i.line_type==0:
                     print("tp targ not found in",map_name,"linedef",index,"sector tag",i.sector_tag)
 
-            elif i.line_type==126: #WR Teleporter Monsters Only (not monsters only)
+            elif i.line_type==126: #WR Teleporter Monsters Only
                 cur_secs = find_sector(i.sector_tag)
 
                 i.line_type=0
@@ -1809,20 +1866,11 @@ if __name__ == '__main__':
             i=level_wad.sectors[index]
             
             curnum+=1
-            
-            if i.ceil_texture != wad.asset_data.sky_id:
-                cur_ceil = flat_looker.index(i.ceil_texture)
-            else:
-                cur_ceil = 0
 
-            if i.floor_texture != wad.asset_data.sky_id:
-                cur_floor = flat_looker.index(i.floor_texture)
-            else:
-                cur_floor = 0
 
             #[floor_h, ceil_h, floor_t, ceil_t, light, type, tag, refresh, surrounding_ceil_h, stage, timer]
             
-            packets.append((level_data_offset+8,[i.floor_height,i.ceil_height,cur_floor,cur_ceil,i.light_level,i.type,i.tag]))
+            packets.append((level_data_offset+8,[i.floor_height,i.ceil_height,i.floor_texture,i.ceil_texture,i.light_level,i.type,i.tag]))
 
 
         cur=""

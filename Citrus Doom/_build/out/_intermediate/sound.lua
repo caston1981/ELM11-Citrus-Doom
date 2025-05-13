@@ -37,6 +37,8 @@ levelCr=3
 loaded=falseVar
 tick=1
 
+pp={{0,0},0,0}
+
 wdth=288
 wdthH=wdth//2
 hght=128
@@ -61,6 +63,16 @@ stg=1
 mN=0
 fireCooldown=0
 init=trueVar
+
+function findMe(i,a,cr)
+	if i<32768then
+		cr=M[7][i]
+		return findMe(cr[cr[3]*(a[2]-cr[2])-cr[4]*(a[1]-cr[1])>0 and 8 or 7],a)
+	else
+		i=M[5][M[6][i-32768][2]]
+		return M[8][M[3][M[2][i[4]][i[5]+6]][6]]
+	end
+end
 
 function onTick()
 	mN=0
@@ -151,18 +163,24 @@ function onTick()
 		--
 		if gB(1) then
 			tick=tick+1
-			if gN(9)>0 then
-				init=trueVar
-				levelCr=gN(9)
-			end
 			if init then
 				for i=1,10 do
 					M[i]=M[i+10*levelCr]
 				end
 				levelCr=levelCr+1
 				init=falseVar
+				for i=1,#M[1] do
+					cr=M[1][i]
+					if cr[4]==1 then
+						pIn=i
+					end
+				end
 			end
-			
+
+			if gN(9)>0 then
+				init=trueVar
+				levelCr=gN(9)
+			end
 			
 			if health>0 then
 				if weapon~=gN(1) and gN(1)>0then
@@ -244,8 +262,9 @@ function onTick()
 					cr=info[1]
 					if cr>(2^15) then
 						cr=M[8][cr-(2^15)]
-						cr[1]=info[2]
-						cr[2]=info[3]
+						for k=1,6 do
+							cr[k]=info[k+1]
+						end
 					elseif cr<0 then
 						if -cr<=#M[1] then
 							if M[1][-cr]~=nil then
@@ -276,6 +295,15 @@ function onTick()
 				end
 			end
 			transferCache={}
+
+			cr=M[1][pIn]
+			pp[1]={cr[1],cr[2]}
+			--pp[2]=cr[9]+41,1
+			pp[3]=cr[3]
+
+			ppSec=findMe(#M[7],pp[1])
+			pp[2]=ppSec[9]+41
+			ppLght=mn(ppSec[5]/255+screenBrightOffset,1)^1.8-- the lower-than-2.2 corection factor means the weapon is brighter than the environment
 			
 			
 			if tick%16==1 then
@@ -326,7 +354,9 @@ function onDraw()
 		end
 		
 		for i=1,#weaponObjects do
-			tex=M[17][abs(weaponObjects[i][2][1])][1]
+			tex=weaponObjects[i][2][1]
+			lght=tex>0 and ppLght or 1
+			tex=M[17][abs(tex)][1]
 			tex=M[23][tex]
 			tW,tH,pxSize=tex[1],tex[2],tex[3]*0.7
 			pxSizeV=pxSize*pixelAspectCorrection
@@ -337,7 +367,7 @@ function onDraw()
 					pix=tex[7+n+k*tH]
 					if pix~=0 then
 						col=M[20][pix]
-						stCl(col[1],col[2],col[3])
+						stCl(col[1]*lght,col[2]*lght,col[3]*lght)
 						rec(x2,y1+n*pxSizeV,pxSize,pxSizeV)
 					end
 				end

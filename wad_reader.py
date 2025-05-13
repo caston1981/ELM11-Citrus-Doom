@@ -143,6 +143,7 @@ class WADReader:
         sector.neighbouring_lowest_floor = None
         sector.neighbouring_lowest_light = None
         sector.neighbouring_linedefs = []
+        sector.neighbouring_sectors = []
         sector.things_inside = []
         return sector
 

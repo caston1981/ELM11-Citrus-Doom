@@ -150,10 +150,6 @@ function onTick()
 		--
 		if gB(1) then
 			tick=tick+1
-			if gN(9)>0 then
-				init=trueVar
-				levelCr=gN(9)
-			end
 			if init then
 				for i=1,10 do
 					M[i]=M[i+10*levelCr]
@@ -161,7 +157,11 @@ function onTick()
 				levelCr=levelCr+1
 				init=falseVar
 			end
-			
+
+			if gN(9)>0 then
+				init=trueVar
+				levelCr=gN(9)
+			end
 			
 			if health>0 then
 				if weapon~=gN(1) and gN(1)>0then
@@ -243,8 +243,9 @@ function onTick()
 					cr=info[1]
 					if cr>(2^15) then
 						cr=M[8][cr-(2^15)]
-						cr[1]=info[2]
-						cr[2]=info[3]
+						for k=1,6 do
+							cr[k]=info[k+1]
+						end
 					elseif cr<0 then
 						if -cr<=#M[1] then
 							if M[1][-cr]~=nil then

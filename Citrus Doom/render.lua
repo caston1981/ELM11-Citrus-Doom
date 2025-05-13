@@ -30,6 +30,7 @@ function rnd2(a) -- rounds to nearest power of 2
 	a=a|(a>>4)
 	return a+1
 end
+function lghtMath(a)lght=mn(a/255+screenBrightOffset,1)^2.2 end
 
 M={}
 romCr=1
@@ -182,9 +183,9 @@ function onTick()
 				end
 				M1=M[1]
 				M8=M[8]
-				for i=1,#M8 do
-					M8[i][5]=M8[i][5]/255
-				end
+				--for i=1,#M8 do
+				--	M8[i][5]=M8[i][5]/255
+				--end
 				levelCr=levelCr+1
 			end
 			
@@ -220,8 +221,10 @@ function onTick()
 					cr=info[1]
 					if cr>(2^15) then -- wall update
 						cr=M8[cr-(2^15)]
-						cr[1]=info[2]
-						cr[2]=info[3]
+						for k=1,6 do
+							cr[k]=info[k+1]
+						end
+						--cr[5]=cr[5]/255
 					elseif cr<0 then -- delete thing
 						while -cr>#M1 do
 							M1[#M1+1]=falseVar -- used to keep the render's thing indexing the same as the engines'
@@ -583,7 +586,7 @@ function onDraw()
 
 					if not v2[9] then x2=x2+1 end
 
-					lght=mn(v[7]+screenBrightOffset,1)^2.2
+					lghtMath(v[7])
 
 					yScl=flip*(v[2]-v[3])*v[10]/v[6]
 					yScl2=flip*(v2[2]-v2[3])*v[10]/v2[6]
@@ -624,10 +627,10 @@ function onDraw()
 						vg=v
 						tex=M[22][v[4][a+2]]
 						if tex and not vsTex then
-							lght=mn(v[4][5]+screenBrightOffset,1)^2.2
+							lghtMath(v[4][5])
 							col=M[20][tex[5]]
 							stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-							screen.drawLine(v[1],hghtH-v[2],v[1],hghtH-v[3]-1.5)
+							screen.drawLine(v[1],hghtH-v[2],v[1],flr(hghtH-v[3]-1))
 						end
 					end
 					if vg and vsTex then
@@ -655,7 +658,7 @@ function onDraw()
 						for j,v in ipairs(cr[i]) do
 							
 							if sec[a+2]~=0 then
-								lght=mn(sec[5]+screenBrightOffset,1)^2.2
+								lghtMath(sec[5])
 								b=sec[a+2]
 								tex=M[22][b]
 								tex=M[22][b+(animationFrame%tex[4])]
@@ -710,7 +713,8 @@ function onDraw()
 										yt=yb-tex[5]*sclV
 										x2=x1-flip*tex[4]*scl
 										scl,sclV=scl*tex[3],sclV*tex[3]
-										lght=state>0 and mn(M8[cr[8]][5]+screenBrightOffset,1)^2.2 or 1
+										lghtMath(M8[cr[8]][5])
+										lght=state>0 and lght or 1
 										pxSize=scl*cScl
 										pxSizeV=pxSize*pixelAspectCorrection
 										fuzzy=cr[4] and M[15][cr[4]][23]&8>0

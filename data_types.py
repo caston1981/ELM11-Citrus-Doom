@@ -79,6 +79,7 @@ class Sector:
         'neighbouring_lowest_floor',
         'neighbouring_lowest_light',
         'neighbouring_linedefs',
+        'neighbouring_sectors',
         'things_inside',
     ]
 
