@@ -171,9 +171,6 @@ function onTick()
 				init=falseVar
 				for i=1,#M[1] do
 					cr=M[1][i]
-					if cr[4]==1 then
-						pIn=i
-					end
 				end
 			end
 
@@ -296,7 +293,7 @@ function onTick()
 			end
 			transferCache={}
 
-			cr=M[1][pIn]
+			cr=M[1][1]
 			pp[1]={cr[1],cr[2]}
 			--pp[2]=cr[9]+41,1
 			pp[3]=cr[3]

@@ -678,6 +678,16 @@ if __name__ == '__main__':
         
         level_wad = WADData(["wad/"+i for i in file_name], map_name=map_name,import_textures=False)
 
+        for index in range(len(level_wad.things)):
+            i = level_wad.things[index]
+
+            #print(i.type)
+            if i.type == 1:
+                player_index=index
+
+        if player_index != 0:
+            level_wad.things[player_index],level_wad.things[0] = level_wad.things[0],level_wad.things[player_index]
+
 
         blockmap = [level_wad.blockmap[0:4]]
         #print(blockmap)

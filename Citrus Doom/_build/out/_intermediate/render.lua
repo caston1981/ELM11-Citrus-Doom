@@ -262,9 +262,6 @@ function onTick()
 						cr[12]=0
 						cr[15]=0
 						cr[19]=0
-						if cr[4]==1 then
-							pIn=i
-						end
 					end
 					crMx=0
 					for j,v in ipairs({1,2,9}) do -- move moving thing
@@ -296,7 +293,7 @@ function onTick()
 			
 			
 			
-			cr=M1[pIn]
+			cr=M1[1]
 			pp[1]={cr[1],cr[2]}
 			pp[2]=cr[9]+41
 			pp[3]=cr[3]

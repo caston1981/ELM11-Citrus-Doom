@@ -29,7 +29,6 @@ levelCr=3
 loaded=falseVar
 init=trueVar
 weapon=2
-pIn=0
 weaponFireDelay=0
 httpTk=0
 timePassage=0
@@ -73,7 +72,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 					bstA=at2(p,pos)
 				end
 			end
-			if index==pIn and not pos[10]then-- the not pos 10 is to prevent the player picking something up which hasn't been spawned in the renderer
+			if index==1 and not pos[10]then-- the not pos 10 is to prevent the player picking something up which hasn't been spawned in the renderer
 				if dst<50then
 					a=s2[25]
 					if a>0then
@@ -110,7 +109,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 		cr=M[2][blkCr[i]]
 		dst,tmpA=chkLnDst(p,M4[cr[1]],M4[cr[2]])
 		if dst<bstDst then
-			if checkPlayerPosLoop==1 and (cr[3]&512>0 or index==pIn) and (cr[4]==2 or index~=pIn) then -- 512 is the monster-usable tag, which is the only thing monsters care about
+			if checkPlayerPosLoop==1 and (cr[3]&512>0 or index==1) and (cr[4]==2 or index>1) then -- 512 is the monster-usable tag, which is the only thing monsters care about
 				summonThinker(cr,cr[5])
 			end
 			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then
@@ -313,7 +312,7 @@ end
 function autoAim()
 	rampBst,targ=2048
 	for i,cr in ipairsVar(M1)do -- vertical auto aim
-		if i~=pIn and cr and chkView(pTng,cr,10)then
+		if i>1 and cr and chkView(pTng,cr,10)then
 			dst=dist(cr,pTng)
 			if dst<rampBst then
 				if M15[cr[4]][23]&2>0then
@@ -413,7 +412,6 @@ function onTick()
 						cr[7]=pTng[7]
 						cr[8]=pTng[8]
 					end
-					pIn=i
 					pTng=cr
 				elseif cr[5]&difficulty<1then
 					M1[i]=falseVar
@@ -547,7 +545,7 @@ function onTick()
 								pTng[3]=pTng[3]+M[19][9][i]
 								crWeapon=M[14][23]
 								autoAim()
-								fireWeapon(pTng,pIn)
+								fireWeapon(pTng,1)
 							end
 							pTng[3]=pTng[3]-20
 						elseif state3>9then-- attack logic
@@ -604,7 +602,7 @@ function onTick()
 			end
 			pp[9]=pTng[9]
 			for i=1,8 do
-				valid=chkPs(pp,trueVar,pIn,i)
+				valid=chkPs(pp,trueVar,1,i)
 			end
 			if valid then
 				for i=1,2 do
@@ -635,14 +633,14 @@ function onTick()
 				end
 				autoAim()
 				
-				fireWeapon(pTng,pIn)
+				fireWeapon(pTng,1)
 			end
 			weaponFireDelay=weaponFireDelay-1
 			
 			if gN(4)<0 then -- interacting with doors/linedefs in general
 				cr=add(pTng,dVec(pTng[3],64))
 				cr[9]=pTng[9]
-				thingExists,wall=chkRayCol(pTng,cr,2,pIn)
+				thingExists,wall=chkRayCol(pTng,cr,2,1)
 				cr=M[2][wall]
 				if thingExists==falseVar then
 					out[2]=wall
@@ -691,7 +689,7 @@ function onTick()
 		for i=3,8 do
 			out[i]=pTng[M[19][4][i]]-- M[19][4] is 0,0,7,8,0,1,2,9,3
 		end
-		out[5]=pIn
+		out[5]=1
 		out[13]=pTng[3]
 
 		i=sndLst
@@ -702,7 +700,7 @@ function onTick()
 			pos=slt*9+5
 			if i<=#M1 then
 				cr=M1[i]
-				if i~=pIn then
+				if i~=1 then
 					if cr then
 						if cr[10] then
 							cr[10]=falseVar
