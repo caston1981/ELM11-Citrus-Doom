@@ -432,25 +432,24 @@ if __name__ == '__main__':
     rotation_map={}
     new_thing = False
     
+    index_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]"
     
     for index in range(len(sprite_textures)):
         i = sprite_textures[index]
 
         if i[5]=="0":
-            new_thing = True
             sprite_rotations.append([index+1 for j in range(8)])
-        else:
-            if i[5]=="1":
-                sprite_rotations.append([0 for j in range(8)])
-                new_thing = True
-            
-            sprite_rotations[-1][int(i[5])-1] = index+1
-            if len(i)>6:
-                sprite_rotations[-1][int(i[7])-1] = -(index+1)
-
-        if new_thing:
             rotation_map[i[:5]] = len(sprite_rotations)
-            new_thing = False
+        else:
+            if not i[:5] in rotation_map:
+                sprite_rotations.append([0 for j in range(8)])
+                rotation_map[i[:5]]=len(sprite_rotations)
+
+            cur_rotation = sprite_rotations[rotation_map[i[:5]]-1]
+            
+            cur_rotation[int(i[5])-1] = index+1
+            if len(i)>6:
+                cur_rotation[int(i[7])-1] = -(index+1)
                 
         if i[:3]=="STF":
             print(i)
