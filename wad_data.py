@@ -217,7 +217,7 @@ def find_me(i,a):
 if __name__ == '__main__':
     start_time=time.time()
     #,"weapons_at_start.wad","jump_to_crash_zone.wad","enemy_testing.wad"
-    file_name=["DOOM.WAD","settings_map.wad","weapons_at_start.wad"] # more rightwards ones overwrite leftwards ones
+    file_name=["DOOM.WAD","settings_map.wad","switches_for_666_tags.wad"] # more rightwards ones overwrite leftwards ones
     #map_order=["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
     #map_order=["E1M2"]
     #map_order=["SET1"]+map_order
@@ -390,7 +390,7 @@ if __name__ == '__main__':
         end = text.find(find_end,start)
         if i==1:
             None
-            print(code.split("\n")[362-1])
+            print(code.split("\n")[46-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -733,6 +733,9 @@ if __name__ == '__main__':
                 i.floor_texture = flat_looker.index(i.floor_texture)
             else:
                 i.floor_texture = 0
+
+            #if i.tag == 666:
+            #    print(map_name)
 
         for index in range(len(level_wad.sidedefs)):
             i=level_wad.sidedefs[index]

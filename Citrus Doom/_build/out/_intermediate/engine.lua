@@ -57,7 +57,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 	bounds=findMe(#M[7],p)
 	bt,tp=exp(bounds)
 	blkPs=sub(p,M10[1])
-	blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
+	blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]or{{}} -- gives default case so it doesn't crash when an object is out-of-bounds
 	for i,cr in ipairsVar(blkCr[0]) do
 		pos=M1[cr]
 		if cr~=index and pos and collObject[14]~=cr then
@@ -179,7 +179,7 @@ function chkRayCol(p1,p2,level,index,cr)
 			crPos={x1+(uA*x21),y1+(uA*y21)}
 			dst=dist(p1,crPos)
 			intH=h1+(h2-h1)*(dst/bsDst)
-			if clmp(intH,cr[8],cr[9])~=intH then
+			if clmp(intH,cr[8]+1,cr[9])~=intH then
 				pass=falseVar
 				if level==1 then
 					return falseVar
@@ -622,6 +622,8 @@ function onTick()
 					end
 					pTng[19]=pTng[19]-1
 				end
+			else
+				pTng[19]=0
 			end
 			
 			ammo=M12[1]
