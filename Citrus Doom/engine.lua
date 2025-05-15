@@ -204,6 +204,7 @@ function chkRayCol(p1,p2,level,index,cr)
 							d1=(dst/bsDst)
 							intH=h1+(h2-h1)*d1
 							if clmp(intH,cr[9],cr[9]+s1[19])==intH and uA<s1[18] then
+								crDst=dst
 								valid=trueVar
 								pass=falseVar
 								crX=x1+(x2-x1)*d1
