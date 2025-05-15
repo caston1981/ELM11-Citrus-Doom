@@ -391,9 +391,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==1:
+        if i==-1:
             None
-            print(code.split("\n")[46-1])
+            print(code.split("\n")[204-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -2077,6 +2077,7 @@ if __name__ == '__main__':
                       [200,200,0],
                       sky_order,
                       [-20]+[4 for i in range(10)], #9
+                      [0,5,0,-5,-3,0,0,-5,3,0,0,-5], #10
                       ]
     for index in range(len(misc_additions)):
         i=misc_additions[index]

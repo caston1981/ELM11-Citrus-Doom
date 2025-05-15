@@ -12,9 +12,12 @@ falseVar=false
 trueVar=true
 str=string
 
+function add(a,b)return{(a[1]+b[1]),(a[2]+b[2])}end
 function cross(a,b)return a[1]*b[2]-a[2]*b[1]end
 function sub(a,b)return{(a[1]-b[1]),(a[2]-b[2])}end
+function mul(a,b)return{a[1]*b,a[2]*b}end
 function wrap(a)return ((a+180)%360)-180 end
+function sin(a)return m.sin(a/180*pi)end
 function cos(a)return m.cos(a/180*pi)end
 function tan(a)return m.tan(a/180*pi)end
 function at(a)return m.atan(a)*180/pi end
@@ -22,6 +25,7 @@ function at2(a)return m.atan(a[2],a[1])*180/pi end
 function clmp(a,b,c)return mn(mx(b,a),c)end
 function rnd(a)return flr(a+0.5)end
 function dist(a,b)return sqrt(((a[1]-b[1])^2)+((a[2]-b[2])^2))end
+function invY(a)return {a[1],-a[2]}end
 function rnd2(a)
 	a=a-1
 	a=a|(a>>1)
@@ -55,7 +59,9 @@ yellow=0
 red=0
 difficulty=3002
 transferCache={}
+bigNumb=32768 -- 2^15
 weaponObjects={}
+mapScale=0.05
 
 tick=0
 stg=1
@@ -63,14 +69,18 @@ mN=0
 fireCooldown=0
 init=trueVar
 
-function findMe(i,a,cr)
-	if i<32768then
-		cr=M[7][i]
-		return findMe(cr[cr[3]*(a[2]-cr[2])-cr[4]*(a[1]-cr[1])>0 and 8 or 7],a)
+function findMe(i,a) -- finding sub-sector a position is in using BSP tree
+	if i<bigNumb then
+		g=M[7][i]
+		return findMe(g[0<cross({g[3],g[4]},sub(a,g))and 8 or 7],a)
 	else
-		i=M[5][M[6][i-32768][2]]
-		return M[8][M[3][M[2][i[4]][i[5]+6]][6]]
+		return i-bigNumb
 	end
+end
+
+function findSec(a) -- finds a sub sector's sector
+	g=M[5][M[6][a][2]]
+	return M[8][M[3][M[2][g[4]][g[5]+6]][6]]
 end
 
 function onTick()
@@ -171,6 +181,13 @@ function onTick()
 				for i=1,#M[1] do
 					cr=M[1][i]
 				end
+				for i=1,#M[8] do
+					M[8][i][8]={}
+				end
+				for i=1,#M[6] do
+					cr=findSec(i)
+					cr[8][#cr[8]+1]=i
+				end
 			end
 
 			if gN(9)>0 then
@@ -231,7 +248,7 @@ function onTick()
 			end
 			
 			
-			if gB(2)then
+			if init then
 				yellow=50
 			end
 			red=mx(red-4,0)
@@ -297,10 +314,21 @@ function onTick()
 			--pp[2]=cr[9]+41,1
 			pp[3]=cr[3]
 
-			ppSec=findMe(#M[7],pp[1])
+			ppSubSec=findMe(#M[7],pp[1])
+			ppSec=findSec(ppSubSec)
 			pp[2]=ppSec[1]+41
 			ppLght=mn(ppSec[5]/255,1)^1.3-- the lower-than-2.2 corection factor means the weapon is brighter than the environment
 			
+			for i=1,#ppSec[8] do
+				cr=M[6][ppSec[8][i]]
+				for j=cr[2],cr[1]+cr[2]-1 do
+					seg=M[5][j]
+					line=M[2][seg[4]]
+					line[8]=true
+				end
+			end
+
+			showMap=gB(2)
 			
 			if tick%16==1 then
 				mRandom=mRandom%256+1
@@ -327,7 +355,7 @@ end
 
 function onDraw()
 	screenVar=screen
-	local tri,rec,stCl,text=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawText
+	local tri,rec,stCl,text,drLine=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawText,screenVar.drawLine
 	mN=mN+1
 
 	if mN<=1 then
@@ -349,29 +377,62 @@ function onDraw()
 			end
 		end
 		
-		for i=1,#weaponObjects do
-			tex=weaponObjects[i][2][1]
-			lght=tex>0 and ppLght or 1
-			tex=M[17][abs(tex)][1]
-			tex=M[23][tex]
-			tW,tH,pxSize=tex[1],tex[2],tex[3]*0.7
-			pxSizeV=pxSize*pixelAspectCorrection
-			x1,y1=wdthH-(tex[4]+160)*0.7,hght-(tex[5]+148)*0.7*pixelAspectCorrection
-			for k=0,tW-1 do
-				x2=x1+k*pxSize
-				for n=0,tH-1 do
-					pix=tex[7+n+k*tH]
-					if pix~=0 then
-						col=M[20][pix]
-						stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-						rec(x2,y1+n*pxSizeV,pxSize,pxSizeV)
+		if not showMap then
+			for i=1,#weaponObjects do
+				tex=weaponObjects[i][2][1]
+				lght=tex>0 and ppLght or 1
+				tex=M[17][abs(tex)][1]
+				tex=M[23][tex]
+				tW,tH,pxSize=tex[1],tex[2],tex[3]*0.7
+				pxSizeV=pxSize*pixelAspectCorrection
+				x1,y1=wdthH-(tex[4]+160)*0.7,hght-(tex[5]+148)*0.7*pixelAspectCorrection
+				for k=0,tW-1 do
+					x2=x1+k*pxSize
+					for n=0,tH-1 do
+						pix=tex[7+n+k*tH]
+						if pix~=0 then
+							col=M[20][pix]
+							stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+							rec(x2,y1+n*pxSizeV,pxSize,pxSizeV)
+						end
 					end
 				end
 			end
 		end
 		
-		
 		if loaded then
+			if showMap then
+				stCl(0,0,0)
+				rec(0,0,wdth,hght)
+				for i=1,#M[2] do
+					cr=M[2][i]
+					if cr[8] then
+						p1=add(invY(mul(sub(M[4][cr[1]],pp[1]),mapScale)),{wdthH,hghtH})
+						p2=add(invY(mul(sub(M[4][cr[2]],pp[1]),mapScale)),{wdthH,hghtH})
+						
+						if cr[3]&4>0 then
+							stCl(50,50,50)
+						else
+							stCl(255,255,255)
+						end
+						drLine(p1[1],p1[2],p2[1],p2[2])
+					end
+				end
+				stCl(255,255,255)
+				cr=M[19][10]
+				for i=1,#cr,4 do
+					sinP=sin(pp[3]-90)
+					cosP=cos(pp[3]-90)
+					p1={cr[i]*cosP+cr[i+1]*sinP,cr[i+1]*cosP-cr[i]*sinP}
+					p2={cr[i+2]*cosP+cr[i+3]*sinP,cr[i+3]*cosP-cr[i+2]*sinP}
+
+					p1=add(p1,{wdthH,hghtH})
+					p2=add(p2,{wdthH,hghtH})
+
+					drLine(p1[1],p1[2],p2[1],p2[2])
+				end
+			end
+
 			stCl(255,red>0 and 0 or 255,0,red+yellow)
 			rec(0,0,wdth,hght)
 			
@@ -397,6 +458,7 @@ function onDraw()
 				stCl(cr[1],cr[2],cr[3])
 				rec(229,95+i*7,6,7)
 			end
+
 			stCl(255,255,255)
 			text(100,131,flr(health))
 			text(100,137,flr(armour))

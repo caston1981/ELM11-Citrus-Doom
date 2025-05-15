@@ -326,7 +326,7 @@ end
 
 function onTick()
 	sB(9,gB(32))
-	sB(2,falseVar)
+	sB(2,gB(11))
 	sB(3,falseVar)
 
 	for j=1,3 do
