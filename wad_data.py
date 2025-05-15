@@ -314,6 +314,7 @@ if __name__ == '__main__':
                    {"Cells":20},{"Cells":100},{"Cells":40,"Plasma Rifle":1},{"Cells":40,"BFG":1},
                    {"Blue Key":1},{"Red Key":1},{"Yellow Key":1},
                    {"Chainsaw":1},
+                   {"Bullet":10,"Shell":4,"Rocket":1,"Cells":20},
                    ]
 
     ammo_pickup_dict = {"MT_CLIP":3,"MT_MISC17":4,"MT_CHAINGUN":5,
@@ -323,6 +324,7 @@ if __name__ == '__main__':
                    "MT_MISC4":17,"MT_MISC5":18,"MT_MISC6":19,
                    "MT_MISC9":17,"MT_MISC8":18,"MT_MISC7":19,
                    "MT_MISC26":20,
+                   "MT_MISC24":21,
                    }
 
     health_pickup_list = [("MT_MISC2",(1,200,0,0,0)), # health bonus/potion
@@ -333,6 +335,7 @@ if __name__ == '__main__':
                           ("MT_MISC0",(0,0,100,100,0.3)), # armor
                           ("MT_MISC1",(0,0,200,200,0.5)), # megaarmor/combat armor
                           ("MT_MEGA",(200,200,200,200,0.5)), # megasphere
+                          ("MT_MISC13",(100,100,0,0,0)),
                           ]
     health_pickup_list_zip = [[health_pickup_list[j][i] for j in range(len(health_pickup_list))] for i in range(len(health_pickup_list[0]))]
 
