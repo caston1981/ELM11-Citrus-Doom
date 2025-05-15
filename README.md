@@ -1,6 +1,6 @@
 Citrus Doom is a Doom port/remake made to run in Stormworks
 
-wad_data.py is the "master file", when run it will compile a complete vehicle file and insert it into the user's stormwork's vehicle save location. Note that all changes in configuration must be done by editing that python file
+wad_data.py is the "master file", when run it will compile a complete vehicle file and insert it into the user's stormwork's vehicle save location. Note that all changes in configuration must be done by editing that python file, and that a DOOM.WAD from Ultimate Doom must be placed in the wad folder
 
 Most recent steam workshop upload:
 https://steamcommunity.com/sharedfiles/filedetails/?id=3461508998
