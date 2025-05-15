@@ -514,10 +514,11 @@ function onTick()
 							angle=flr(at2(cr,cr[23])/45+0.5)*45
 							valid=falseVar
 							stg=1
+							flying=s1[23]&4>0
 							while stg<5 and not valid do-- checks angles 0, 45, -45, 90, -90 relative to desired direction
 								nm=add(cr,dVec(angle+M[19][2][stg],8))
 								nm[9]=cr[9]
-								valid=chkPs(nm,falseVar,i,stg)and bounds[1]>=nm[9]-24
+								valid=chkPs(nm,falseVar,i,stg)and(bounds[1]>=nm[9]-24 or flying)
 								stg=stg+1
 							end
 							if valid then
@@ -530,9 +531,8 @@ function onTick()
 							else
 								chkPs(cr,falseVar,i)
 							end
-							if s1[23]&4<1 then
-								cr[9]=bounds[1]
-							end
+							cr[9]=flying and cr[9] or bounds[1]
+							
 							a=dist(cr,cr[23])
 							if s1[13]>0 and chkRayCol(cr,cr[23],1)and mn(a,230)<rand()then
 								cr[6]=s1[13]
