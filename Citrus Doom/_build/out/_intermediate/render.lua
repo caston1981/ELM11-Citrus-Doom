@@ -97,53 +97,43 @@ function onTick()
 
 	for j=1,3 do
 		if gB(9) and (not loaded)or not M[21]then -- M[21] is the first thing loaded after the loading screen orange, halting loading when that's done
-			rom=property.getText(romCr.."")
-			if rom~="" then
-				i=1
-				nm=""
-				cr=str.sub(rom,i,i)
-				while cr~=""do
-					b=str.byte(cr)
-					if b>64 or cr==""then
-						nm=(nm..(b-65))+0
-						if stg==1then
-							crI=nm
-							if M[nm]==nilVar then
-								M[nm]={}
-							end
-							stg=2
-						elseif stg==2then
-							intH=nm
-							crL=0
-							stg=3
-						elseif stg==3then
-							cnt=nm
-							stg=4
-						else
-							if crL==0then
-								crL=intH
-								cnt=cnt-1
-								crM={}
-								M[crI][#M[crI]+1]=crM
-							end
-							crM[#crM+1]=nm
-							crL=crL-1
-							if mx(crL,cnt)==0then
-								stg=1
-							end
-						end
-						nm=""
+			rom=property.getText(romCr)
+			i=1
+			nm=""
+			cr=str.sub(rom,i,i)
+			while cr~=""do
+				pos=str.byte(cr)
+				if pos>64then
+					nm=(nm..pos-65)+0
+					if stg==1then
+						curIndex=nm
+						M[nm]=M[nm]or{}
+					elseif stg==2then
+						intH=nm
+						curLength=0
+					elseif stg==3then
+						count=nm
 					else
-						nm=nm.. cr
+						if curLength==0then
+							curLength=intH
+							count=count-1
+							curM={}
+							M[curIndex][#M[curIndex]+1]=curM
+						end
+						curM[#curM+1]=nm
+						curLength=curLength-1
+						stg=mx(curLength,count)>0 and stg-1 or 0
 					end
-					i=i+1
-					cr=str.sub(rom,i,i)
+					stg=stg+1
+					nm=""
+				else
+					nm=nm..cr
 				end
-
-				romCr=romCr+1
-			else
-				loaded=trueVar
+				i=i+1
+				cr=str.sub(rom,i,i)
 			end
+			romCr=romCr+1
+			loaded=rom==""
 		end
 	end
 
