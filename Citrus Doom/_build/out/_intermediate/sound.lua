@@ -39,7 +39,6 @@ M={}
 romCr=1
 levelCr=3
 loaded=falseVar
-tick=1
 
 pp={{0,0},0,0}
 
@@ -56,6 +55,7 @@ levelCr=3
 
 LOD=400
 health=100
+healthOld=100
 yellow=0
 red=0
 difficulty=3002
@@ -64,7 +64,8 @@ bigNumb=32768 -- 2^15
 weaponObjects={}
 mapScale=0.05
 
-tick=0
+faceTick=0
+weaponGrin=0
 stg=1
 mN=0
 fireCooldown=0
@@ -162,7 +163,7 @@ function onTick()
 		--end
 		--
 		if gB(1) then
-			tick=tick+1
+			
 			if init then
 				for i=1,10 do
 					M[i]=M[i+10*levelCr]
@@ -321,20 +322,27 @@ function onTick()
 
 			showMap=gB(2)
 			
-			if tick%16==1 then
-				mRandom=mRandom%256+1
-				face=(4-mn(health//20,4))*8
-				if weaponList[weapon] then
-					face=face+M[13][1][mRandom]%3
-				else
-					weaponList[weapon]=1
-					face=face+6
-				end
-				
-				if health<=0 then
-					face=41
-				end
+			
+			faceTick=faceTick-1
+			weaponGrin=weaponGrin-1
+			if not weaponList[weapon] then
+				weaponList[weapon]=1
+				weaponGrin=70
 			end
+			newFace=(4-mn(health//20,4))*8
+			if health<=0 then --dead face
+				face=41
+			elseif weaponGrin>0 then --new weapon grin
+				face=newFace+6
+			elseif health<healthOld then --pain face
+				faceTick=35
+				face=newFace+7
+			elseif faceTick<=0 then --normal looking around
+				faceTick=16
+				mRandom=mRandom%256+1
+				face=newFace+M[13][1][mRandom]%3
+			end
+			healthOld=health
 			
 		end
 		
