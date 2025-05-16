@@ -184,14 +184,19 @@ function onTick()
 				cr=M[2][gN(2)]
 				if cr then
 					a=cr[4]
-					if a==3008 then
-						vsTex=cr[5]==1
-					elseif a>3004 then
-						LOD=mx(LOD+3*(cr[4]-3006),1)
-					elseif a>3000 then
-						difficulty=cr[4]
+					if a>0 then
+						if a==3008 then
+							vsTex=cr[5]==1
+						elseif a>3004 then
+							LOD=mx(LOD+3*(cr[4]-3006),1)
+						elseif a>3000 then
+							difficulty=cr[4]
+						end
+						switchedSwitch=gN(2)
+						if a<3000 and M[9][cr[5]][7]==0then
+							cr[8]=1
+						end
 					end
-					switchedSwitch=gN(2)
 				end
 			end
 			
@@ -414,7 +419,7 @@ function onTick()
 
 											if render then
 												cr=M[21][v][4]
-												if (seg[4]==switchedSwitch or difficulty==line[4]) and cr>0then
+												if (seg[4]==switchedSwitch or difficulty==line[4] or line[8]) and cr>0then
 													v=cr -- for switches/buttons/whatever to have a different texture when pressed
 												end
 												resScl=M[21][v][3]

@@ -455,7 +455,7 @@ function onDraw()
 			text(1,143,"DIF:")
 			text(1,149,"LOD:")
 			text(26,149,flr(LOD))
-			text(26,143,mn(difficulty-3000,3))
+			text(26,143,flr(mn(difficulty-3000,3)))
 		end
 		
 		text(1,131,"ROM:")
