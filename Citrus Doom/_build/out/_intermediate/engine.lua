@@ -118,7 +118,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 				bstA=tmpA
 			else
 				tmpTp,tmpBt=mn(cr[9],tp),mx(cr[8],bt)
-				if mn(p[9],tp-h)+24<tmpBt or mx(p[9],bt)+h>tmpTp then
+				if mn(p[9],tp-h)+24<tmpBt or mx(p[9],bt)+h>tmpTp or tmpTp-tmpBt<h then
 					bstDst=dst
 					bstA=tmpA
 				else
