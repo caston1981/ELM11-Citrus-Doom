@@ -114,8 +114,10 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 				summonThinker(cr,cr[5])
 			end
 			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then
-				bstDst=dst
-				bstA=tmpA
+				if d3>0then  -- this makes one-sided linedefs only work on one side, allowing an out-of-bounds player to walk back in bounds
+					bstDst=dst
+					bstA=tmpA
+				end
 			else
 				tmpTp,tmpBt=mn(cr[9],tp),mx(cr[8],bt)
 				if mn(p[9],tp-h)+24<tmpBt or mx(p[9],bt)+h>tmpTp or tmpTp-tmpBt<h then
