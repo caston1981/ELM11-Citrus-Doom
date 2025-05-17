@@ -539,7 +539,7 @@ function onTick()
 								fireWeapon(pTng,1)
 							end
 							pTng[3]=pTng[3]-20
-						elseif state3>9then-- attack logic
+						elseif state3>9 and cr[20]then-- attack logic
 							cr[3]=at2(cr,cr[23])
 							crWeapon=M[14][state3]
 							cr[10]=trueVar
