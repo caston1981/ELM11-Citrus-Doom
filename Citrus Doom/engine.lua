@@ -268,7 +268,7 @@ function fireWeapon(source,index)
 			M1[#M1+1]=a
 			s1=M15[a[4]]
 			a[6]=s1[3]
-			a[9]=source[9]+32
+			a[9]=source[9]+crWeapon[13]
 			a[11]=vel[1]
 			a[12]=vel[2]
 			a[17]=weapon
@@ -556,7 +556,7 @@ function onTick()
 							cr[1]=cr[1]-cr[11]
 							cr[2]=cr[2]-cr[12]
 							cr[3]=0
-							cr[6]=M15[cr[4]][9] -- this uses pain state instead of death state to keep lost souls alive after impact
+							cr[6]=M15[cr[4]][5] -- this uses see state instead of death state to keep lost souls alive after impact
 							cr[10]=trueVar
 							cr[11]=0
 							cr[12]=0

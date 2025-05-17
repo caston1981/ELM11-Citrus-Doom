@@ -334,7 +334,7 @@ function onTick()
 				face=41
 			elseif weaponGrin>0 then --new weapon grin
 				face=newFace+6
-			elseif health<healthOld then --pain face
+			elseif health<healthOld then --pain face, can't look in the direction of attacker since attackers aren't kept track of
 				faceTick=35
 				face=newFace+7
 			elseif faceTick<=0 then --normal looking around

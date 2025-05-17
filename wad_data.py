@@ -500,6 +500,7 @@ if __name__ == '__main__':
                      'A_HeadAttack':17,
                      'A_BruisAttack':19,
                      'A_CyberAttack':21,
+                     'A_SkullKnockback':24,
                    }
     
     #print(info_states[5])
@@ -606,8 +607,8 @@ if __name__ == '__main__':
         #        print(j,cur[j])
 
         if cur[22] != 0:
-            if "MF_MISSILE" in cur[22]: # this is used so missiles enter their painstate when they die, thus allowing lost souls to live upon impact
-                cur[8]=cur[13]
+            if "MF_MISSILE" in cur[22]: # this is used so missiles enter their seestate when they die, thus allowing lost souls to live upon impact
+                cur[4]=cur[13]
             cur[22] = sum([spawn_flags[j] for j in cur[22].split("|")])
         
         #print(cur[17],cur[18])
@@ -1146,11 +1147,11 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
-            elif i.line_type==30: #W1 Floor Up Shortest Lower Texture (actually 64 units from current floor)
+            elif i.line_type==30: #W1 Floor Up Shortest Lower Texture (actually 64 units from floor)
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height+64, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 2, max(level_wad.sectors[sec-1].floor_height,level_wad.sectors[sec-1].neighbouring_highest_floor)+64, 2, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1990,9 +1991,8 @@ if __name__ == '__main__':
             temp = info_spawn_zip[0].index(new[7])
             temp_spawn = info_spawn[temp]
             if int(new[6])>0:
-                new[5]=temp_spawn[16]
-                if new[7].find("SKULL")>0:
-                    new[5]=20
+                if not new[7].find("SKULL")>0:
+                    new[5]=temp_spawn[16]
                 #print(new[6])
             for k in [2,13]:
                 
