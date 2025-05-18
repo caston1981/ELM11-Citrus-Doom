@@ -214,6 +214,14 @@ def find_me(i,a):
     else:
         return i-32768
 
+def get_downsize_offset(sprite,res_scale_cur):
+    header = sprite[0]
+    return (header.left_offset % res_scale_cur, header.top_offset % res_scale_cur)
+
+def round_to(number,round_val):
+    return (number//round_val)*round_val
+    
+
 if __name__ == '__main__':
     start_time=time.time()
     #,"weapons_at_start.wad","jump_to_crash_zone.wad","enemy_testing.wad"
@@ -260,7 +268,7 @@ if __name__ == '__main__':
 
     #print(wad.sound)
     #halt
-    force_new_cache = False
+    force_new_cache = True
 
     packets = []
     curmax = 8192
@@ -2220,10 +2228,15 @@ if __name__ == '__main__':
                 res_scale_cur = sprite_overrides[index[:4]]
             else:
                 res_scale_cur = res_scale_sprites
-                
-            i=all_sprites[index][1]
-            width=i.get_width()//res_scale_cur
-            height=i.get_height()//res_scale_cur
+
+            cur_sprite = all_sprites[index]
+            i = cur_sprite[1]
+            
+            cur_offset = get_downsize_offset(cur_sprite,res_scale_cur)
+            
+            width=(i.get_width()+res_scale_cur-1-cur_offset[0])//res_scale_cur
+            height=(i.get_height()+res_scale_cur-1-cur_offset[1])//res_scale_cur
+
 
             av=(0,0,0)
             av_num=0
@@ -2231,7 +2244,7 @@ if __name__ == '__main__':
             for j in range(width):
                 for k in range(height):
                     
-                    colour=i.get_at((j*res_scale_cur,k*res_scale_cur))
+                    colour=i.get_at((j*res_scale_cur+cur_offset[0],k*res_scale_cur+cur_offset[1]))
                     colour=colour[:3]
                     if colour != trans_colour:
                         av=add(av,colour)
@@ -2400,14 +2413,18 @@ if __name__ == '__main__':
                 res_scale_cur = sprite_overrides[index[:4]]
             else:
                 res_scale_cur = res_scale_sprites
-                
-            i=all_sprites[index][1]
-            header=all_sprites[index][0]
 
+            cur_sprite = all_sprites[index]
+            i = cur_sprite[1]
+            header = cur_sprite[0]
+
+            cur_offset = get_downsize_offset(cur_sprite,res_scale_cur)
             
-            width=i.get_width()//res_scale_cur
-            height=i.get_height()//res_scale_cur
-            cur=[width,height,res_scale_cur,header.left_offset,header.top_offset,sprite_avs[index]+1]
+            width=(i.get_width()+res_scale_cur-1-cur_offset[0])//res_scale_cur
+            height=(i.get_height()+res_scale_cur-1-cur_offset[1])//res_scale_cur
+            cur=[width,height,res_scale_cur,
+                 round_to(header.left_offset,res_scale_cur),round_to(header.top_offset,res_scale_cur),
+                 sprite_avs[index]+1]
             
             #if index=="TROOH5" or True:
             #    #print(header.left_offset,header.top_offset)
@@ -2416,7 +2433,7 @@ if __name__ == '__main__':
             
             for j in range(width):
                 for k in range(height):
-                    colour=i.get_at((j*res_scale_cur,k*res_scale_cur))
+                    colour=i.get_at((j*res_scale_cur+cur_offset[0],k*res_scale_cur+cur_offset[1]))
                     colour=colour[:3]
                     if colour != trans_colour:
                         cur.append(colourmap.index(colour)+1)
