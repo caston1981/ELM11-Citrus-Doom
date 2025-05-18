@@ -55,9 +55,9 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 	bstDst=r
 	bounds=findMe(#M[7],p)
 	bt,tp=exp(bounds)
-	blkPs=sub(p,M10[1])
-	blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]or{{}} -- gives default case so it doesn't crash when an object is out-of-bounds
-	for i,cr in ipairsVar(blkCr[0]) do
+	blkPs=sub(p,M101)
+	blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]or{} -- gives default case so it doesn't crash when an object is out-of-bounds
+	for i,cr in ipairsVar(blkCr[0]or{}) do -- similar do-not-crash case
 		pos=M1[cr]
 		if cr~=index and pos and collObject[14]~=cr then
 			dst=dist(pos,p)
@@ -114,7 +114,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 				summonThinker(cr,cr[5])
 			end
 			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then
-				if d3>0then  -- this makes one-sided linedefs only work on one side, allowing an out-of-bounds player to walk back in bounds
+				if index>1 or d3>0then  -- this makes one-sided linedefs only work on one side for the player, allowing an out-of-bounds player to walk back in bounds
 					bstDst=dst
 					bstA=tmpA
 				end
@@ -386,6 +386,7 @@ function onTick()
 			M4=M[4]
 			M8=M[8]
 			M10=M[10]
+			M101,M10[1]=M10[1]
 			M12=M[12]
 			M15=M[15]
 			for i=14,16 do
@@ -411,7 +412,7 @@ function onTick()
 					M1[i]=falseVar
 				end
 			end
-			blockmapLim=M10[1][3]
+			blockmapLim=M101[3]
 		end
 
 		for i,cr in ipairsVar(M[2])do -- refresh walls
@@ -435,7 +436,7 @@ function onTick()
 		if timePassage>=0 then
 			timePassage=timePassage-1/35
 			
-			for i=2,#M10 do
+			for i=2,#M10 do -- nothing should be written to M10[1][0], but it can happen when an object goes out of bounds
 				M10[i][0]={}
 			end
 			
@@ -570,9 +571,9 @@ function onTick()
 					if cr[6]==1then
 						M1[i]=falseVar
 					else
-						blkPs=sub(cr,M10[1])
+						blkPs=sub(cr,M101)
 						blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
-						if blkCr~=nilVar then
+						if blkCr then
 							blkCr[0][#blkCr[0]+1]=i
 						end
 					end
