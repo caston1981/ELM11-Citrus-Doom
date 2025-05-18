@@ -268,7 +268,7 @@ if __name__ == '__main__':
 
     #print(wad.sound)
     #halt
-    force_new_cache = True
+    force_new_cache = False
 
     packets = []
     curmax = 8192
@@ -399,7 +399,7 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==1:
+        if i==-1:
             None
             print(code.split("\n")[83-1])
             
@@ -2489,6 +2489,8 @@ if __name__ == '__main__':
     cur=[]
     t=0
     tt=0
+    tl=0
+    tg=0
     for index in range(len(packets)):
         i = packets[index]
         #if i[0]==31:
@@ -2511,22 +2513,30 @@ if __name__ == '__main__':
                     else:
                         parts[-1] = parts[-1]+temp
                     t+=temp_len
-                    tt+=temp_len
                     
                 
-                if i[0]!=cur[0][0] and cur[0][0] in type_map:
-                    print(t//1024,"KiB of "+type_map[cur[0][0]])
+                if i[0]!=cur[0][0]:
+                    tt+=t
+                    if cur[0][0] in type_map:
+                        tg+=t
+                        print(t//1024,"KiB of "+type_map[cur[0][0]])
+                    if cur[0][0]>30:
+                        tl+=t
                     t=0
             cur=[i]
         else:
             cur.append(i)
-            
 
-
-
+    print()
+    print(tg//1024,"KiB of graphics")
+    print(tl//1024,"KiB of level data")
+    print((tt-tg-tl)//1024,"KiB of misc")
+    print(tt//1024,"KiB total")
+    print()
+    
     
     sizes = [len(i) for i in parts]
-    print(tt//1024,"KiB total")
+    
     print(len(parts),"text boxes total")
     print("hypothetically could be",sum(sizes)/curmax,"text boxes")
     print("largest text box is",max(sizes))
@@ -2564,6 +2574,10 @@ if __name__ == '__main__':
     file = open(path_out,mode="w", newline='\n')
     file.write(text)
     file.close()
+
+    print()
+    print("actual file is",len(text)//1024,"KiB")
+    print()
 
     print("took",time.time()-start_time,"seconds")
     
