@@ -941,7 +941,7 @@ if __name__ == '__main__':
                     for j in range(len(previous_secs)-1,-1,-1):
                         cur_floor_height = floor_height+(j+1)*step_size
                         sec = previous_secs[j]+1
-                        thinker = (sec, 1, cur_floor_height, 2, 1, 0, 0, i.thinker_id)
+                        thinker = (sec, 1, cur_floor_height, 1, 1, 0, 0, i.thinker_id)
                         i.thinker_id = insert_thinker(thinker)
 
                 i.line_type = {7:1,8:2,127:1}[i.line_type]
@@ -1159,7 +1159,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, max(level_wad.sectors[sec-1].floor_height,level_wad.sectors[sec-1].neighbouring_highest_floor)+64, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, max(level_wad.sectors[sec-1].floor_height,level_wad.sectors[sec-1].neighbouring_highest_floor)+64, 2, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1322,7 +1322,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_ceiling-8, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_ceiling-8, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
