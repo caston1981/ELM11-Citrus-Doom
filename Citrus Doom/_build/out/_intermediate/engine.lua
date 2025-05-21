@@ -436,7 +436,7 @@ function onTick()
 		if timePassage>=0 then
 			timePassage=timePassage-1/35
 			
-			for i=2,#M10 do -- nothing should be written to M10[1][0], but it can happen when an object goes out of bounds
+			for i=2,#M10 do
 				M10[i][0]={}
 			end
 			
@@ -451,7 +451,7 @@ function onTick()
 				s1=pos[a]
 				pos[a]=clmp(cr[3],s1-cr[4],s1+cr[4])+0
 				s1=pos[a]
-				if abs(s1-cr[3])<0.1then
+				if s1==cr[3]then
 					thinkers[i]=v[2]==cr[5]and{cr[6],1,pos}or{v[1],v[2]+1,pos}
 					if cr[6]==0 then
 						tableRemove(thinkers,i)
@@ -462,7 +462,7 @@ function onTick()
 				pos[30]=i
 			end
 			
-			--pTng[7]=mx(5,pTng[7]) -- invulnerability
+			pTng[7]=mx(5,pTng[7]) -- invulnerability
 			
 			for i,cr in ipairsVar(M1)do
 				if cr then
@@ -604,18 +604,15 @@ function onTick()
 					pTng[30+i]=pp[i]-pTng[i]
 					pTng[i]=pp[i]
 				end
-				if pTng[9]<=bounds[1]then
+				if pTng[9]>bounds[1]then
+					pTng[19]=pTng[19]-1
+				else
 					pTng[9]=mn(bounds[1],pTng[9]+4)
 					pTng[19]=mx(0,pTng[19])
-				else
-					if pTng[9]>=bounds[2]-56then
-						pTng[9]=bounds[2]-56
-						pTng[19]=mn(0,pTng[19])
-					end
-					pTng[19]=pTng[19]-1
 				end
 			else
 				pTng[19]=0
+				pTng[9]=bounds[1] -- puts the player's heigh back in-bounds
 			end
 			
 			ammo=M12[1]
