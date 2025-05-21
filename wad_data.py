@@ -1115,6 +1115,17 @@ if __name__ == '__main__':
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
+
+            elif i.line_type==25: #W1 Start Slow Crusher
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs: # this doesn't use the normal insert_thinker because I couldn't think of a way to make a thinker loop with it
+                    
+                    sector_thinkers.append((sec, 2, level_wad.sectors[sec-1].ceil_height, 1, 1, len(sector_thinkers)+2, 1, 0))
+                    sector_thinkers.append((sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_floor+8, 1, 1, len(sector_thinkers), 1, i.thinker_id))
+                    i.thinker_id = len(sector_thinkers)
+
+                i.line_type=2
             
             elif i.line_type==26: #MR Door Blue
                 thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 2, 1, 0, key_indexes["blue"], 0)
@@ -1414,6 +1425,17 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
+            elif i.line_type==73: #WR Start Slow Crusher
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs: # this doesn't use the normal insert_thinker because I couldn't think of a way to make a thinker loop with it
+                    
+                    sector_thinkers.append((sec, 2, level_wad.sectors[sec-1].ceil_height, 1, 1, len(sector_thinkers)+2, 2, 0))
+                    sector_thinkers.append((sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_floor+8, 1, 1, len(sector_thinkers), 2, i.thinker_id))
+                    i.thinker_id = len(sector_thinkers)
+
+                i.line_type=2
+
             elif i.line_type==75: #WR Door Close
                 cur_secs = find_sector(i.sector_tag)
                 
@@ -1432,6 +1454,17 @@ if __name__ == '__main__':
 
                     thinker = (sec, 2, level_wad.sectors[sec-1].floor_height, 2, TICKRATE*30, next_thinker, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=2
+
+            elif i.line_type==77: #WR Start Crusher
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs: # this doesn't use the normal insert_thinker because I couldn't think of a way to make a thinker loop with it
+                    
+                    sector_thinkers.append((sec, 2, level_wad.sectors[sec-1].ceil_height, 2, 1, len(sector_thinkers)+2, 2, 0))
+                    sector_thinkers.append((sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_floor+8, 2, 1, len(sector_thinkers), 2, i.thinker_id))
+                    i.thinker_id = len(sector_thinkers)
 
                 i.line_type=2
 
@@ -1467,8 +1500,8 @@ if __name__ == '__main__':
                 
                 for sec in cur_secs: # this doesn't use the normal insert_thinker because I couldn't think of a way to make a thinker loop with it
                     
-                    sector_thinkers.append((sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, TICKRATE*3, len(sector_thinkers)+2, 0, 0))
-                    sector_thinkers.append((sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, TICKRATE*3, len(sector_thinkers), 0, i.thinker_id))
+                    sector_thinkers.append((sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, TICKRATE*3, len(sector_thinkers)+2, 2, 0))
+                    sector_thinkers.append((sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, TICKRATE*3, len(sector_thinkers), 2, i.thinker_id))
                     i.thinker_id = len(sector_thinkers)
 
                 i.line_type=2
@@ -1785,11 +1818,8 @@ if __name__ == '__main__':
             elif i.line_type>=3000:
                 i.thinker_id = i.sector_tag
 
-            elif i.line_type>0 and not i.line_type in [25,#crush slow start walkover
-                                                            48,#moving texture
-                                                            73,#crush slow start
+            elif i.line_type>0 and not i.line_type in [48,#moving texture
                                                             74,#crush stop
-                                                            77,#crush start
                                                             ]:
                 print("unknown linedef type",i.line_type,"in level",map_name)
                 None

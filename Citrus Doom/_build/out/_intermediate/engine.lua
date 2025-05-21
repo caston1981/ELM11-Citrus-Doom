@@ -32,6 +32,7 @@ init=trueVar
 weapon=2
 weaponFireDelay=0
 httpTk=0
+tick=0
 timePassage=0
 pRandom=0
 stg=1
@@ -435,6 +436,7 @@ function onTick()
 		sB(1,timePassage>=0)
 		if timePassage>=0 then
 			timePassage=timePassage-1/35
+			tick=tick+1
 			
 			for i=2,#M10 do
 				M10[i][0]={}
@@ -563,8 +565,7 @@ function onTick()
 							cr[6]=M15[cr[4]][5] -- this uses see state instead of death state to keep lost souls alive after impact
 							cr[10]=trueVar
 							cr[11]=0
-							cr[12]=0
-							cr[17]=nilVar
+							cr[12],cr[17]=0
 							cr[19]=0
 						end
 					end
@@ -613,6 +614,7 @@ function onTick()
 			else
 				pTng[19]=0
 				pTng[9]=bounds[1] -- puts the player's heigh back in-bounds
+				valid=tick%4>0 or damageThing(pTng,10) -- crushes player
 			end
 			
 			ammo=M12[1]
