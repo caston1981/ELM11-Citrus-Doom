@@ -915,14 +915,15 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
 
-            elif i.line_type==7 or i.line_type==8 or i.line_type==127: #S1 stairs, W1 stairs, S1 stairs fast (not fast, but still big)
+            elif i.line_type==7 or i.line_type==8 or i.line_type==127: #S1 stairs, W1 stairs, S1 stairs fast
                 cur_secs = find_sector(i.sector_tag)
                 step_size = 16 if i.line_type==127 else 8
+                step_speed = 4 if i.line_type==127 else 0.25
 
                 for sec in cur_secs:
                     previous_secs = [sec-1]
@@ -941,7 +942,7 @@ if __name__ == '__main__':
                     for j in range(len(previous_secs)-1,-1,-1):
                         cur_floor_height = floor_height+(j+1)*step_size
                         sec = previous_secs[j]+1
-                        thinker = (sec, 1, cur_floor_height, 1, 1, 0, 0, i.thinker_id)
+                        thinker = (sec, 1, cur_floor_height, step_speed, 1, 0, 0, i.thinker_id)
                         i.thinker_id = insert_thinker(thinker)
 
                 i.line_type = {7:1,8:2,127:1}[i.line_type]
@@ -962,13 +963,13 @@ if __name__ == '__main__':
                     assert sec2!=0
                     assert sec3!=0
 
-                    thinker = (sec2, 1, level_wad.sectors[sec3-1].floor_height, 1, 1, 0, 0, 0)
+                    thinker = (sec2, 1, level_wad.sectors[sec3-1].floor_height, 0.5, 1, 0, 0, 0)
                     next_thinker = insert_thinker(thinker)
 
                     thinker = (sec2, 3, level_wad.sectors[sec3-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
                         
-                    thinker = (sec, 1, level_wad.sectors[sec3-1].floor_height, 1, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec3-1].floor_height, 0.5, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -977,10 +978,10 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 0, 0)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 4, 1, 0, 0, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, TICKRATE*3, next_thinker, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 4, TICKRATE*3, next_thinker, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1017,7 +1018,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height+32, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height+32, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1038,7 +1039,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1047,7 +1048,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1062,7 +1063,7 @@ if __name__ == '__main__':
                             sec2=potential_sec
                     assert sec2!=0
 
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, 0)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 0, 0)
                     next_thinker = insert_thinker(thinker)
                             
                     thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
@@ -1074,7 +1075,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 0, 0)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 4, 1, 0, 0, 0)
                     next_thinker = insert_thinker(thinker)
 
                     thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, TICKRATE*3, next_thinker, 0, i.thinker_id)
@@ -1090,7 +1091,7 @@ if __name__ == '__main__':
                         if potential_sec!=sec and level_wad.sectors[sec-1].neighbouring_highest_floor==level_wad.sectors[potential_sec-1].floor_height:
                             sec2=potential_sec
                     
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, 0)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 0, 0)
                     next_thinker = insert_thinker(thinker)
 
                     thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
@@ -1102,7 +1103,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1111,7 +1112,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1170,7 +1171,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, max(level_wad.sectors[sec-1].floor_height,level_wad.sectors[sec-1].neighbouring_highest_floor)+64, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, max(level_wad.sectors[sec-1].floor_height,level_wad.sectors[sec-1].neighbouring_highest_floor)+64, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1209,11 +1210,11 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif i.line_type==36: #W1 Floor To 8 Above Heighest Adjacent Floor Fast (not fast)
+            elif i.line_type==36: #W1 Floor To 8 Above Heighest Adjacent Floor Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 4, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1231,7 +1232,7 @@ if __name__ == '__main__':
                     thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, 0, 0, i.thinker_id)
                     next_thinker = insert_thinker(thinker)
                     
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, 1, next_thinker, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 1, 1, next_thinker, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1240,7 +1241,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1271,7 +1272,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_highest_ceiling, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_highest_ceiling, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1289,7 +1290,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height+8, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height+8, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1298,7 +1299,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 1, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 1, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1319,7 +1320,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1329,7 +1330,7 @@ if __name__ == '__main__':
                 
                 i.line_type=2
 
-            elif i.line_type==56: #W1 Floor To 8 Below Lowest Adjacent Ceiling and Crush (not crush)
+            elif i.line_type==56: #W1 Floor To 8 Below Lowest Adjacent Ceiling and Crush
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
@@ -1342,7 +1343,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height+24, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height+24, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1351,7 +1352,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height+24, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height+24, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1360,7 +1361,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, 1, 0, 1, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 1, 1, 0, 1, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1378,10 +1379,10 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 1, 0)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 4, 1, 0, 1, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, TICKRATE*3, next_thinker, 1, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 4, TICKRATE*3, next_thinker, 1, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1398,29 +1399,29 @@ if __name__ == '__main__':
 
                 i.line_type=1
 
-            elif i.line_type==65: #SR Floor To 8 Below Lowest Adjacent Ceiling and Crush (don't crush)
+            elif i.line_type==65: #SR Floor To 8 Below Lowest Adjacent Ceiling and Crush
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-8, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-8, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
 
-            elif i.line_type==70: #SR Floor To 8 Above Higher Adjacent Floor Fast (not fast, uses highest)
+            elif i.line_type==70: #SR Floor To 8 Above Higher Adjacent Floor Fast (uses highest)
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 2, 1, 0, 1, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 4, 1, 0, 1, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
 
-            elif i.line_type==71: #S1 Floor To 8 Above Higher Adjacent Floor Fast (not fast, uses highest)
+            elif i.line_type==71: #S1 Floor To 8 Above Higher Adjacent Floor Fast (uses highest)
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 4, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1457,7 +1458,7 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif i.line_type==77: #WR Start Crusher
+            elif i.line_type==77: #WR Start Fast Crusher
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs: # this doesn't use the normal insert_thinker because I couldn't think of a way to make a thinker loop with it
@@ -1472,7 +1473,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, 1, 0, 2, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 1, 1, 0, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1481,7 +1482,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 2, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1500,8 +1501,8 @@ if __name__ == '__main__':
                 
                 for sec in cur_secs: # this doesn't use the normal insert_thinker because I couldn't think of a way to make a thinker loop with it
                     
-                    sector_thinkers.append((sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, TICKRATE*3, len(sector_thinkers)+2, 2, 0))
-                    sector_thinkers.append((sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, TICKRATE*3, len(sector_thinkers), 2, i.thinker_id))
+                    sector_thinkers.append((sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, TICKRATE*3, len(sector_thinkers)+2, 2, 0))
+                    sector_thinkers.append((sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 1, TICKRATE*3, len(sector_thinkers), 2, i.thinker_id))
                     i.thinker_id = len(sector_thinkers)
 
                 i.line_type=2
@@ -1510,10 +1511,10 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 2, 0)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 4, 1, 0, 2, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, TICKRATE*3, next_thinker, 2, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 4, TICKRATE*3, next_thinker, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1546,7 +1547,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling, 2, 1, 0, 2, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling, 1, 1, 0, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1581,7 +1582,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 2, 1, 0, 2, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 1, 1, 0, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
@@ -1590,7 +1591,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_ceiling, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1599,7 +1600,7 @@ if __name__ == '__main__':
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1623,93 +1624,93 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
-            elif i.line_type==105: #WR Door Fast (not fast)
+            elif i.line_type==105: #WR Door Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 2, 0)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height, 8, 1, 0, 2, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, TICKRATE*4, next_thinker, 2, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, TICKRATE*4, next_thinker, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
 
-            elif i.line_type==109: #W1 Door Stay Open Fast (not fast)
+            elif i.line_type==109: #W1 Door Stay Open Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
 
-            elif i.line_type==112: #S1 Door Stay Open Fast (not fast)
+            elif i.line_type==112: #S1 Door Stay Open Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
 
-            elif i.line_type==114: #SR Door Fast (not fast)
+            elif i.line_type==114: #SR Door Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 1, 0)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height, 8, 1, 0, 1, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, TICKRATE*4, next_thinker, 1, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, TICKRATE*4, next_thinker, 1, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
 
-            elif i.line_type==115: #SR Door Stay Open Fast (not fast)
+            elif i.line_type==115: #SR Door Stay Open Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, 1, 0, 1, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, 1, 0, 1, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
 
-            elif i.line_type==117: #MR Door Fast (not fast)
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.floor_height, 2, 1, 0, 1, 0)
+            elif i.line_type==117: #MR Door Fast
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 8, s2.floor_height, 2, 1, 0, 1, 0)
                 next_thinker = insert_thinker(thinker)
 
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-4, 2, TICKRATE*4, next_thinker, 1, i.thinker_id)
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 8, s2.neighbouring_lowest_ceiling-4, 2, TICKRATE*4, next_thinker, 1, i.thinker_id)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
 
-            elif i.line_type==118: #M1 Door Stay Open Fast (not fast)
+            elif i.line_type==118: #M1 Door Stay Open Fast
 
-                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 2, s2.neighbouring_lowest_ceiling-4, 2, 1, 0, 0, 0)
+                thinker = (level_wad.sidedefs[i.back_sidedef_id-1].sector_id+1, 8, s2.neighbouring_lowest_ceiling-4, 2, 1, 0, 0, 0)
                 i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
 
-            elif i.line_type==120: #WR Lift Fast (not fast)
+            elif i.line_type==120: #WR Lift Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 2, 0)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 8, 1, 0, 2, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, TICKRATE*3, next_thinker, 2, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 8, TICKRATE*3, next_thinker, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
 
-            elif i.line_type==123: #SR Lift Fast (not fast)
+            elif i.line_type==123: #SR Lift Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 1, 0)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].floor_height, 8, 1, 0, 1, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 2, TICKRATE*3, next_thinker, 1, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 8, TICKRATE*3, next_thinker, 1, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=1
@@ -1764,53 +1765,53 @@ if __name__ == '__main__':
                 if i.line_type==0:
                     print("tp targ not found in",map_name,"linedef",index,"sector tag",i.sector_tag)
 
-            elif i.line_type==133: #S1 Door Stay Open Blue Fast (not fast)
+            elif i.line_type==133: #S1 Door Stay Open Blue Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["blue"]
 
-            elif i.line_type==134: #S1 Door Red Fast (not fast)
+            elif i.line_type==134: #S1 Door Red Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
                     thinker = (sec, 2, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 1, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, TICKRATE*4, next_thinker, 1, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, TICKRATE*4, next_thinker, 1, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["red"]
 
-            elif i.line_type==135: #S1 Door Stay Open Red Fast (not fast)
+            elif i.line_type==135: #S1 Door Stay Open Red Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["red"]
 
-            elif i.line_type==136: #SR Door Yellow Fast (not fast)
+            elif i.line_type==136: #SR Door Yellow Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height, 2, 1, 0, 1, 0)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].floor_height, 8, 1, 0, 1, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, TICKRATE*4, next_thinker, 1, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, TICKRATE*4, next_thinker, 1, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["yellow"]
 
-            elif i.line_type==137: #S1 Door Stay Open Yellow Key Fast (not fast)
+            elif i.line_type==137: #S1 Door Stay Open Yellow Key Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 2, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 2, level_wad.sectors[sec-1].neighbouring_lowest_ceiling-4, 8, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=key_indexes["yellow"]
@@ -2533,7 +2534,7 @@ if __name__ == '__main__':
                         out_numbs.append(k)
 
                 for j in out_numbs:
-                    temp = str(int(j))
+                    temp = str(j)
                     temp = temp[:-1]+chr(ord(temp[-1])+17)
                     temp_len = len(temp)
                     if len(parts)==0 or len(parts[-1])+temp_len>curmax:
