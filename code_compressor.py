@@ -135,7 +135,7 @@ def compress(text,print_vars=False,delete_newlines=False):
         if i == '"':
             is_string = not is_string
 
-    for i in ["then"]:
+    for i in ["then","or"]:
         cur_index=0
         while text.find(" "+i,cur_index)>-1:
             cur_index = text.find(" "+i,cur_index)
