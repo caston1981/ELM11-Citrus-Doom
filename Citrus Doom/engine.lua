@@ -104,7 +104,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 	hitThing=falseVar
 
 	if tp-bt<h or bt>p[9]+24then-- or tp<p[9]+h
-		return falseVar
+		return falseVar -- returns if an object can't fit in the current sector
 	end
 	for i=1,#blkCr do
 		cr=M[2][blkCr[i]]
@@ -613,7 +613,7 @@ function onTick()
 			else
 				pTng[19]=0
 				pTng[9]=bounds[1] -- puts the player's heigh back in-bounds
-				valid=tick%4>0 or damageThing(pTng,10) -- crushes player
+				valid=tick%4>0 or bounds[6]<18 or damageThing(pTng,10) -- crushes player if both conditions are false
 			end
 			
 			ammo=M12[1]
