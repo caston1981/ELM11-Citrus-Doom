@@ -110,10 +110,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 		cr=M[2][blkCr[i]]
 		dst,tmpA=chkLnDst(p,M4[cr[1]],M4[cr[2]])
 		if dst<bstDst then
-			if checkPlayerPosLoop==1 and (cr[3]&512>0 or index==1) and (cr[4]==2 or index>1) then -- 512 is the monster-usable tag, which is the only thing monsters care about
-				summonThinker(cr,cr[5])
-			end
-			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then
+			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then -- in order: if the linedef is marked as solid, if the colliding object is marked as solid, if the linedef is one-sided
 				if index>1 or d3>0then  -- this makes one-sided linedefs only work on one side for the player, allowing an out-of-bounds player to walk back in bounds
 					bstDst=dst
 					bstA=tmpA
@@ -124,6 +121,9 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 					bstDst=dst
 					bstA=tmpA
 				else
+					if checkPlayerPosLoop==1 and (cr[3]&512>0 or index==1) and (cr[4]==2 or index>1) then -- 512 is the monster-usable tag, which is the only thing monsters care about
+						summonThinker(cr,cr[5])
+					end
 					tp,bt=tmpTp,tmpBt
 				end
 			end
