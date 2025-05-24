@@ -632,6 +632,7 @@ if __name__ == '__main__':
     for i in ammo_pickup_dict:
         cur = info_spawn[info_spawn_zip[0].index(i)]
         info_states_processed[cur[2]-1][4] = 1
+        #print(cur[2],i)
             #print(i[26])
 
     for i in health_pickup_list_zip[0]:
@@ -1338,7 +1339,7 @@ if __name__ == '__main__':
                 for sec in cur_secs:
                     cur_sec = level_wad.sectors[sec-1]
                     
-                    thinker = (sec, 1, cur_sec.neighbouring_highest_ceiling-8, 1, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, min(cur_sec.ceil_height,cur_sec.neighbouring_highest_ceiling)-8, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
                     cur_sec.type = 18 # enables crushing
 
@@ -1410,7 +1411,7 @@ if __name__ == '__main__':
                 for sec in cur_secs:
                     cur_sec = level_wad.sectors[sec-1]
                     
-                    thinker = (sec, 1, cur_sec.neighbouring_lowest_ceiling-8, 1, 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 1, min(cur_sec.ceil_height,cur_sec.neighbouring_highest_ceiling)-8, 1, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
                     cur_sec.type = 18 # enables crushing
 
@@ -1590,11 +1591,11 @@ if __name__ == '__main__':
                     print("tp targ not found in",map_name,"linedef",index,"sector tag",i.sector_tag)
                     
 
-            elif i.line_type==98: #WR Floor To 8 Above Heighest Adjacent Floor Fast (not fast)
+            elif i.line_type==98: #WR Floor To 8 Above Heighest Adjacent Floor Fast
                 cur_secs = find_sector(i.sector_tag)
                 
                 for sec in cur_secs:
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 1, 1, 0, 2, i.thinker_id)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor+8, 4, 1, 0, 2, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                 i.line_type=2
