@@ -112,7 +112,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 		dst,tmpA=chkLnDst(p,M4[cr[1]],M4[cr[2]])
 		if dst<bstDst then
 			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then -- in order: if the linedef is marked as solid, if the colliding object is marked as solid, if the linedef is one-sided
-				if index>1 or d3>0then  -- this makes one-sided linedefs only work on one side for the player, allowing an out-of-bounds player to walk back in bounds
+				if index>1 or d3>0 or cr[3]&4>0 then  -- this makes one-sided linedefs only work on one side for the player, allowing an out-of-bounds player to walk back in bounds
 					bstDst=dst
 					bstA=tmpA
 				end
@@ -464,7 +464,7 @@ function onTick()
 				pos[30]=i
 			end
 			
-			pTng[7]=mx(5,pTng[7]) -- invulnerability
+			--pTng[7]=mx(5,pTng[7]) -- invulnerability
 			
 			for i,cr in ipairsVar(M1)do
 				if cr then

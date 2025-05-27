@@ -232,6 +232,7 @@ if __name__ == '__main__':
     #map_order=["SET1","E2M3","E1M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
     map_order=["SET1"]+["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(4*9)]
     #map_order=["SET1","E1M1","E2M3"] # self explanitory, first level is the settings one
+    #map_order[1]="E1M3"
     skys = {"E1":"SKY1","E2":"SKY2","E3":"SKY3","E4":"SKY4"}
     sky_textures = [skys[i] for i in skys]
     sky_order = [(sky_textures.index(skys[i[:2]] if i[:2] in skys else sky_textures[0])+1) for i in map_order]
