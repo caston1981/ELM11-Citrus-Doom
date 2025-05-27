@@ -380,118 +380,115 @@ function onDraw()
 	local tri,rec,stCl,text,drLine=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawText,screenVar.drawLine
 	mN=mN+1
 
-	if mN<=1 then
-		
-		if M[21]and not loaded then
-			tex=M[25][1]
-			tW,tH=tex[1],tex[2]
-			x1,y1=wdthH-tW/2,80-tH/2
+	if M[21]and not loaded then
+		tex=M[25][1]
+		tW,tH=tex[1],tex[2]
+		x1,y1=wdthH-tW/2,80-tH/2
+		for k=0,tW-1 do
+			x2=x1+k
+			for n=0,tH-1 do
+				pix=tex[5+n+k*tH]
+				if pix~=0 then
+					col=M[20][pix]
+					stCl(col[1],col[2],col[3])
+					rec(x2,y1+n,1,1)
+				end
+			end
+		end
+	end
+	
+	if not showMap then
+		for i=1,#weaponObjects do
+			tex=weaponObjects[i][2][1]
+			lght=tex>0 and ppLght or 1
+			tex=M[17][abs(tex)][1]
+			tex=M[23][tex]
+			tW,tH,pxSize=tex[1],tex[2],tex[3]*0.7
+			pxSizeV=pxSize*pixelAspectCorrection
+			x1,y1=wdthH-(tex[4]+160)*0.7,hght-(tex[5]+148)*0.7*pixelAspectCorrection
 			for k=0,tW-1 do
-				x2=x1+k
+				x2=x1+k*pxSize
 				for n=0,tH-1 do
-					pix=tex[5+n+k*tH]
+					pix=tex[7+n+k*tH]
 					if pix~=0 then
 						col=M[20][pix]
-						stCl(col[1],col[2],col[3])
-						rec(x2,y1+n,1,1)
+						stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+						rec(x2,y1+n*pxSizeV,pxSize,pxSizeV)
 					end
 				end
 			end
 		end
-		
-		if not showMap then
-			for i=1,#weaponObjects do
-				tex=weaponObjects[i][2][1]
-				lght=tex>0 and ppLght or 1
-				tex=M[17][abs(tex)][1]
-				tex=M[23][tex]
-				tW,tH,pxSize=tex[1],tex[2],tex[3]*0.7
-				pxSizeV=pxSize*pixelAspectCorrection
-				x1,y1=wdthH-(tex[4]+160)*0.7,hght-(tex[5]+148)*0.7*pixelAspectCorrection
-				for k=0,tW-1 do
-					x2=x1+k*pxSize
-					for n=0,tH-1 do
-						pix=tex[7+n+k*tH]
-						if pix~=0 then
-							col=M[20][pix]
-							stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-							rec(x2,y1+n*pxSizeV,pxSize,pxSizeV)
-						end
+	end
+	
+	if loaded then
+		if showMap then
+			stCl(0,0,0)
+			rec(0,0,wdth,hght)
+			for i=1,#M[2] do
+				cr=M[2][i]
+				if cr[8] then
+					p1=add(invY(mul(sub(M[4][cr[1]],pp[1]),mapScale)),{wdthH,hghtH})
+					p2=add(invY(mul(sub(M[4][cr[2]],pp[1]),mapScale)),{wdthH,hghtH})
+					
+					if cr[3]&4>0 then
+						stCl(50,50,50)
+					else
+						stCl(255,255,255)
 					end
-				end
-			end
-		end
-		
-		if loaded then
-			if showMap then
-				stCl(0,0,0)
-				rec(0,0,wdth,hght)
-				for i=1,#M[2] do
-					cr=M[2][i]
-					if cr[8] then
-						p1=add(invY(mul(sub(M[4][cr[1]],pp[1]),mapScale)),{wdthH,hghtH})
-						p2=add(invY(mul(sub(M[4][cr[2]],pp[1]),mapScale)),{wdthH,hghtH})
-						
-						if cr[3]&4>0 then
-							stCl(50,50,50)
-						else
-							stCl(255,255,255)
-						end
-						drLine(p1[1],p1[2],p2[1],p2[2])
-					end
-				end
-				stCl(255,255,255)
-				cr=M[19][10]
-				for i=1,#cr,4 do
-					sinP=sin(pp[3]-90)
-					cosP=cos(pp[3]-90)
-					p1={cr[i]*cosP+cr[i+1]*sinP,cr[i+1]*cosP-cr[i]*sinP}
-					p2={cr[i+2]*cosP+cr[i+3]*sinP,cr[i+3]*cosP-cr[i+2]*sinP}
-
-					p1=add(p1,{wdthH,hghtH})
-					p2=add(p2,{wdthH,hghtH})
-
 					drLine(p1[1],p1[2],p2[1],p2[2])
 				end
 			end
+			stCl(255,255,255)
+			cr=M[19][10]
+			for i=1,#cr,4 do
+				sinP=sin(pp[3]-90)
+				cosP=cos(pp[3]-90)
+				p1={cr[i]*cosP+cr[i+1]*sinP,cr[i+1]*cosP-cr[i]*sinP}
+				p2={cr[i+2]*cosP+cr[i+3]*sinP,cr[i+3]*cosP-cr[i+2]*sinP}
 
-			stCl(255,red>0 and 0 or 255,0,red+yellow)
-			rec(0,0,wdth,hght)
-			
-			stCl(50,50,50)
-			rec(0,hght,wdth,32)
-			stCl(25,25,25)
-			rec(wdthH-16,hght,32,32)
-			tex=M[23][M[19][3][1]+face]
-			tW,tH=tex[1],tex[2]
-			x1=wdthH-tW/2
-			for i=0,tW-1 do
-				for j=0,tH-1 do
-					pix=tex[7+j+i*tH]
-					if pix~=0 then
-						col=M[20][pix]
-						stCl(col[1],col[2],col[3])
-						rec(x1+i,hght+1+j,1,1)
-					end
+				p1=add(p1,{wdthH,hghtH})
+				p2=add(p2,{wdthH,hghtH})
+
+				drLine(p1[1],p1[2],p2[1],p2[2])
+			end
+		end
+
+		stCl(255,red>0 and 0 or 255,0,red+yellow)
+		rec(0,0,wdth,hght)
+		
+		stCl(50,50,50)
+		rec(0,hght,wdth,32)
+		stCl(25,25,25)
+		rec(wdthH-16,hght,32,32)
+		tex=M[23][M[19][3][1]+face]
+		tW,tH=tex[1],tex[2]
+		x1=wdthH-tW/2
+		for i=0,tW-1 do
+			for j=0,tH-1 do
+				pix=tex[7+j+i*tH]
+				if pix~=0 then
+					col=M[20][pix]
+					stCl(col[1],col[2],col[3])
+					rec(x1+i,hght+1+j,1,1)
 				end
 			end
-			for i=5,7 do
-				cr=M[19][i]
-				stCl(cr[1],cr[2],cr[3])
-				rec(229,95+i*7,6,7)
-			end
-
-			stCl(255,255,255)
-			text(100,131,flr(health))
-			text(100,137,flr(armour))
-			text(1,143,"DIF:")
-			text(1,149,"LOD:")
-			text(26,149,flr(LOD))
-			text(26,143,flr(mn(difficulty-3000,3)))
 		end
-		
-		text(1,131,"ROM:")
-		text(26,131,romCr)
-		text(1,137,"TPS:")
+		for i=5,7 do
+			cr=M[19][i]
+			stCl(cr[1],cr[2],cr[3])
+			rec(229,95+i*7,6,7)
+		end
+
+		stCl(255,255,255)
+		text(100,131,flr(health))
+		text(100,137,flr(armour))
+		text(1,143,"DIF:")
+		text(1,149,"LOD:")
+		text(26,149,flr(LOD))
+		text(26,143,flr(mn(difficulty-3000,3)))
 	end
+	
+	text(1,131,"ROM:")
+	text(26,131,romCr)
+	text(1,137,"TPS:")
 end

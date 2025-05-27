@@ -99,7 +99,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 				end
 			end
 		end
-	end
+	end	
 			
 	hitThing=falseVar
 

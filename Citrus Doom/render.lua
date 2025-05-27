@@ -531,201 +531,199 @@ end
 function onDraw()
 	screenVar=screen
 	local tri,rec,stCl,text=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawText --locals are faster because lua
-	mN=mN+1
 	vises={floors,ceils}
 
-	if mN<=1 then -- so it won't render on unnecessary displays, more useful in the past
 
-		if loaded then
-			
-			tex=M[24][M[19][8][levelCr-3]]
-			tW,tH=tex[1],tex[2]
-			scl=wdth/ceil(tW*fovT)
-			scl2=scl*1
-			for i=0,ceil(tW*fovT),1 do
-				x1=(tW/2-i-1+pp[3]/90*tW)%tW
-				x2=(x1%1-1)*scl
-				x1=flr(x1)*tH
-				for j=0,tH-1,1 do
-					pix=tex[5+j+x1]
+
+	if loaded then
+		
+		tex=M[24][M[19][8][levelCr-3]]
+		tW,tH=tex[1],tex[2]
+		scl=wdth/ceil(tW*fovT)
+		scl2=scl*1
+		for i=0,ceil(tW*fovT),1 do
+			x1=(tW/2-i-1+pp[3]/90*tW)%tW
+			x2=(x1%1-1)*scl
+			x1=flr(x1)*tH
+			for j=0,tH-1,1 do
+				pix=tex[5+j+x1]
+				col=M[20][pix]
+				stCl(col[1],col[2],col[3])
+				rec(i*scl+x2,j*scl,scl2,scl2)
+			end
+		end
+
+		for i=#walls,1,-1 do -- the entire wall rendering is rather weird for doom
+			for j=1,#walls[i] do --    it renders each texture pixel (texel) as one quad (2 triangles really), instead of drawing each screen pixel separately
+			v=walls[i][j] --    this makes rendering a lot faster, less important for current cpus but cruial for tolorable performance on my Ryzen 5 1600X
+			if v[9] or v[13] then
+				if v[9] then -- I don't know why more normal per-screen-pixel is so slow when I tried it before
+					v2=walls[i][j+1] --    tried just rendering 1 rect per pixel on a 9x5 screen (288x160 res) using 1 setcolor call and 1 rect call
+				else --    that barely stayed above 60tps, though of course it performs well enough on newer cpus
+					v2=v
+				end
+				tex=M[21][v[4]]
+				tex=M[21][v[4]+(animationFrame%tex[5])]
+				flip=v[12]
+				y=mn(flip,0)
+				x=v[1]
+				x2=v2[1]
+
+				fin=v[2-y]
+				fin2=v2[2-y]
+
+				k=v[3+y]
+				k2=v2[3+y]
+
+				if not v2[9] then x2=x2+1 end
+
+				lghtMath(v[7])
+
+				yScl=flip*(v[2]-v[3])*v[10]/v[6]
+				yScl2=flip*(v2[2]-v2[3])*v[10]/v2[6]
+
+				crM=flip>0 and mn or mx
+				itter=0
+				while k*flip<fin*flip and (itter<tex[2] or not v[14]) do
+
+					kN=crM(k+yScl,fin)
+					k2N=crM(k2+yScl2,fin2)
+
+					pix=tex[7+((y*v[11]+v[8]//tex[3])%tex[2])+tex[2]*(v[5]%tex[1])]
 					col=M[20][pix]
-					stCl(col[1],col[2],col[3])
-					rec(i*scl+x2,j*scl,scl2,scl2)
+					if col then
+						stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+						tri(x,k,x,kN,x2,k2N)
+						tri(x,k,x2,k2,x2,k2N)
+					end
+
+					k=kN
+					k2=k2N
+					y=y+flip
+					itter=itter+v[11]
+
+					end
+
 				end
 			end
-
-			for i=#walls,1,-1 do -- the entire wall rendering is rather weird for doom
-				for j=1,#walls[i] do --    it renders each texture pixel (texel) as one quad (2 triangles really), instead of drawing each screen pixel separately
-				v=walls[i][j] --    this makes rendering a lot faster, less important for current cpus but cruial for tolorable performance on my Ryzen 5 1600X
-				if v[9] or v[13] then
-					if v[9] then -- I don't know why more normal per-screen-pixel is so slow when I tried it before
-						v2=walls[i][j+1] --    tried just rendering 1 rect per pixel on a 9x5 screen (288x160 res) using 1 setcolor call and 1 rect call
-					else --    that barely stayed above 60tps, though of course it performs well enough on newer cpus
-						v2=v
-					end
-					tex=M[21][v[4]]
-					tex=M[21][v[4]+(animationFrame%tex[5])]
-					flip=v[12]
-					y=mn(flip,0)
-					x=v[1]
-					x2=v2[1]
-
-					fin=v[2-y]
-					fin2=v2[2-y]
-
-					k=v[3+y]
-					k2=v2[3+y]
-
-					if not v2[9] then x2=x2+1 end
-
-					lghtMath(v[7])
-
-					yScl=flip*(v[2]-v[3])*v[10]/v[6]
-					yScl2=flip*(v2[2]-v2[3])*v[10]/v2[6]
-
-					crM=flip>0 and mn or mx
-					itter=0
-					while k*flip<fin*flip and (itter<tex[2] or not v[14]) do
-
-						kN=crM(k+yScl,fin)
-						k2N=crM(k2+yScl2,fin2)
-
-						pix=tex[7+((y*v[11]+v[8]//tex[3])%tex[2])+tex[2]*(v[5]%tex[1])]
-						col=M[20][pix]
-						if col then
-							stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-							tri(x,k,x,kN,x2,k2N)
-							tri(x,k,x2,k2,x2,k2N)
-						end
-
-						k=kN
-						k2=k2N
-						y=y+flip
-						itter=itter+v[11]
-
-						end
-
+			
+			for a=1,2 do
+				cr=vises[a]
+				cache={}
+				bt,tp,vg=hght,-hght
+				
+				for j,v in ipairs(cr[i]) do
+					bt=mn(bt,v[2])
+					tp=mx(tp,v[3])
+					vg=v
+					tex=M[22][v[4][a+2]]
+					if tex and not vsTex then
+						lghtMath(v[4][5])
+						col=M[20][tex[5]]
+						stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+						screen.drawLine(v[1],hghtH-v[2],v[1],flr(hghtH-v[3]-1))
 					end
 				end
-				
-				for a=1,2 do
-					cr=vises[a]
-					cache={}
-					bt,tp,vg=hght,-hght
+				if vg and vsTex then
+					sec=vg[4]
+					height=(sec[a]-pp[2])
+					p_dir_x = cos(pp[3])
+					p_dir_y = sin(pp[3])
+					for iy=flr(bt+hghtH),ceil(tp+hghtH) do
+						z = vMult * height / (hghtH - iy)
+									
+						px = p_dir_x * z - pp[1][1]
+						py = p_dir_y * z - pp[1][2]
 					
-					for j,v in ipairs(cr[i]) do
-						bt=mn(bt,v[2])
-						tp=mx(tp,v[3])
-						vg=v
-						tex=M[22][v[4][a+2]]
-						if tex and not vsTex then
-							lghtMath(v[4][5])
-							col=M[20][tex[5]]
-							stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-							screen.drawLine(v[1],hghtH-v[2],v[1],flr(hghtH-v[3]-1))
-						end
+						l_x = -p_dir_y * z + px
+						l_y = p_dir_x * z + py
+						r_x = p_dir_y * z + px
+						r_y = -p_dir_x * z + py
+		
+						dx = (r_x - l_x) / wdth
+						dy = (r_y - l_y) / wdth
+
+						cache[iy]={dx,dy,l_x,l_y}
 					end
-					if vg and vsTex then
-						sec=vg[4]
-						height=(sec[a]-pp[2])
-						p_dir_x = cos(pp[3])
-						p_dir_y = sin(pp[3])
-						for iy=flr(bt+hghtH),ceil(tp+hghtH) do
-							z = vMult * height / (hghtH - iy)
-										
-							px = p_dir_x * z - pp[1][1]
-							py = p_dir_y * z - pp[1][2]
+
+					for j,v in ipairs(cr[i]) do
 						
-							l_x = -p_dir_y * z + px
-							l_y = p_dir_x * z + py
-							r_x = p_dir_y * z + px
-							r_y = -p_dir_x * z + py
-			
-							dx = (r_x - l_x) / wdth
-							dy = (r_y - l_y) / wdth
-
-							cache[iy]={dx,dy,l_x,l_y}
-						end
-
-						for j,v in ipairs(cr[i]) do
+						if sec[a+2]~=0 then
+							lghtMath(sec[5])
+							b=sec[a+2]
+							tex=M[22][b]
+							tex=M[22][b+(animationFrame%tex[4])]
+							x=v[1]
 							
-							if sec[a+2]~=0 then
-								lghtMath(sec[5])
-								b=sec[a+2]
-								tex=M[22][b]
-								tex=M[22][b+(animationFrame%tex[4])]
-								x=v[1]
-								
-								xg=wdthH-(wdthH-x)*fovT
-								bt,tp=flr(v[2]+hghtH),ceil(v[3]+hghtH)
-								
-								resScl = tex[3]
+							xg=wdthH-(wdthH-x)*fovT
+							bt,tp=flr(v[2]+hghtH),ceil(v[3]+hghtH)
 							
-								for iy=bt,tp do
-									cacheCur=cache[iy]
-									
-									tx = (cacheCur[3] + cacheCur[1] * xg)//resScl
-									ty = (cacheCur[4] + cacheCur[2] * xg)//resScl
-									
-									pix=6 + (ty%tex[1]) + tex[1]*(tx%tex[2])
-									col=M[20][tex[pix]]
-									if col then
-										stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-										rec(x,-iy+hght,1,1)
-									end
+							resScl = tex[3]
+						
+							for iy=bt,tp do
+								cacheCur=cache[iy]
+								
+								tx = (cacheCur[3] + cacheCur[1] * xg)//resScl
+								ty = (cacheCur[4] + cacheCur[2] * xg)//resScl
+								
+								pix=6 + (ty%tex[1]) + tex[1]*(tx%tex[2])
+								col=M[20][tex[pix]]
+								if col then
+									stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+									rec(x,-iy+hght,1,1)
 								end
 							end
 						end
 					end
 				end
+			end
 
-				for j=1,#thngsOrd[i] do -- mostly self-explanatory thing rendering
-					cr=M1[thngsOrd[i][j]]
-					if cr[6]~=0 then -- this is where (I think) most of the performace drops come from in more intense sections, rendering a room full of 12+ things is a lot of rects
-						pl1=sub(cr,pp[1])
-						d1=cr[20]
-						if d1>1 then
-							a1=wrap(at2(pl1)-pp[3])
-							d1=d1*cos(a1)
-							if absFunc(a1)<90 then
-								x1=wdthH-rnd(tan(a1)/fovT*wdthH)
-								ang=rnd((180+a1+pp[3]-cr[3])/360*8)
-								state=M[16][cr[6]][1]
-								if state~=0 and cr[6]~=1 then
-									tex=M[17][absFunc(state)][ang%8+1] --(cr[15]//10)%#tex+1
-									flip=tex<0 and -1 or 1
-									tex=absFunc(tex)
-									if tex>0 then
-										tex=M[23][tex]
-										tW,tH=tex[1],tex[2]
-										cScl=mn(rnd2(d1//LOD+1),8)
-										scl=wdthH/(fovT*d1)
-										sclV=scl*pixelAspectCorrection
-										yb=hghtH+(pp[2]-cr[9])/d1*vMult
-										yt=yb-tex[5]*sclV
-										x2=x1-flip*tex[4]*scl
-										scl,sclV=scl*tex[3],sclV*tex[3]
-										lghtMath(M8[cr[8]][5])
-										lght=state>0 and lght or 1
-										pxSize=scl*cScl
-										pxSizeV=pxSize*pixelAspectCorrection
-										fuzzy=cr[4] and M[15][cr[4]][23]&8>0
-										
-										for k=0,tW-1,cScl do -- was originally 2 separate loops for fuzzy and non fuzzy things
-											x1=x2+k*scl*flip -- now is 1 loop to save space, hopefully it doesn't impact performance too much
-											if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
-												for n=0,tH-1,cScl do
-													pix=tex[7+n+k*tH]
-													if pix~= 0 then
-														if fuzzy then
-															fuzz=fuzz%50+1
-															stCl(0,0,0,mn(75*M[13][2][fuzz],255))
-														else
-															col=M[20][pix]
-															stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-														end
-														rec(x1,yt+n*sclV,pxSize,pxSizeV)
+			for j=1,#thngsOrd[i] do -- mostly self-explanatory thing rendering
+				cr=M1[thngsOrd[i][j]]
+				if cr[6]~=0 then -- this is where (I think) most of the performace drops come from in more intense sections, rendering a room full of 12+ things is a lot of rects
+					pl1=sub(cr,pp[1])
+					d1=cr[20]
+					if d1>1 then
+						a1=wrap(at2(pl1)-pp[3])
+						d1=d1*cos(a1)
+						if absFunc(a1)<90 then
+							x1=wdthH-rnd(tan(a1)/fovT*wdthH)
+							ang=rnd((180+a1+pp[3]-cr[3]+mN*4)/360*8)
+							state=M[16][cr[6]][1]
+							if state~=0 and cr[6]~=1 then
+								tex=M[17][absFunc(state)][ang%8+1] --(cr[15]//10)%#tex+1
+								flip=tex<0 and -1 or 1
+								tex=absFunc(tex)
+								if tex>0 then
+									tex=M[23][tex]
+									tW,tH=tex[1],tex[2]
+									cScl=mn(rnd2(d1//LOD+1),8)
+									scl=wdthH/(fovT*d1)
+									sclV=scl*pixelAspectCorrection
+									yb=hghtH+(pp[2]-cr[9])/d1*vMult
+									yt=yb-tex[5]*sclV
+									x2=x1-flip*tex[4]*scl
+									scl,sclV=scl*tex[3],sclV*tex[3]
+									lghtMath(M8[cr[8]][5])
+									lght=state>0 and lght or 1
+									pxSize=scl*cScl
+									pxSizeV=pxSize*pixelAspectCorrection
+									fuzzy=cr[4] and M[15][cr[4]][23]&8>0
+									
+									for k=0,tW-1,cScl do -- was originally 2 separate loops for fuzzy and non fuzzy things
+										x1=x2+k*scl*flip -- now is 1 loop to save space, hopefully it doesn't impact performance too much
+										if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
+											for n=0,tH-1,cScl do
+												pix=tex[7+n+k*tH]
+												if pix~= 0 then
+													if fuzzy then
+														fuzz=fuzz%50+1
+														stCl(0,0,0,mn(75*M[13][2][fuzz],255))
+													else
+														col=M[20][pix]
+														stCl(col[1]*lght,col[2]*lght,col[3]*lght)
 													end
+													rec(x1,yt+n*sclV,pxSize,pxSizeV)
 												end
 											end
 										end
@@ -738,4 +736,5 @@ function onDraw()
 			end
 		end
 	end
+	mN=mN+1
 end
