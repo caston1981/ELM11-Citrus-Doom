@@ -63,6 +63,9 @@ bigNumb=32768 -- 2^15
 weaponObjects={}
 mapScale=0.05
 
+sounds={}
+noteLn=3
+
 faceTick=0
 weaponGrin=0
 stg=1
@@ -212,6 +215,7 @@ function onTick()
 					cr=weaponObjects[1]
 					cr[2]=M[16][cr[1][4]]
 					cr[3]=-1
+					sounds[#sounds+1]={1,1}
 				end
 			end
 			
@@ -235,6 +239,25 @@ function onTick()
 					else
 						table.remove(weaponObjects,i)
 					end
+				end
+			end
+
+			for i=1,32 do
+				sN(i,0)
+			end
+
+			for i=#sounds,1,-1 do
+				soundCr=sounds[i]
+				cr=M[18][soundCr[1]]
+				for j=0,noteLn-1 do
+					note=cr[(soundCr[2]+j)*2-1]
+					if note and note>0 then
+						sN(2+(i-1)*noteLn+j,clmp(rnd((note+12)//2),1,60))
+					end
+				end
+				soundCr[2]=soundCr[2]+2
+				if soundCr[2] >= noteLn+#cr then
+					table.remove(sounds,i)
 				end
 			end
 			
@@ -275,6 +298,7 @@ function onTick()
 								info=M[1][-cr][6]
 								if M[16][info][5]>0 then
 									yellow=mx(yellow,15)
+									sounds[#sounds+1]={M[19][11][1],1}
 								end
 							else
 								M[1][-cr]={}

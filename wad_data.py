@@ -82,10 +82,15 @@ class WADData:
         self.update_data()
         # ------------------------------- #
         if import_textures:
+            names = []
+            for i in self.reader.directory:
+                names.append(i["lump_name"])
+            
             self.asset_data = AssetData(self,skys)
             self.sounds = {}
-            for i in ["DPBFG"]:
-                self.sounds[i] = self.asset_data.load_sound(i)
+            for i in names:
+                if i[0:2]=="DP":
+                    self.sounds[i] = self.asset_data.load_sound(i)
         # ------------------------------- #
         self.reader.close()
 
@@ -291,6 +296,7 @@ if __name__ == '__main__':
     face_textures = [*wad.asset_data.face]
     all_sprites = wad.asset_data.sprites | wad.asset_data.face
     all_sprite_textures = [*all_sprites]
+    sound_names = [*wad.sounds]
     
     wall_avs = {}
     flat_avs = {}
@@ -400,9 +406,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==-1:
+        if i==2:
             None
-            print(code.split("\n")[83-1])
+            print(code.split("\n")[170-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -2108,29 +2114,25 @@ if __name__ == '__main__':
         
         packets.append((17,i))
 
-    """
-    for index in wad.sounds:
+    
+    for index in sound_names:
         i=wad.sounds[index]
-        
-        new="18,"+str(len(i))+",1,"+((str(i)[1:-1]).replace(" ",""))
-        #print(new)
-        if len(new)+len(packets[-1])+1>curmax:
-            packets.append(new)
-        else:
-            packets[-1]+=(","+new)
-    """
+
+        packets.append((18,i))
+    
     
 
-    misc_additions = [[1,2,9,6,11,12,19,3],
-                      [0,45,-45,90,-90],
-                      [all_sprite_textures.index("STFST01")+1,],
-                      [0,0,7,8,0,1,2,9,3],
-                      [0,0,255],
-                      [255,0,0],
-                      [200,200,0],
-                      sky_order,
+    misc_additions = [[1,2,9,6,11,12,19,3], #1
+                      [0,45,-45,90,-90], #2
+                      [all_sprite_textures.index("STFST01")+1,], #3
+                      [0,0,7,8,0,1,2,9,3], #4
+                      [0,0,255], #5
+                      [255,0,0], #6
+                      [200,200,0], #7
+                      sky_order, #8
                       [-20]+[4 for i in range(10)], #9
                       [0,5,0,-5,-3,0,0,-5,3,0,0,-5], #10
+                      [sound_names.index("DPITEMUP")+1], #11
                       ]
     for index in range(len(misc_additions)):
         i=misc_additions[index]

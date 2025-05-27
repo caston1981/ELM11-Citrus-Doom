@@ -138,7 +138,7 @@ class AssetData:
         if self.get_lump_index('TEXTURE2'):
             texture_maps += self.load_texture_maps(texture_lump_name='TEXTURE2')
 
-        self.load_sound("DPFIRSHT")
+        #self.load_sound("DPFIRSHT")
 
         self.wall_textures = {
             tex_map.name: Texture(self, tex_map).image for tex_map in texture_maps
