@@ -118,7 +118,8 @@ class AssetData:
         # sprites
         self.sprites = self.get_sprites(start_marker='S_START', end_marker='S_END')
 
-        self.face = self.get_sprites(start_marker='STFST01', end_marker='STFDEAD0', off=1)
+        self.face = self.get_sprites(start_marker='STGNUM0', end_marker='STFDEAD0', off=1)
+        
 
         # texture patch names
         self.p_names = self.wad_data.get_lump_data(

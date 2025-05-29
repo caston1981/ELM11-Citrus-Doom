@@ -56,6 +56,7 @@ LOD=400
 health=100
 healthOld=100
 armour=0
+textTimer=0
 yellow=0
 red=0
 difficulty=3002
@@ -189,6 +190,8 @@ function onTick()
 				init=trueVar
 				levelCr=gN(9)
 			end
+
+			textTimer=textTimer-1
 			
 			if health>0 then
 				if weapon~=gN(1) and gN(1)>0then
@@ -299,6 +302,8 @@ function onTick()
 								info=M[1][-cr][6]
 								if M[16][info][5]>0 then
 									yellow=mx(yellow,15)
+									textTimer=35
+									textIndex=M[16][info][5]
 									sounds[#sounds+1]={M[19][11][1],1}
 								end
 							else
@@ -478,6 +483,29 @@ function onDraw()
 			cr=M[19][i]
 			stCl(cr[1],cr[2],cr[3])
 			rec(199,95+i*7,6,7)
+		end
+
+		if textTimer>0 then
+			crText=M[13][textIndex]
+			for index=1,#crText do
+				cr=crText[index]
+				if cr>0 then
+					tex=M[23][cr]
+					tW,tH=tex[1],tex[2]
+					x1=tex[4]+index*8-6
+					y1=-tex[5]+2
+					for i=0,tW-1 do
+						for j=0,tH-1 do
+							pix=tex[7+j+i*tH]
+							if pix~=0 then
+								col=M[20][pix]
+								stCl(col[1],col[2],col[3])
+								rec(x1+i,y1+j,1,1)
+							end
+						end
+					end
+				end
+			end
 		end
 
 		stCl(255,255,255)

@@ -225,7 +225,18 @@ def get_downsize_offset(sprite,res_scale_cur):
 
 def round_to(number,round_val):
     return (number//round_val)*round_val
+
+def get_text(file_name):
+    file = open(file_name)
+    text = file.read()
+    file.close()
     
+    text = text.replace("\n\n","\n").split("\n")
+    out = []
+    for i in text:
+        out.append(i.split('"')[1])
+    return out
+
 
 if __name__ == '__main__':
     start_time=time.time()
@@ -350,7 +361,7 @@ if __name__ == '__main__':
                           ("MT_MISC0",(0,0,100,100,0.3)), # armor
                           ("MT_MISC1",(0,0,200,200,0.5)), # megaarmor/combat armor
                           ("MT_MEGA",(200,200,200,200,0.5)), # megasphere
-                          ("MT_MISC13",(100,100,0,0,0)),
+                          ("MT_MISC13",(100,100,0,0,0)), # berserk, only heals
                           ]
     health_pickup_list_zip = [[health_pickup_list[j][i] for j in range(len(health_pickup_list))] for i in range(len(health_pickup_list[0]))]
 
@@ -408,7 +419,7 @@ if __name__ == '__main__':
         end = text.find(find_end,start)
         if i==2:
             None
-            print(code.split("\n")[170-1])
+            print(code.split("\n")[300-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -484,6 +495,20 @@ if __name__ == '__main__':
     #for i in rotation_map:
     #    if i[:4]=="HEAD":
     #        print(sprite_rotations[rotation_map[i]-1])
+
+    char_sprite_lookup = {}
+    for i in range(33,96):
+        char_sprite_lookup[chr(i)]=i
+    for i in range(26):
+        char_sprite_lookup[chr(i+97)]=i+65
+
+    for i in char_sprite_lookup:
+        char_sprite_lookup[i] = all_sprite_textures.index("STCFN0"+str(char_sprite_lookup[i]))+1
+        
+    ammo_pickup_text = get_text("ammo_pickup_text.txt")
+    health_pickup_text = get_text("health_pickup_text.txt")
+
+    
     
     file = open("info_states.txt")
     info_states = file.read()
@@ -636,18 +661,21 @@ if __name__ == '__main__':
             i[26] = info_spawn_zip[0].index(drop_dict[i[0]])+1
             i[27] = info_spawn[i[26]-1][2]
 
+    text_index=2
     for i in ammo_pickup_dict:
+        text_index+=1
         cur = info_spawn[info_spawn_zip[0].index(i)]
-        info_states_processed[cur[2]-1][4] = 1
+        info_states_processed[cur[2]-1][4] = text_index
         #print(cur[2],i)
             #print(i[26])
 
     for i in health_pickup_list_zip[0]:
+        text_index+=1
         index = info_spawn[info_spawn_zip[0].index(i)][2]-1
         seen = []
         while not index in seen:
             cur = info_states_processed[index]
-            cur[4] = 1
+            cur[4] = text_index
             seen.append(index)
             if cur[1]>0:
                 index=cur[3]-1
@@ -2023,6 +2051,12 @@ if __name__ == '__main__':
     #print(cur)
 
     packets.append((13,cur))
+
+    for i in ammo_pickup_text:
+        packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
+
+    for i in health_pickup_text:
+        packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
 
     
 
