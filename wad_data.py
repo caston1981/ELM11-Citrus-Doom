@@ -274,7 +274,7 @@ if __name__ == '__main__':
     path_in = base_name+".xml"
     path_out = path_bits[0]+obj_name+path_bits[1]
 
-    wall_overrides={"EXITSIGN":1,"EXITDOOR":2,"ORANGE_1":1,"KEYBOARD":1,"HOTAS2":1,"DIFFICUL":2} # used to make some walls higher quality than others
+    wall_overrides={"EXITSIGN":1,"EXITDOOR":2,"ORANGE_1":1,"KEYBOARD":1,"HOTAS2":1,"DIFFICUL":2,"LODLAB":2,"FLOORLAB":2} # used to make some walls higher quality than others
     sprite_overrides={"SHEL":1} # used to make some sprites higher quality than others, mostly generated automatically
                                 # manually adjusted the shotgun shell pickup since it looks weird at 1/2
     
