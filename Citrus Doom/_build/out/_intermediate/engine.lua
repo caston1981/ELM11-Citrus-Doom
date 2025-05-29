@@ -747,7 +747,7 @@ function onDraw()
 		for i=1,4 do
 			a=124+i*7
 			text(240,a,flr(M12[1][i]))
-			text(230,a,M12[1][13+i])
+			text(200,a,M12[1][13+i])
 		end
 	end
 end

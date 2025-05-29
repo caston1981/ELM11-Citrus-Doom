@@ -55,6 +55,7 @@ levelCr=3
 LOD=400
 health=100
 healthOld=100
+armour=0
 yellow=0
 red=0
 difficulty=3002
@@ -266,7 +267,7 @@ function onTick()
 				yellow=50
 			end
 			red=mx(red-4,0)
-			red=clmp(red+(health-gN(3))*3,0,255)
+			red=clmp(red+(health-gN(3) + armour-gN(4))*3,0,255)
 			yellow=mx(yellow-1.5,0)
 			health=gN(3)
 			armour=gN(4)
@@ -476,14 +477,21 @@ function onDraw()
 		for i=5,7 do
 			cr=M[19][i]
 			stCl(cr[1],cr[2],cr[3])
-			rec(229,95+i*7,6,7)
+			rec(199,95+i*7,6,7)
 		end
 
 		stCl(255,255,255)
 		text(100,131,flr(health))
 		text(100,137,flr(armour))
+		text(67,131,"HEALTH")
+		text(67,137,"ARMOUR")
 		text(1,143,"DIF:")
 		text(1,149,"LOD:")
+		text(217,131,"BULL")
+		text(217,138,"SHEL")
+		text(217,145,"ROKT")
+		text(217,152,"CELL")
+		
 		text(26,149,flr(LOD))
 		text(26,143,flr(mn(difficulty-3000,3)))
 	end
