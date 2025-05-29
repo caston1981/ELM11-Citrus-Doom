@@ -487,23 +487,28 @@ function onDraw()
 
 		if textTimer>0 then
 			crText=M[13][textIndex]
+			x1=0
+			y1=0
 			for index=1,#crText do
 				cr=crText[index]
 				if cr>0 then
 					tex=M[23][cr]
 					tW,tH=tex[1],tex[2]
-					x1=tex[4]+index*8-6
-					y1=-tex[5]+2
+					x2=x1+tex[4]
+					y2=y1-tex[5]
 					for i=0,tW-1 do
 						for j=0,tH-1 do
 							pix=tex[7+j+i*tH]
 							if pix~=0 then
 								col=M[20][pix]
 								stCl(col[1],col[2],col[3])
-								rec(x1+i,y1+j,1,1)
+								rec(x2+i,y2+j,1,1)
 							end
 						end
 					end
+					x1=x1+tW
+				else
+					x1=x1+4
 				end
 			end
 		end
