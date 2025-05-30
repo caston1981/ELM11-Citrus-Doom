@@ -444,14 +444,15 @@ function onTick()
 																if yb~=yt then
 																	pass=trueVar
 																	cD=d3*tan(ang) -- the distance-along-the-wall-line thing but with the current position on the wall instead of its first vertex
-																	cScl=mn(((absFunc(cD)+absFunc(d3))//LOD)+1,4) -- LOD based on kinda distance
+																	cScl=mn(((absFunc(cD)+absFunc(d3))//LOD)+1,8) -- LOD based on kinda distance
 																	cSclH=mn(rnd2(flr(cScl/cos(ang))),16) -- horizontal-only LOD based on angle relative to the player
 																	cScl=rnd2(cScl) -- round
 																	
-																	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cSclH))*cSclH -- turns out this isn't as bad as I expected, the revised code below doen't really help
+																	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cSclH)) -- turns out this isn't as bad as I expected, the revised code below doen't really help
+																	xCur2=xCur*cSclH
 																	dCur={x,hghtH-yb,hghtH-yt,v,xCur,y2-y1,sec[5],side[2]+yOff,trueVar,resScl*cScl,cScl,flip,not passL,n==3 and double} -- bit long innit
-																	if xCur>xLast or (not passL) or k==x2 then
-																		xLast=xCur-1+cSclH
+																	if xCur2>xLast or (not passL) or k==x2 then
+																		xLast=xCur2-1+cSclH
 																		passL=trueVar
 																		walls[i][#walls[i]+1]=dCur
 																	end
@@ -564,7 +565,7 @@ function onDraw()
 					v2=v
 				end
 				tex=M[21][v[4]]
-				tex=M[21][v[4]+(animationFrame%tex[5])]
+				tex=M[21][v[4]+(animationFrame%tex[5])*M[19][3][2]+M[19][12][v[11]]]
 				flip=v[12]
 				y=mn(flip,0)
 				x=v[1]
@@ -580,8 +581,8 @@ function onDraw()
 
 				lghtMath(v[7])
 
-				yScl=flip*(v[2]-v[3])*v[10]/v[6]
-				yScl2=flip*(v2[2]-v2[3])*v[10]/v2[6]
+				yScl=flip*(v[2]-v[3])*tex[3]/v[6]
+				yScl2=flip*(v2[2]-v2[3])*tex[3]/v2[6]
 
 				crM=flip>0 and mn or mx
 				itter=0
@@ -590,7 +591,7 @@ function onDraw()
 					kN=crM(k+yScl,fin)
 					k2N=crM(k2+yScl2,fin2)
 
-					pix=tex[7+((y*v[11]+v[8]//tex[3])%tex[2])+tex[2]*(v[5]%tex[1])]
+					pix=tex[7+((y+v[8]//tex[3])%tex[2])+tex[2]*((v[5])%tex[1])]
 					col=M[20][pix]
 					if col then
 						stCl(col[1]*lght,col[2]*lght,col[3]*lght)
@@ -601,7 +602,7 @@ function onDraw()
 					k=kN
 					k2=k2N
 					y=y+flip
-					itter=itter+v[11]
+					itter=itter+1
 
 					end
 
@@ -696,9 +697,8 @@ function onDraw()
 								flip=tex<0 and -1 or 1
 								tex=absFunc(tex)
 								if tex>0 then
-									tex=M[23][tex]
+									tex=M[23][tex+M[19][12][mn(rnd2(d1//LOD+1),8)]]
 									tW,tH=tex[1],tex[2]
-									cScl=mn(rnd2(d1//LOD+1),8)
 									scl=wdthH/(fovT*d1)
 									sclV=scl*pixelAspectCorrection
 									yb=hghtH+(pp[2]-cr[9])/d1*vMult
@@ -707,14 +707,14 @@ function onDraw()
 									scl,sclV=scl*tex[3],sclV*tex[3]
 									lghtMath(M8[cr[8]][5])
 									lght=state>0 and lght or 1
-									pxSize=scl*cScl
+									pxSize=scl
 									pxSizeV=pxSize*pixelAspectCorrection
 									fuzzy=cr[4] and M[15][cr[4]][23]&8>0
 									
-									for k=0,tW-1,cScl do -- was originally 2 separate loops for fuzzy and non fuzzy things
+									for k=0,tW-1 do -- was originally 2 separate loops for fuzzy and non fuzzy things
 										x1=x2+k*scl*flip -- now is 1 loop to save space, hopefully it doesn't impact performance too much
 										if i<=dpth[clmp(rnd(x1),0,wdth-1)] then
-											for n=0,tH-1,cScl do
+											for n=0,tH-1 do
 												pix=tex[7+n+k*tH]
 												if pix~= 0 then
 													if fuzzy then

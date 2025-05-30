@@ -466,7 +466,7 @@ function onDraw()
 		rec(0,hght,wdth,32)
 		stCl(25,25,25)
 		rec(wdthH-16,hght,32,32)
-		tex=M[23][M[19][3][1]+face]
+		tex=M[23][M[19][3][1]+(face)*M[19][3][3]]
 		tW,tH=tex[1],tex[2]
 		x1=wdthH-tW/2
 		for i=0,tW-1 do

@@ -1,7 +1,7 @@
 from clipboard import copy as SetC
 from wad_reader import WADReader
 from asset_data import AssetData
-from math import dist, floor as flr
+from math import dist, floor as flr, ceil
 from code_compressor import compress
 import pygame, time, json
 from copy import deepcopy as dcopy
@@ -289,15 +289,18 @@ if __name__ == '__main__':
 
     packets = []
     curmax = 8192
-    res_scale_walls = 4
+    res_scale_walls = [4,8,16,32]
     res_scale_flats = 4
-    res_scale_sprites = 2
+    res_scale_sprites = [2,4,8,16]
     res_scale_sprites_quality = 2
     res_scale_sprites_projectiles = 2
     res_scale_sprites_weapons = 2
     res_scale_sprites_face = 1
     res_scale_sky = 4
     sky_offset = 16
+    
+    res_count_walls = len(res_scale_walls)
+    res_count_sprites = len(res_scale_sprites)
 
     TICKRATE = 35
 
@@ -308,12 +311,23 @@ if __name__ == '__main__':
     all_sprites = wad.asset_data.sprites | wad.asset_data.face
     all_sprite_textures = [*all_sprites]
     sound_names = [*wad.sounds]
+
+    wall_textures_expanded = []
+    for i in wall_textures:
+        for j in range(res_count_walls):
+            wall_textures_expanded.append(i)
+
+    all_sprite_textures_expanded = []
+    for i in all_sprite_textures:
+        for j in range(res_count_sprites):
+            all_sprite_textures_expanded.append(i)
+    
     
     wall_avs = {}
     flat_avs = {}
     sprite_avs = {}
     sky_avs = {}
-    wall_looker = ["-"]+wall_textures
+    wall_looker = ["-"]+wall_textures_expanded
     flat_looker = ["-"]+flat_textures
     pixels = 0
     num = 0
@@ -465,9 +479,10 @@ if __name__ == '__main__':
     
     for index in range(len(sprite_textures)):
         i = sprite_textures[index]
+        index_true = all_sprite_textures_expanded.index(i)+1
 
         if i[5]=="0":
-            sprite_rotations.append([index+1 for j in range(8)])
+            sprite_rotations.append([index_true for j in range(8)])
             rotation_map[i[:5]] = len(sprite_rotations)
         else:
             if not i[:5] in rotation_map:
@@ -476,9 +491,9 @@ if __name__ == '__main__':
 
             cur_rotation = sprite_rotations[rotation_map[i[:5]]-1]
             
-            cur_rotation[int(i[5])-1] = index+1
+            cur_rotation[int(i[5])-1] = index_true
             if len(i)>6:
-                cur_rotation[int(i[7])-1] = -(index+1)
+                cur_rotation[int(i[7])-1] = -(index_true)
                 
         if i[:3]=="STF":
             print(i)
@@ -503,7 +518,7 @@ if __name__ == '__main__':
         char_sprite_lookup[chr(i+97)]=i+65
 
     for i in char_sprite_lookup:
-        char_sprite_lookup[i] = all_sprite_textures.index("STCFN0"+str(char_sprite_lookup[i]))+1
+        char_sprite_lookup[i] = all_sprite_textures_expanded.index("STCFN0"+str(char_sprite_lookup[i]))+1
         
     ammo_pickup_text = get_text("ammo_pickup_text.txt")
     health_pickup_text = get_text("health_pickup_text.txt")
@@ -2091,7 +2106,7 @@ if __name__ == '__main__':
                 
                 temp_sprite = info_states_processed[temp_spawn[k]-1][0]
                 if temp_sprite != 0:
-                    sprite_name = sprite_textures[abs(temp_sprite)-1][:4]
+                    sprite_name = all_sprite_textures_expanded[abs(temp_sprite)-1][:4]
                     
                     if not sprite_name in sprite_overrides:
                         sprite_overrides[sprite_name] = res_scale_sprites_projectiles
@@ -2158,7 +2173,7 @@ if __name__ == '__main__':
 
     misc_additions = [[1,2,9,6,11,12,19,3], #1
                       [0,45,-45,90,-90], #2
-                      [all_sprite_textures.index("STFST01")+1,], #3
+                      [all_sprite_textures_expanded.index("STFST01")+1,res_count_walls,res_count_sprites], #3
                       [0,0,7,8,0,1,2,9,3], #4
                       [0,0,255], #5
                       [255,0,0], #6
@@ -2167,6 +2182,7 @@ if __name__ == '__main__':
                       [-20]+[4 for i in range(10)], #9
                       [0,5,0,-5,-3,0,0,-5,3,0,0,-5], #10
                       [sound_names.index("DPITEMUP")+1], #11
+                      [0,1,0,2,0,0,0,3,0,0,0,0,0,0,0,4], #12
                       ]
     for index in range(len(misc_additions)):
         i=misc_additions[index]
@@ -2241,12 +2257,12 @@ if __name__ == '__main__':
             if index in wall_overrides:
                 res_scale_cur = wall_overrides[index]
             else:
-                res_scale_cur = res_scale_walls
+                res_scale_cur = res_scale_walls[0]
 
             
             i=wad.asset_data.wall_textures[index]
-            width=len(i)//res_scale_cur
-            height=len(i[0])//res_scale_cur
+            width = ceil(len(i)/res_scale_cur)
+            height = ceil(len(i[0])/res_scale_cur)
 
             av=(0,0,0)
             av_num=0
@@ -2308,7 +2324,7 @@ if __name__ == '__main__':
             elif index[:4] in sprite_overrides:
                 res_scale_cur = sprite_overrides[index[:4]]
             else:
-                res_scale_cur = res_scale_sprites
+                res_scale_cur = res_scale_sprites[0]
 
             cur_sprite = all_sprites[index]
             i = cur_sprite[1]
@@ -2429,36 +2445,37 @@ if __name__ == '__main__':
         
         t=0
         for index in wall_textures:
-            if index in wall_overrides:
-                res_scale_cur = wall_overrides[index]
-            else:
-                res_scale_cur = res_scale_walls
+            for mipmap_size in range(res_count_walls):
+                if index in wall_overrides:
+                    res_scale_cur = (wall_overrides[index]*res_scale_walls[mipmap_size])//res_scale_walls[0]
+                else:
+                    res_scale_cur = res_scale_walls[mipmap_size]
 
-            if index in wall_animations:
-                frames = wall_animations[index]
-            else:
-                frames = 1
-                
-            i=wad.asset_data.wall_textures[index]
-            switch1=((wall_textures.index("SW2"+index[3:])+1) if index[0:3]=="SW1" else 0)
-            switch2=((wall_textures.index("SW1"+index[3:])+1) if index[0:3]=="SW2" else 0)
-            switch=switch1+switch2
-            
-            width=len(i)//res_scale_cur
-            height=len(i[0])//res_scale_cur
-            cur = [width,height,res_scale_cur,switch,frames,wall_avs[index]+1]
-
-            
-            
-            for j in range(width):
-                for k in range(height):
-                    colour=tuple(i[j*res_scale_cur][k*res_scale_cur])
-                    if colour != trans_colour:
-                        cur.append(colourmap.index(colour)+1)
-                    else:
-                        cur.append(0)
+                if index in wall_animations:
+                    frames = wall_animations[index]
+                else:
+                    frames = 1
                     
-            temp_packets.append((21,cur))
+                i=wad.asset_data.wall_textures[index]
+                switch1=((wall_textures_expanded.index("SW2"+index[3:])+1) if index[0:3]=="SW1" else 0)
+                switch2=((wall_textures_expanded.index("SW1"+index[3:])+1) if index[0:3]=="SW2" else 0)
+                switch=switch1+switch2
+                
+                width=ceil(len(i)/res_scale_cur)
+                height=ceil(len(i[0])/res_scale_cur)
+                cur = [width,height,res_scale_cur,switch,frames,wall_avs[index]+1]
+
+                
+                
+                for j in range(width):
+                    for k in range(height):
+                        colour=tuple(i[j*res_scale_cur][k*res_scale_cur])
+                        if colour != trans_colour:
+                            cur.append(colourmap.index(colour)+1)
+                        else:
+                            cur.append(0)
+                        
+                temp_packets.append((21,cur))
         
         t=0
         for index in flat_textures:
@@ -2488,39 +2505,40 @@ if __name__ == '__main__':
         
         t=0
         for index in all_sprite_textures:
-            if index in sprite_overrides:
-                res_scale_cur = sprite_overrides[index]
-            elif index[:4] in sprite_overrides:
-                res_scale_cur = sprite_overrides[index[:4]]
-            else:
-                res_scale_cur = res_scale_sprites
+            for mipmap_size in range(res_count_walls):
+                if index in sprite_overrides:
+                    res_scale_cur = (sprite_overrides[index]*res_scale_sprites[mipmap_size])//res_scale_sprites[0]
+                elif index[:4] in sprite_overrides:
+                    res_scale_cur = (sprite_overrides[index[:4]]*res_scale_sprites[mipmap_size])//res_scale_sprites[0]
+                else:
+                    res_scale_cur = res_scale_sprites[mipmap_size]
 
-            cur_sprite = all_sprites[index]
-            i = cur_sprite[1]
-            header = cur_sprite[0]
+                cur_sprite = all_sprites[index]
+                i = cur_sprite[1]
+                header = cur_sprite[0]
 
-            cur_offset = get_downsize_offset(cur_sprite,res_scale_cur)
-            
-            width=(i.get_width()+res_scale_cur-1-cur_offset[0])//res_scale_cur
-            height=(i.get_height()+res_scale_cur-1-cur_offset[1])//res_scale_cur
-            cur=[width,height,res_scale_cur,
-                 round_to(header.left_offset,res_scale_cur),round_to(header.top_offset,res_scale_cur),
-                 sprite_avs[index]+1]
-            
-            #if index=="TROOH5" or True:
-            #    #print(header.left_offset,header.top_offset)
-            #    print(res_scale_cur,(width,height),(i.get_width(),i.get_height()),(header.width,header.height))
+                cur_offset = get_downsize_offset(cur_sprite,res_scale_cur)
+                
+                width=(i.get_width()+res_scale_cur-1-cur_offset[0])//res_scale_cur
+                height=(i.get_height()+res_scale_cur-1-cur_offset[1])//res_scale_cur
+                cur=[width,height,res_scale_cur,
+                     round_to(header.left_offset,res_scale_cur),round_to(header.top_offset,res_scale_cur),
+                     sprite_avs[index]+1]
+                
+                #if index=="TROOH5" or True:
+                #    #print(header.left_offset,header.top_offset)
+                #    print(res_scale_cur,(width,height),(i.get_width(),i.get_height()),(header.width,header.height))
 
-            
-            for j in range(width):
-                for k in range(height):
-                    colour=i.get_at((j*res_scale_cur+cur_offset[0],k*res_scale_cur+cur_offset[1]))
-                    colour=colour[:3]
-                    if colour != trans_colour:
-                        cur.append(colourmap.index(colour)+1)
-                    else:
-                        cur.append(0)
-            temp_packets.append((23,cur))
+                
+                for j in range(width):
+                    for k in range(height):
+                        colour=i.get_at((j*res_scale_cur+cur_offset[0],k*res_scale_cur+cur_offset[1]))
+                        colour=colour[:3]
+                        if colour != trans_colour:
+                            cur.append(colourmap.index(colour)+1)
+                        else:
+                            cur.append(0)
+                temp_packets.append((23,cur))
         
         t=0
         for index in range(len(sky_textures)):
