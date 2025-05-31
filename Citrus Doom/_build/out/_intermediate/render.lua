@@ -446,15 +446,15 @@ function onTick()
 																if yb~=yt then
 																	pass=trueVar
 																	cD=d3*tan(ang) -- the distance-along-the-wall-line thing but with the current position on the wall instead of its first vertex
-																	cScl=mn(((absFunc(cD)+absFunc(d3))//LODH)+1,8) -- LOD based on kinda distance
-																	cSclH=mn(rnd2(flr(cScl/cos(ang))),16) -- horizontal-only LOD based on angle relative to the player
-																	cScl=rnd2(cScl) -- round
+																	cScl=rnd2(mn(((absFunc(cD)+absFunc(d3))//LODH)+1,16)) -- LOD based on kinda distance
+																	--cSclH=mn(rnd2(flr(cScl/cos(ang))),16) -- horizontal-only LOD based on angle relative to the player
+																	--cScl=rnd2(cScl) -- round
 																	
-																	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cSclH)) -- turns out this isn't as bad as I expected, the revised code below doen't really help
-																	xCur2=xCur*cSclH
+																	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cScl)) -- turns out this isn't as bad as I expected, the revised code below doen't really help
+																	xCur2=xCur*cScl
 																	dCur={x,hghtH-yb,hghtH-yt,v,xCur,y2-y1,sec[5],side[2]+yOff,trueVar,resScl*cScl,cScl,flip,not passL,n==3 and double} -- bit long innit
 																	if xCur2>xLast or (not passL) or k==x2 then
-																		xLast=xCur2-1+cSclH
+																		xLast=xCur2-1+cScl
 																		passL=trueVar
 																		walls[i][#walls[i]+1]=dCur
 																	end
