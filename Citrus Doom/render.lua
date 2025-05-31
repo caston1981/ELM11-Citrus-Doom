@@ -652,11 +652,12 @@ function onDraw()
 					for j,v in ipairs(cr[i]) do
 						
 						if sec[a+2]~=0 then
+							x=v[1]
+							
 							lghtMath(sec[5])
 							b=sec[a+2]
 							tex=M[22][b]
 							tex=M[22][b+(animationFrame%tex[4])]
-							x=v[1]
 							
 							xg=wdthH-(wdthH-x)*fovT
 							bt,tp=flr(v[2]+hghtH),ceil(v[3]+hghtH)
