@@ -246,7 +246,7 @@ if __name__ == '__main__':
     #map_order=["E1M2"]
     #map_order=["SET1"]+map_order
     #map_order=["SET1","E2M3","E1M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
-    map_order=["SET1"]+["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(4*9)]
+    map_order=["SET1"]+["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
     #map_order=["SET1","E1M1","E2M3"] # self explanitory, first level is the settings one
     #map_order[1]="E1M3"
     skys = {"E1":"SKY1","E2":"SKY2","E3":"SKY3","E4":"SKY4"}
@@ -289,7 +289,7 @@ if __name__ == '__main__':
 
     packets = []
     curmax = 8192
-    res_scale_walls = [4,8,16,32]
+    res_scale_walls = [2,4,8,16,32]
     res_scale_flats = 4
     res_scale_sprites = [2,4,8,16]
     res_scale_sprites_quality = 2
@@ -2505,7 +2505,7 @@ if __name__ == '__main__':
         
         t=0
         for index in all_sprite_textures:
-            for mipmap_size in range(res_count_walls):
+            for mipmap_size in range(res_count_sprites):
                 if index in sprite_overrides:
                     res_scale_cur = (sprite_overrides[index]*res_scale_sprites[mipmap_size])//res_scale_sprites[0]
                 elif index[:4] in sprite_overrides:

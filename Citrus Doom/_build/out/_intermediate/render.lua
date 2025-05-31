@@ -47,6 +47,7 @@ hght=128
 hghtH=hght//2
 thngs={}
 LOD=400-- higher is more quality
+LODH=200
 health=100
 mRandom=0
 transferCache={}
@@ -189,6 +190,7 @@ function onTick()
 							vsTex=cr[5]==1
 						elseif a>3004 then
 							LOD=mx(LOD+3*(cr[4]-3006),1)
+							LODH=LOD/2
 						elseif a>3000 then
 							difficulty=cr[4]
 						end
@@ -444,7 +446,7 @@ function onTick()
 																if yb~=yt then
 																	pass=trueVar
 																	cD=d3*tan(ang) -- the distance-along-the-wall-line thing but with the current position on the wall instead of its first vertex
-																	cScl=mn(((absFunc(cD)+absFunc(d3))//LOD)+1,8) -- LOD based on kinda distance
+																	cScl=mn(((absFunc(cD)+absFunc(d3))//LODH)+1,8) -- LOD based on kinda distance
 																	cSclH=mn(rnd2(flr(cScl/cos(ang))),16) -- horizontal-only LOD based on angle relative to the player
 																	cScl=rnd2(cScl) -- round
 																	
