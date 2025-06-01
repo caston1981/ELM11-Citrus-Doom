@@ -40,7 +40,7 @@ lookAcl=0
 difficulty=2
 
 function findMe(i,a,cr)
-	if i<2^15then
+	if i<2^15 then
 		cr=M[7][i]
 		return findMe(cr[cr[3]*(a[2]-cr[2])-cr[4]*(a[1]-cr[1])>0 and 8 or 7],a)
 	else
@@ -75,9 +75,9 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 				end
 			end
 			if index==1 then
-				if dst<50then
+				if dst<50 then
 					a=s2[25]
-					if a>0then
+					if a>0 then
 						for n,v in ipairsVar(M12[a])do
 							if v>0 and M12[1][n]<M12[2][n]then
 								pos=M12
@@ -102,7 +102,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 		end
 	end	
 	
-	if tp-bt<h or bt>p[9]+24then-- or tp<p[9]+h
+	if tp-bt<h or bt>p[9]+24 then-- or tp<p[9]+h
 		return falseVar -- returns if an object can't fit in the current sector
 	end
 	for i=1,#blkCr do
@@ -159,14 +159,14 @@ function chkLnDst(p1,p2,p3)
 	end
 end
 
-function chkRayCol(p1,p2,level,index,cr)
+function chkRayCol(p1,p2,level,index,cr) -- raycast between two points
 	bsDst=dist(p1,p2)
 	crDst=bsDst
 	pass=trueVar
 	x1,y1=exp(p1)
 	x2,y2=exp(p2)
 	x21,y21=exp(sub(p2,p1))
-	h1,h2=p1[9]+32,p2[9]+32
+	h1,h2=p1[9]+32,p2[9]+32 -- for simplicity it adds 32 to the points' vertical positions, almost always a good thing
 	valid=falseVar
 	for i,cr in ipairsVar(M[2])do
 		x3y3=M4[cr[1]]
@@ -179,8 +179,8 @@ function chkRayCol(p1,p2,level,index,cr)
 			crPos={x1+(uA*x21),y1+(uA*y21)}
 			dst=dist(p1,crPos)
 			intH=h1+(h2-h1)*(dst/bsDst)
-			if clmp(intH,cr[8]+1,cr[9])~=intH then
-				pass=falseVar
+			if clmp(intH,cr[8]+1,cr[9])~=intH then -- if the ray passes through the "window" of a 2-sided linedef
+				pass=falseVar -- note that cr[8] and cr[9] for 1-sided linedefs are 0 and 0
 				if level==1 then
 					return falseVar
 				end
@@ -266,7 +266,7 @@ function fireWeapon(source,index)
 		
 		spreadOff=(rand()/128-1)*crWeapon[10]
 		vel=dVec(source[3]+spreadOff,crWeapon[6])
-		if crWeapon[7]>0then
+		if crWeapon[7]>0 then -- projectiles
 			M1[#M1+1]=a
 			s1=M15[a[4]]
 			a[6]=s1[3]
@@ -276,10 +276,10 @@ function fireWeapon(source,index)
 			a[17]=weapon
 			a[19]=ramp
 		else
-			pos=add(source,vel)
+			pos=add(source,vel) -- hitscan
 			pos[9]=pTng[9]+ramp
 			thingExists,wall,pos=chkRayCol(source,pos,3,index)
-			if not thingExists then
+			if not thingExists then -- hitscan smoke, I don't know why "not thingExists" means a thing exists
 				posOff=sub(pos,dVec(source[3]+spreadOff,1))
 				M1[#M1+1]=a
 				a[1]=posOff[1]
@@ -318,7 +318,7 @@ function autoAim()
 		if i>1 and cr and chkView(pTng,cr,10)then
 			dst=dist(cr,pTng)
 			if dst<rampBst then
-				if M15[cr[4]][23]&2>0then
+				if M15[cr[4]][23]&2>0 then
 					targ=cr
 					rampBst=dst
 				end
@@ -340,18 +340,18 @@ function onTick()
 			cr=str.sub(rom,i,i)
 			while cr~=""do
 				pos=str.byte(cr)
-				if pos>64then
+				if pos>64 then
 					nm=(nm..pos-65)+0
-					if stg==1then
+					if stg==1 then
 						curIndex=nm
 						M[nm]=M[nm]or{}
-					elseif stg==2then
+					elseif stg==2 then
 						intH=nm
 						curLength=0
-					elseif stg==3then
+					elseif stg==3 then
 						count=nm
 					else
-						if curLength==0then
+						if curLength==0 then
 							curLength=intH
 							count=count-1
 							curM={}
@@ -407,7 +407,7 @@ function onTick()
 						cr[8]=pTng[8]
 					end
 					pTng=cr
-				elseif cr[5]&difficulty<1then
+				elseif cr[5]&difficulty<1 then
 					M1[i]=falseVar
 				end
 			end
@@ -473,7 +473,7 @@ function onTick()
 					s1=M15[cr[4]]
 					if cr[7]<=0 and cr[20]then
 						cr[15]=0
-						cr[6]=s1[cr[7]<=-s1[4] and s1[15]>1 and 15or 14]-- to gib or not to gib
+						cr[6]=s1[cr[7]<=-s1[4] and s1[15]>1 and 15 or 14]-- to gib or not to gib
 						cr[10],cr[20]=trueVar
 						if s1[27]>0 then-- item drop logic, copies what died and turns it into a pickup
 							pos={}
@@ -487,7 +487,7 @@ function onTick()
 					end
 					state=M[16][cr[6]]
 					
-					if cr[15]>=state[2] and state[2]~=-1then
+					if cr[15]>=state[2] and state[2]~=-1 then
 						cr[6]=state[4]
 						cr[15]=0
 						state3=M[16][cr[6]][3]
@@ -500,12 +500,12 @@ function onTick()
 									end
 								end
 							end
-						elseif state3==2then-- view logic
+						elseif state3==2 then-- view logic
 							if chkView(cr,pTng,90) then
 								cr[23]=pTng-- set target
 								cr[6]=s1[5]
 							end
-						elseif state3==3then-- chase logic
+						elseif state3==3 then-- chase logic
 							angle=flr(at2(cr,cr[23])/45+0.5)*45
 							valid=falseVar
 							stg=1
@@ -532,10 +532,10 @@ function onTick()
 							if s1[13]>0 and chkRayCol(cr,cr[23],1)and mn(a,230)<rand()then
 								cr[6]=s1[13]
 							end
-							if a<64 and s1[12]>0then
+							if a<64 and s1[12]>0 then
 								cr[6]=s1[12]
 							end
-						elseif state3==5then-- bfg tracers
+						elseif state3==5 then-- bfg tracers
 							for i=1,11 do
 								pTng[3]=pTng[3]+M[19][9][i]
 								crWeapon=M[14][23]
@@ -551,7 +551,7 @@ function onTick()
 							fireWeapon(cr,i)
 						end
 					end
-					if cr[17] and cr[17]>0then
+					if cr[17] and cr[17]>0 then
 						crWeapon=M[14][cr[17]]
 						if not chkPs(cr,falseVar,i) or cr[9]<=bounds[1] then
 							if hitThing then
@@ -567,7 +567,7 @@ function onTick()
 							cr[19]=0
 						end
 					end
-					if cr[6]==1then
+					if cr[6]==1 then
 						M1[i]=falseVar
 					else
 						blkPs=sub(cr,M101)
@@ -580,7 +580,7 @@ function onTick()
 			end
 			
 			for i=1,8 do
-				if gB(i)and M12[1][i+4]>0then
+				if gB(i)and M12[1][i+4]>0 then
 					weapon=i
 				end
 			end
@@ -620,7 +620,7 @@ function onTick()
 			if gB(31) and weaponFireDelay<=0 and (pos==0 or ammo[pos]>=crWeapon[2])then -- player shooting logic
 				sB(3,trueVar) -- announces player is firing
 				weaponFireDelay=crWeapon[3]
-				if pos>0then -- drain ammo
+				if pos>0 then -- drain ammo
 					ammo[pos]=ammo[pos]-crWeapon[2]
 				end
 				autoAim()
@@ -642,7 +642,7 @@ function onTick()
 					end
 					if pos==1 or valid then
 						summonThinker(cr,cr[5])
-					elseif pos>3000 and pos<3005then
+					elseif pos>3000 and pos<3005 then
 						difficulty=flr(pos-3000)
 					end
 				end

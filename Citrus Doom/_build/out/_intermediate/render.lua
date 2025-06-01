@@ -104,18 +104,18 @@ function onTick()
 			cr=str.sub(rom,i,i)
 			while cr~=""do
 				pos=str.byte(cr)
-				if pos>64then
+				if pos>64 then
 					nm=(nm..pos-65)+0
-					if stg==1then
+					if stg==1 then
 						curIndex=nm
 						M[nm]=M[nm]or{}
-					elseif stg==2then
+					elseif stg==2 then
 						intH=nm
 						curLength=0
-					elseif stg==3then
+					elseif stg==3 then
 						count=nm
 					else
-						if curLength==0then
+						if curLength==0 then
 							curLength=intH
 							count=count-1
 							curM={}
@@ -196,7 +196,7 @@ function onTick()
 							difficulty=cr[4]
 						end
 						switchedSwitch=gN(2)
-						if a<3000 and M[9][cr[5]][7]==0then
+						if a<3000 and M[9][cr[5]][7]==0 then
 							cr[8]=1
 						end
 					end
@@ -208,7 +208,7 @@ function onTick()
 				screenBrightTimer=weapon==5 and 5 or 3
 			else
 				screenBrightTimer=screenBrightTimer-1
-				if screenBrightTimer<1then
+				if screenBrightTimer<1 then
 					screenBrightOffset=0
 				end
 			end
@@ -266,7 +266,7 @@ function onTick()
 						cr[v]=cr[v]+cr[v+10]
 						crMx=crMx+cr[v+10]
 					end
-					if crMx~=0then-- it is very, very unlikely for an object to be moving but have 0 velocity when measured this way
+					if crMx~=0 then-- it is very, very unlikely for an object to be moving but have 0 velocity when measured this way
 						cr[7]=findMe(#M[7],cr)
 						cr[8]=findSec(cr[7])
 					end
@@ -393,7 +393,7 @@ function onTick()
 											calculate=(y1<y2)~=(n==2)~=(k==6)and y1~=y2 and sec1~=sec2
 											y1,y2=mn(y1,y2),mx(y1,y2) -- make sure they're the right way up for rendering
 											if calculate then 
-												if n==1then
+												if n==1 then
 													tpRnd=trueVar -- unless both lower and upper textures have been rendered, it needs to do a middle for floor/ceiling reasons
 												else
 													btRnd=trueVar -- also yes if only one is done, the middle texture one will attempt to do that one's ceiling/floor again
@@ -427,7 +427,7 @@ function onTick()
 
 											if render then
 												cr=M[21][v][4]
-												if (seg[4]==switchedSwitch or difficulty==line[4] or line[8]) and cr>0then
+												if (seg[4]==switchedSwitch or difficulty==line[4] or line[8]) and cr>0 then
 													v=cr -- for switches/buttons/whatever to have a different texture when pressed
 												end
 												resScl=M[21][v][3]
@@ -491,14 +491,14 @@ function onTick()
 																	if yt<clH[x]then
 																		ceils[i][#ceils[i]+1]={x,mx(yt,flH[x]),clH[x],sec}
 																	end
-																	if n==3then yNew=yt else yNew=yb end
+																	if n==3 then yNew=yt else yNew=yb end
 																	if clH[x]>yNew then clH[x]=yNew end
 																end
 																if n~=1 then -- floor
 																	if yb>flH[x]then
 																		floors[i][#floors[i]+1]={x,flH[x],mn(yb,clH[x]),sec}
 																	end
-																	if n==3then yNew=yb else yNew=yt end
+																	if n==3 then yNew=yb else yNew=yt end
 																	if flH[x]<yNew then flH[x]=yNew end
 																end
 																if (clH[x]<=flH[x])or (n==3 and (not double)and render) then
@@ -567,9 +567,9 @@ function onDraw()
 			for j=1,#walls[i] do --    it renders each texture pixel (texel) as one quad (2 triangles really), instead of drawing each screen pixel separately
 			v=walls[i][j] --    this makes rendering a lot faster, less important for current cpus but cruial for tolorable performance on my Ryzen 5 1600X
 			if v[9] or v[13] then
-				if v[9] then -- I don't know why more normal per-screen-pixel is so slow when I tried it before
-					v2=walls[i][j+1] --    tried just rendering 1 rect per pixel on a 9x5 screen (288x160 res) using 1 setcolor call and 1 rect call
-				else --    that barely stayed above 60tps, though of course it performs well enough on newer cpus
+				if v[9] then -- I initially thought per-pixel rendering was weirdly slow, but I was comparing it to a python renderer that cheats by using Numba
+					v2=walls[i][j+1] --    without Numba it runs at ~2fps
+				else
 					v2=v
 				end
 				tex=M[21][v[4]]
@@ -592,7 +592,7 @@ function onDraw()
 				yScl=flip*(v[2]-v[3])*tex[3]/v[6]
 				yScl2=flip*(v2[2]-v2[3])*tex[3]/v2[6]
 
-				crM=flip>0 and mn or mx
+				crM=flip>0 and mn or mx -- better than deciding which function every loop
 				itter=0
 				while k*flip<fin*flip and (itter<tex[2] or not v[14]) do
 
@@ -610,7 +610,7 @@ function onDraw()
 					k=kN
 					k2=k2N
 					y=y+flip
-					itter=itter+1
+					itter=itter+1 -- floating middle textures shouldn't repeat
 
 					end
 
@@ -640,7 +640,7 @@ function onDraw()
 					p_dir_x = cos(pp[3])
 					p_dir_y = sin(pp[3])
 					for iy=flr(bt+hghtH),ceil(tp+hghtH) do
-						z = vMult * height / (hghtH - iy)
+						z = vMult * height / (hghtH - iy) -- copied straight from Coder Space's level viewer
 									
 						px = p_dir_x * z - pp[1][1]
 						py = p_dir_y * z - pp[1][2]
@@ -715,7 +715,7 @@ function onDraw()
 									x2=x1-flip*tex[4]*scl
 									scl,sclV=scl*tex[3],sclV*tex[3]
 									lghtMath(cr[8][5])
-									lght=state>0 and lght or 1
+									lght=state>0 and lght or 1 -- full illuminate if the animation frame number is less than 0
 									pxSize=scl
 									pxSizeV=pxSize*pixelAspectCorrection
 									fuzzy=cr[4] and M[15][cr[4]][23]&8>0

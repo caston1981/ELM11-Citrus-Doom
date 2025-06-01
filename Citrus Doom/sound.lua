@@ -100,18 +100,18 @@ function onTick()
 			cr=str.sub(rom,i,i)
 			while cr~=""do
 				pos=str.byte(cr)
-				if pos>64then
+				if pos>64 then
 					nm=(nm..pos-65)+0
-					if stg==1then
+					if stg==1 then
 						curIndex=nm
 						M[nm]=M[nm]or{}
-					elseif stg==2then
+					elseif stg==2 then
 						intH=nm
 						curLength=0
-					elseif stg==3then
+					elseif stg==3 then
 						count=nm
 					else
-						if curLength==0then
+						if curLength==0 then
 							curLength=intH
 							count=count-1
 							curM={}
@@ -194,7 +194,7 @@ function onTick()
 			textTimer=textTimer-1
 			
 			if health>0 then
-				if weapon~=gN(1) and gN(1)>0then
+				if weapon~=gN(1) and gN(1)>0 then
 					weaponObjects={}
 					cr={}
 					cr[1]=M[29][gN(1)]
