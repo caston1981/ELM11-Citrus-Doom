@@ -39,7 +39,7 @@ lookAcl=0
 difficulty=2
 
 function findMe(i,a,cr)
-	if i<32768then
+	if i<2^15then
 		cr=M[7][i]
 		return findMe(cr[cr[3]*(a[2]-cr[2])-cr[4]*(a[1]-cr[1])>0 and 8 or 7],a)
 	else
@@ -48,7 +48,7 @@ function findMe(i,a,cr)
 	end
 end
 
-function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables are local and are set to nil if not filled
+function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are local and are set to nil if not filled
 	collObject = M1[index]
 	s1=M15[collObject[4]]
 	r,h=s1[18],s1[19]
@@ -64,7 +64,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 			s2=M15[pos[4]]
 			if pos[20] then
 				x1=dst-s2[18]
-				if x1<bstDst and s2[23]&1>0 and (s1[23]&1>0 or (p[9]+h<pos[9] or p[9]>pos[9]+s2[19])==falseVar)then
+				if x1<bstDst and s2[23]&1>0 and (s1[23]&1>0 or clmp(p[9],pos[9]-h,pos[9]+s2[19])==p[9])then
 					hitThing=pos
 					if mv==falseVar then
 						return falseVar
@@ -73,7 +73,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 					bstA=at2(p,pos)
 				end
 			end
-			if index==1 and not pos[10]then-- the not pos 10 is to prevent the player picking something up which hasn't been spawned in the renderer
+			if index==1 then
 				if dst<50then
 					a=s2[25]
 					if a>0then
@@ -100,9 +100,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 			end
 		end
 	end	
-			
-	hitThing=falseVar
-
+	
 	if tp-bt<h or bt>p[9]+24then-- or tp<p[9]+h
 		return falseVar -- returns if an object can't fit in the current sector
 	end
@@ -129,7 +127,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr,i,j) -- declerations variables a
 			end
 		end
 	end
-	bounds={bt,tp}
+	bounds,hitThing={bt,tp}
 	if mv then
 		if bstDst~=r then
 			cr=add(p,dVec(bstA,bstDst-r))
@@ -722,7 +720,7 @@ function onTick()
 					slt=slt+1
 				end
 			end
-			i=((i-2)%ttEnd)+1
+			i=(i-2)%ttEnd+1
 			sndLst=mn(sndLst,ttEnd)
 			running=i~=sndLst
 		end

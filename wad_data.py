@@ -662,10 +662,13 @@ if __name__ == '__main__':
         #        print(j,cur[j])
 
         if cur[22] != 0:
-            if "MF_MISSILE" in cur[22]: # this is used so missiles enter their seestate when they die, thus allowing lost souls to live upon impact
+            cur_flags=cur[22]
+            if "MF_MISSILE" in cur_flags: # this is used so missiles enter their seestate when they die, thus allowing lost souls to live upon impact
                 cur[4]=cur[13]
-            cur[22] = sum([spawn_flags[j] for j in cur[22].split("|")])
-        
+            cur[22] = sum([spawn_flags[j] for j in cur_flags.split("|")])
+            if (("MF_NOBLOOD"in cur_flags) or not ("MF_SHOOTABLE"in cur_flags)) and not ("MF_NOGRAVITY"in cur_flags):
+                cur[22]+=16 # used for deciding which objects to automatically pull to gravity
+                
         #print(cur[17],cur[18])
         
         info_spawn[index] = cur

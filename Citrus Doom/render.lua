@@ -89,7 +89,7 @@ end
 
 function findSec(a) -- finds a sub sector's sector
 	g=M[5][M[6][a][2]]
-	return M[3][M[2][g[4]][g[5]+6]][6]
+	return M8[M[3][M[2][g[4]][g[5]+6]][6]]
 end
 
 function onTick()
@@ -253,7 +253,7 @@ function onTick()
 					if init then
 						cr[7]=findMe(#M[7],cr)
 						cr[8]=findSec(cr[7])
-						cr[9]=M8[cr[8]][1]
+						cr[9]=cr[8][1]
 						cr[11]=0
 						cr[12]=0
 						cr[15]=0
@@ -273,6 +273,9 @@ function onTick()
 					cr[20]=dist(cr,pp[1]) -- used for thing sorting
 					state=M[16][cr[6]]
 					if state~=nil then
+						if state[5]>0 then
+							cr[9]=cr[8][1]
+						end
 						if cr[15]>=state[2] and state[2]~=-1 then
 							cr[6]=state[4]
 							cr[15]=0
@@ -707,7 +710,7 @@ function onDraw()
 									yt=yb-tex[5]*sclV
 									x2=x1-flip*tex[4]*scl
 									scl,sclV=scl*tex[3],sclV*tex[3]
-									lghtMath(M8[cr[8]][5])
+									lghtMath(cr[8][5])
 									lght=state>0 and lght or 1
 									pxSize=scl
 									pxSizeV=pxSize*pixelAspectCorrection
