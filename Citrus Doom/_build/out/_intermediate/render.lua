@@ -174,6 +174,7 @@ function onTick()
 					M[i]=M[i+10*levelCr]
 				end
 				M1=M[1]
+				ppPos={M1[1][1],M1[1][2]}
 				M8=M[8]
 				--for i=1,#M8 do
 				--	M8[i][5]=M8[i][5]/255
@@ -295,8 +296,10 @@ function onTick()
 			
 			cr=M1[1]
 			pp[1]={cr[1],cr[2]}
-			pp[2]=cr[9]+41
 			pp[3]=cr[3]
+			bobBase=mn(dist(pp[1],ppPos)^2/4,16)
+			ppPos={cr[1],cr[2]}
+			pp[2]=cr[9]+41+bobBase*sin(tick*20)/4 -- I think it should be /2, but that's a nauseating amount of view bob
 			
 
 			ssecs={}
