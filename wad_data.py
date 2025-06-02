@@ -485,15 +485,15 @@ if __name__ == '__main__':
             sprite_rotations.append([index_true for j in range(8)])
             rotation_map[i[:5]] = len(sprite_rotations)
         else:
-            if not i[:5] in rotation_map:
-                sprite_rotations.append([0 for j in range(8)])
-                rotation_map[i[:5]]=len(sprite_rotations)
+            for itter in range(2 if len(i)>6 else 1):
+                sprite_start = i[:4] + i[4 + itter*2]
+                if not sprite_start in rotation_map:
+                    sprite_rotations.append([0 for j in range(8)])
+                    rotation_map[sprite_start]=len(sprite_rotations)
 
-            cur_rotation = sprite_rotations[rotation_map[i[:5]]-1]
-            
-            cur_rotation[int(i[5])-1] = index_true
-            if len(i)>6:
-                cur_rotation[int(i[7])-1] = -(index_true)
+                cur_rotation = sprite_rotations[rotation_map[sprite_start]-1]
+                
+                cur_rotation[int(i[5 + itter*2])-1] = index_true if itter == 0 else -index_true
                 
         if i[:3]=="STF":
             print(i)
