@@ -70,6 +70,7 @@ sounds={}
 noteLn=3
 
 faceTick=0
+tickGlobal=0
 weaponGrin=0
 stg=1
 mN=0
@@ -136,7 +137,9 @@ function onTick()
 	end
 
 	if loaded then
+		tickGlobal=tickGlobal+1
 		
+		M[12][1][tickGlobal%#M[12][1]+1] = rnd(gN(10))
 		
 		
 		
@@ -537,9 +540,16 @@ function onDraw()
 		
 		text(26,149,flr(LOD))
 		text(26,143,flr(mn(difficulty-3000,3)))
+		for i=1,4 do
+			a=124+i*7
+			text(240,a,M[12][1][i])
+			text(200,a,M[12][1][13+i])
+		end
 	end
 	
 	text(1,131,"ROM:")
 	text(26,131,romCr)
 	text(1,137,"TPS:")
+	
+	
 end

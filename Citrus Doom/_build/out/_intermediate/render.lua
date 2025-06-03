@@ -250,17 +250,18 @@ function onTick()
 			end
 			for i=1,#M1 do
 				cr=M1[i]
+				if init then
+					cr[7]=findMe(#M[7],cr)
+					cr[8]=findSec(cr[7])
+					cr[9]=cr[8][1]
+					cr[11]=0
+					cr[12]=0
+					cr[15]=0
+					cr[19]=0
+				end
 				
-				if cr then
-					if init then
-						cr[7]=findMe(#M[7],cr)
-						cr[8]=findSec(cr[7])
-						cr[9]=cr[8][1]
-						cr[11]=0
-						cr[12]=0
-						cr[15]=0
-						cr[19]=0
-					end
+				if cr and i>1 then
+					
 					crMx=0
 					for j,v in ipairs({1,2,9}) do -- move moving thing
 						cr[v]=cr[v]+cr[v+10]

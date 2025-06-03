@@ -33,6 +33,7 @@ weapon=2
 weaponFireDelay=0
 httpTk=0
 tick=0
+tickGlobal=0
 timePassage=0
 pRandom=0
 stg=1
@@ -429,6 +430,7 @@ function onTick()
 		for i=1,32 do
 			out[i]=0
 		end
+		tickGlobal=tickGlobal+1
 		
 		timePassage=mn(timePassage+1/httpTkP,2/35)
 		sB(1,timePassage>=0)
@@ -678,11 +680,10 @@ function onTick()
 		
 
 		out[1]=weapon
-		for i=3,8 do
-			out[i]=pTng[M[19][4][i]]-- M[19][4] is 0,0,7,8,0,1,2,9,3
+		for i=3,13 do
+			out[i]=pTng[M[19][4][i]] or out[i]-- M[19][4] is 0,0,7,8,4,1,2,9,0,0,0,0,3 yes it's using the spawn state as the index, it's always 1 so it's alright
 		end
-		out[5]=1
-		out[13]=pTng[3]
+		out[10]=M12[1][tickGlobal%#M12[1]+1]
 
 		i=sndLst
 		running=trueVar
@@ -741,11 +742,6 @@ function onDraw()
 	
 	text(26,137,httpTkP)
 	
-	if loaded then
-		for i=1,4 do
-			a=124+i*7
-			text(240,a,flr(M12[1][i]))
-			text(200,a,M12[1][13+i])
-		end
-	end
+	--if loaded then
+	--end
 end

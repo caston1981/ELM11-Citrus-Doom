@@ -50,6 +50,7 @@ def compress(text,print_vars=False,delete_newlines=False):
         text = text[1:]
     #print([text[:25]])  
 
+    bad_var=""
     if text[2:5]=='=""':
         bad_var = text[0:2]
         text = text[5:]
@@ -60,8 +61,11 @@ def compress(text,print_vars=False,delete_newlines=False):
         text = text[4:]
         text = text.replace(bad_var,'""')
 
+    if bad_var != "":
+        print("\t"+bad_var)
     
-
+    
+    text=" "+text
     cur=""
     valid=True
     for index in range(len(text)):
@@ -115,8 +119,8 @@ def compress(text,print_vars=False,delete_newlines=False):
 
     #print(replacements)
 
-    is_string = False
-
+    is_string = False 
+    
     cur=""
     for index in range(len(text)-1,-1,-1):
         i=text[index]
@@ -143,12 +147,12 @@ def compress(text,print_vars=False,delete_newlines=False):
                 text = text[:cur_index] + text[cur_index+1:]
             #print([text[cur_index-1:cur_index+10]])
             cur_index += 1
-
+    text=text[1:]
     
 
     print("\t",len(text),"end characters")
 
-    return text[1:]
+    return text
 
 if __name__ == '__main__':
     file = open("in.txt")
