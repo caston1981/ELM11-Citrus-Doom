@@ -376,6 +376,9 @@ if __name__ == '__main__':
                           ("MT_MISC1",(0,0,200,200,0.5)), # megaarmor/combat armor
                           ("MT_MEGA",(200,200,200,200,0.5)), # megasphere
                           ("MT_MISC13",(100,100,0,0,0)), # berserk, only heals
+                          ("MT_MISC15",(0,0,0,0,0)), # Computer area map, only here so it gets picked up
+                          ("MT_INV",(200,200,200,200,0.5)), # invunerability (just heals the player a lot)
+                          ("MT_MISC16",(0,0,0,0,0)), # Light amplification visor, only here so it gets picked up
                           ]
     health_pickup_list_zip = [[health_pickup_list[j][i] for j in range(len(health_pickup_list))] for i in range(len(health_pickup_list[0]))]
 
@@ -433,7 +436,7 @@ if __name__ == '__main__':
         end = text.find(find_end,start)
         if i==2:
             None
-            print(code.split("\n")[300-1])
+            print(code.split("\n")[203-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -1902,7 +1905,7 @@ if __name__ == '__main__':
             i=level_wad.things[index]
             
             
-            if i.type in info_spawn_zip[1] and i.flags&16==0:
+            if i.type in info_spawn_zip[1] and i.flags&16==0 and not (i.type in [2024,2025]): # gets rid of multiplayer-only things and invis/rad suit
                 begining = info_spawn_zip[1].index(i.type)+1
                 state = info_spawn_zip[2][begining-1]
 
@@ -2186,6 +2189,7 @@ if __name__ == '__main__':
                       [0,5,0,-5,-3,0,0,-5,3,0,0,-5], #10
                       [sound_names.index("DPITEMUP")+1], #11
                       [0,1,0,2,0,0,0,3,0,0,0,0,0,0,0,4], #12
+                      [health_pickup_list_zip[0].index("MT_MISC15")+1,health_pickup_list_zip[0].index("MT_MISC16")+1], #13
                       ]
     for index in range(len(misc_additions)):
         i=misc_additions[index]
