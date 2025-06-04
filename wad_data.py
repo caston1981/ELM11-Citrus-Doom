@@ -434,9 +434,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==0:
+        if i==-1:
             None
-            print(code.split("\n")[1-1])
+            print(code.split("\n")[79-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -522,6 +522,23 @@ if __name__ == '__main__':
 
     for i in char_sprite_lookup:
         char_sprite_lookup[i] = all_sprite_textures_expanded.index("STCFN0"+str(char_sprite_lookup[i]))+1
+
+    char_sprite_table_small_dark = [0 for i in range(128)]
+    for i in range(10):
+        char_sprite_table_small_dark[i+ord("0")-1] = all_sprite_textures_expanded.index("STGNUM"+str(i))+1
+    char_sprite_table_small_dark[0] = 4
+
+    char_sprite_table_small_bright = [0 for i in range(128)]
+    for i in range(10):
+        char_sprite_table_small_bright[i+ord("0")-1] = all_sprite_textures_expanded.index("STYSNUM"+str(i))+1
+    char_sprite_table_small_bright[0] = 4
+
+    char_sprite_table_large = [0 for i in range(128)]
+    for i in range(10):
+        char_sprite_table_large[i+ord("0")-1] = all_sprite_textures_expanded.index("STTNUM"+str(i))+1
+    char_sprite_table_large[i+ord("%")-1] = all_sprite_textures_expanded.index("STTPRCNT")+1
+    char_sprite_table_large[0] = 14
+    
         
     ammo_pickup_text = get_text("ammo_pickup_text.txt")
     health_pickup_text = get_text("health_pickup_text.txt")
@@ -2190,6 +2207,10 @@ if __name__ == '__main__':
                       [sound_names.index("DPITEMUP")+1], #11
                       [0,1,0,2,0,0,0,3,0,0,0,0,0,0,0,4], #12
                       [health_pickup_list_zip[0].index("MT_MISC15")+1,health_pickup_list_zip[0].index("MT_MISC16")+1], #13
+                      char_sprite_table_small_dark, #14
+                      char_sprite_table_small_bright, #15
+                      char_sprite_table_large, #16
+                      [200,50,50,300], #17
                       ]
     for index in range(len(misc_additions)):
         i=misc_additions[index]

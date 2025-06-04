@@ -90,6 +90,32 @@ function findSec(a) -- finds a sub sector's sector
 	return M[8][M[3][M[2][g[4]][g[5]+6]][6]]
 end
 
+function textCustom(x1,y1,textToDraw,charSet) -- draws text using a charset (14 small+dim, 15 small+bright, 16 large), position defines the top right of the drawn text
+	local rec,stCl=screenVar.drawRectF,screenVar.setColor
+	textToDraw=textToDraw..""
+	charSet=M[19][charSet]
+	for i=#textToDraw,1,-1 do
+		cr=charSet[str.byte(str.sub(textToDraw,i,i))]
+		x1=x1-charSet[1]
+		if cr>0 then
+			tex=M[23][cr]
+			tW,tH=tex[1],tex[2]
+			x2=x1-tex[4]+1
+			y2=y1-tex[5]
+			for j=0,tW-1 do
+				for k=0,tH-1 do
+					pix=tex[7+k+j*tH]
+					if pix~=0 then
+						col=M[20][pix]
+						stCl(col[1],col[2],col[3])
+						rec(x2+j,y2+k,1,1)
+					end
+				end
+			end
+		end
+	end
+end
+
 function onTick()
 	mN=0
 
@@ -492,9 +518,11 @@ function onDraw()
 			end
 		end
 		for i=5,7 do
-			cr=M[19][i]
-			stCl(cr[1],cr[2],cr[3])
-			rec(199,95+i*7,6,7)
+			if M[12][1][9+i]>0 then
+				cr=M[19][i]
+				stCl(cr[1],cr[2],cr[3])
+				rec(199,95+i*7,6,7)
+			end
 		end
 
 		if textTimer>0 then
@@ -506,7 +534,7 @@ function onDraw()
 				if cr>0 then
 					tex=M[23][cr]
 					tW,tH=tex[1],tex[2]
-					x2=x1+tex[4]
+					x2=x1-tex[4]
 					y2=y1-tex[5]
 					for i=0,tW-1 do
 						for j=0,tH-1 do
@@ -524,7 +552,8 @@ function onDraw()
 				end
 			end
 		end
-
+		--textCustom(wdth-1,0,321234567890,15)
+		
 		stCl(255,255,255)
 		text(100,131,flr(health))
 		text(100,137,flr(armour))
@@ -541,9 +570,12 @@ function onDraw()
 		text(26,143,flr(mn(difficulty-3000,3)))
 		for i=1,4 do
 			a=124+i*7
-			text(240,a,M[12][1][i])
-			text(200,a,M[12][1][13+i])
+			textCustom(250,a,rnd(M[12][1][i]),15)
+			textCustom(271,a,rnd(M[19][17][i]),15)
+			stCl(255,255,255)
+			text(254,a,"/")
 		end
+		stCl(255,255,255)
 	end
 	
 	text(1,131,"ROM:")
