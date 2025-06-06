@@ -392,7 +392,9 @@ if __name__ == '__main__':
 
     #[print(i) for i in ammo_pickup_list]
 
-    drop_dict = {"MT_POSSESSED":"MT_CLIP","MT_SHOTGUY":"MT_SHOTGUN"}
+    drop_dict = {"MT_POSSESSED":"MT_CLIP","MT_SHOTGUY":"MT_SHOTGUN",
+                 "MT_SPIDER":"MT_MISC6","MT_CYBORG":"MT_MISC6" # used for level exits
+                 }
                  
     
     
