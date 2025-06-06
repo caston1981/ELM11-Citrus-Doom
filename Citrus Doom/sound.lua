@@ -162,6 +162,11 @@ function onTick()
 	end
 
 	if loaded then
+		if gN(9)>0 then
+			init=trueVar
+			levelCr=gN(9)
+		end
+		
 		tickGlobal=tickGlobal+1
 		
 		M[12][1][tickGlobal%#M[12][1]+1] = rnd(gN(10))
@@ -215,10 +220,6 @@ function onTick()
 				end
 			end
 
-			if gN(9)>0 then
-				init=trueVar
-				levelCr=gN(9)
-			end
 
 			textTimer=textTimer-1
 			
@@ -326,32 +327,28 @@ function onTick()
 							cr[k]=info[k+1]
 						end
 					elseif cr<0 then
-						if -cr<=#M[1] then
-							pos=M[1][-cr]
-							if pos~=nil then
-								info=pos[6]
-								if M[16][info][5]>0 then
-									yellow=mx(yellow,15)
-									textTimer=35
-									textIndex=M[16][info][5]
-									sounds[#sounds+1]={M[19][11][1],1}
-									if pos[4] then
-										s2=M[15][pos[4]]
-										if s2[29]==M[19][13][1] then -- for map computer
-											for k=1,#M[2] do
-												M[2][k][8]=true
-											end
+						pos=M[1][-cr]
+						if pos~=nil then
+							info=pos[6]
+							if M[16][info][5]>0 then
+								yellow=mx(yellow,15)
+								textTimer=35
+								textIndex=M[16][info][5]
+								sounds[#sounds+1]={M[19][11][1],1}
+								if pos[4] then
+									s2=M[15][pos[4]]
+									if s2[29]==M[19][13][1] then -- for map computer
+										for k=1,#M[2] do
+											M[2][k][8]=true
 										end
 									end
 								end
-							else
-								M[1][-cr]={}
 							end
-							while -cr>#M[1] do
-								M[1][#M[1]+1]=falseVar
-							end
-							table.remove(M[1],-cr)
 						end
+						while -cr>#M[1] do
+							M[1][#M[1]+1]=falseVar
+						end
+						table.remove(M[1],-cr)
 					else
 						if not M[1][cr] then
 							M[1][cr]={}
