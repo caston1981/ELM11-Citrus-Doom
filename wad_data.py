@@ -536,7 +536,7 @@ if __name__ == '__main__':
     char_sprite_table_large = [0 for i in range(128)]
     for i in range(10):
         char_sprite_table_large[i+ord("0")-1] = all_sprite_textures_expanded.index("STTNUM"+str(i))+1
-    char_sprite_table_large[i+ord("%")-1] = all_sprite_textures_expanded.index("STTPRCNT")+1
+    char_sprite_table_large[ord("%")-1] = all_sprite_textures_expanded.index("STTPRCNT")+1
     char_sprite_table_large[0] = 14
     
         

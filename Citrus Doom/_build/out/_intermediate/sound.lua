@@ -552,28 +552,29 @@ function onDraw()
 		end
 		--textCustom(wdth-1,0,321234567890,15)
 		
-		stCl(255,255,255)
-		text(100,131,flr(health))
-		text(100,137,flr(armour))
-		text(67,131,"HEALTH")
-		text(67,137,"ARMOUR")
+		
+		textCustom(120,131,flr(health).."%",16)
+		textCustom(220,131,flr(armour).."%",16)
+		stCl(15,15,15)
+		text(120-28-15,152,"HEALTH")
+		text(220-28-15,152,"ARMOUR")
 		text(1,143,"DIF:")
 		text(1,149,"LOD:")
-		text(217,131,"BULL")
-		text(217,138,"SHEL")
-		text(217,145,"ROKT")
-		text(217,152,"CELL")
+		text(227,131,"BULL")
+		text(227,138,"SHEL")
+		text(227,145,"ROKT")
+		text(227,152,"CELL")
 		
 		text(26,149,flr(LOD))
 		text(26,143,flr(mn(difficulty-3000,3)))
 		for i=1,4 do
 			a=124+i*7
-			textCustom(250,a,rnd(M[12][1][i]),15)
-			textCustom(271,a,rnd(M[19][17][i]),15)
-			stCl(255,255,255)
-			text(254,a,"/")
+			textCustom(260,a,rnd(M[12][1][i]),15)
+			textCustom(281,a,rnd(M[19][17][i]),15)
+			stCl(15,15,15)
+			text(264,a,"/")
 		end
-		stCl(255,255,255)
+		stCl(15,15,15)
 	end
 	
 	text(1,131,"ROM:")
