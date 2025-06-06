@@ -8,7 +8,7 @@ ceil=m.ceil
 sqrt=m.sqrt
 gN=input.getNumber
 gB=input.getBool
-pi=m.pi
+pi=m.pi/180
 falseVar=false
 trueVar=true
 str=string
@@ -16,11 +16,11 @@ str=string
 function cross(a,b)return a[1]*b[2]-a[2]*b[1]end
 function sub(a,b)return{(a[1]-b[1]),(a[2]-b[2])}end
 function wrap(a)return ((a+180)%360)-180 end
-function sin(a)return m.sin(a/180*pi)end
-function cos(a)return m.cos(a/180*pi)end
-function tan(a)return m.tan(a/180*pi)end
-function at(a)return m.atan(a)*180/pi end
-function at2(a)return m.atan(a[2],a[1])*180/pi end
+function sin(a)return m.sin(a*pi)end
+function cos(a)return m.cos(a*pi)end
+function tan(a)return m.tan(a*pi)end
+function at(a)return m.atan(a)/pi end
+function at2(a)return m.atan(a[2],a[1])/pi end
 function clmp(a,b,cr)return mn(mx(b,a),cr)end
 function rnd(a)return flr(a+0.5)end
 function dist(a,b)return sqrt(((a[1]-b[1])^2)+((a[2]-b[2])^2))end -- only checks horizontal distance
@@ -51,7 +51,7 @@ LODH=200
 health=100
 mRandom=0
 transferCache={}
-bigNumb=32768 -- 2^15
+bigNumb=2^15
 difficulty=3002
 fuzz=0
 screenBrightTimer=0
@@ -188,7 +188,7 @@ function onTick()
 					a=cr[4]
 					if a>0 then
 						if a==3008 then
-							vsTex=cr[5]==1
+							vsTex=cr[5]>0 and cr[5]
 						elseif a>3004 then
 							LOD=mx(LOD+3*(cr[4]-3006),1)
 							LODH=LOD/2
@@ -541,7 +541,7 @@ end
 
 function onDraw()
 	screenVar=screen
-	local tri,rec,stCl,text=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawText --locals are faster because lua
+	local tri,rec,stCl=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor --locals are faster because lua
 	vises={floors,ceils}
 
 
@@ -661,28 +661,30 @@ function onDraw()
 						
 						if sec[a+2]~=0 then
 							x=v[1]
-							
-							lghtMath(sec[5])
-							b=sec[a+2]
-							tex=M[22][b]
-							tex=M[22][b+(animationFrame%tex[4])]
-							
-							xg=wdthH-(wdthH-x)*fovT
-							bt,tp=flr(v[2]+hghtH),ceil(v[3]+hghtH)
-							
-							resScl = tex[3]
-						
-							for iy=bt,tp do
-								cacheCur=cache[iy]
+							if x%vsTex==0 then
 								
-								tx = (cacheCur[3] + cacheCur[1] * xg)//resScl
-								ty = (cacheCur[4] + cacheCur[2] * xg)//resScl
+								lghtMath(sec[5])
+								b=sec[a+2]
+								tex=M[22][b]
+								tex=M[22][b+(animationFrame%tex[4])]
 								
-								pix=6 + (ty%tex[1]) + tex[1]*(tx%tex[2])
-								col=M[20][tex[pix]]
-								if col then
-									stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-									rec(x,-iy+hght,1,1)
+								xg=wdthH-(wdthH-x)*fovT
+								bt,tp=flr(v[2]+hghtH),ceil(v[3]+hghtH)
+								
+								resScl = tex[3]
+							
+								for iy=bt,tp do
+									cacheCur=cache[iy]
+									
+									tx = (cacheCur[3] + cacheCur[1] * xg)//resScl
+									ty = (cacheCur[4] + cacheCur[2] * xg)//resScl
+									
+									pix=6 + (ty%tex[1]) + tex[1]*(tx%tex[2])
+									col=M[20][tex[pix]]
+									if col then
+										stCl(col[1]*lght,col[2]*lght,col[3]*lght)
+										rec(x,-iy+hght,vsTex,1)
+									end
 								end
 							end
 						end
