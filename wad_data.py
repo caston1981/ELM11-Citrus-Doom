@@ -343,7 +343,7 @@ if __name__ == '__main__':
     
     
     ammo_item_list = ["Bullet","Shell","Rocket","Cells","Fist","Pistol","Chainsaw","Shotgun","Chaingun","Rocket Launcher","Plasma Rifle",
-                 "BFG","SSGun","Blue Key","Red Key","Yellow Key"
+                 "BFG","SSGun","Blue Key","Red Key","Yellow Key","TPS",
                  ]
     #print(len(ammo_item_list))
     
@@ -2196,11 +2196,11 @@ if __name__ == '__main__':
 
     misc_additions = [[1,2,9,6,11,12,19,3], #1
                       [0,45,-45,90,-90], #2
-                      [all_sprite_textures_expanded.index("STFST01")+1,res_count_walls,res_count_sprites], #3
+                      [all_sprite_textures_expanded.index("STFST01")+1,res_count_walls,res_count_sprites,all_sprite_textures_expanded.index("STKEYS0")+1], #3
                       [0,0,7,8,4,1,2,9,0,0,0,0,3], #4
-                      [0,0,255], #5
-                      [255,0,0], #6
-                      [200,200,0], #7
+                      [0,2,1], #5
+                      [0], #6 unused
+                      [0], #7 unused
                       sky_order, #8
                       [-20]+[4 for i in range(10)], #9
                       [0,5,0,-5,-3,0,0,-5,3,0,0,-5], #10

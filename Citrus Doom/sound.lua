@@ -116,6 +116,13 @@ function textCustom(x1,y1,textToDraw,charSet) -- draws text using a charset (14 
 	end
 end
 
+function textImitation(x,y,text)
+	screenVar.setColor(13,0,0)
+	screenVar.drawText(x+1,y+1,text)
+	screenVar.setColor(59,59,59)
+	screenVar.drawText(x,y,text)
+end
+
 function onTick()
 	mN=0
 
@@ -418,7 +425,7 @@ end
 
 function onDraw()
 	screenVar=screen
-	local tri,rec,stCl,text,drLine=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawText,screenVar.drawLine
+	local rec,stCl,drLine,text=screenVar.drawRectF,screenVar.setColor,screenVar.drawLine,screenVar.drawText
 	mN=mN+1
 
 	if M[21]and not loaded then
@@ -497,9 +504,9 @@ function onDraw()
 		stCl(255,red>0 and 0 or 255,0,red+yellow)
 		rec(0,0,wdth,hght)
 		
-		stCl(50,50,50)
+		stCl(30,30,30)
 		rec(0,hght,wdth,32)
-		stCl(25,25,25)
+		stCl(5,5,5)
 		rec(wdthH-16,hght,32,32)
 		tex=M[23][M[19][3][1]+(face)*M[19][3][3]]
 		tW,tH=tex[1],tex[2]
@@ -514,11 +521,21 @@ function onDraw()
 				end
 			end
 		end
-		for i=5,7 do
-			if M[12][1][9+i]>0 then
-				cr=M[19][i]
-				stCl(cr[1],cr[2],cr[3])
-				rec(199,95+i*7,6,7)
+		for i=1,3 do
+			if M[12][1][13+i]>0 then
+				x1,y1=221,125+i*8
+				tex=M[23][M[19][3][4]+M[19][5][i]*M[19][3][3]]
+				tW,tH=tex[1],tex[2]
+				for j=0,tW-1 do
+					for k=0,tH-1 do
+						pix=tex[7+k+j*tH]
+						if pix~=0 then
+							col=M[20][pix]
+							stCl(col[1],col[2],col[3])
+							rec(x1+j,y1+k,1,1)
+						end
+					end
+				end
 			end
 		end
 
@@ -552,33 +569,32 @@ function onDraw()
 		--textCustom(wdth-1,0,321234567890,15)
 		
 		
-		textCustom(120,131,flr(health).."%",16)
-		textCustom(220,131,flr(armour).."%",16)
-		stCl(15,15,15)
-		text(120-28-15,152,"HEALTH")
-		text(220-28-15,152,"ARMOUR")
-		text(1,143,"DIF:")
-		text(1,149,"LOD:")
-		text(227,131,"BULL")
-		text(227,138,"SHEL")
-		text(227,145,"ROKT")
-		text(227,152,"CELL")
+		textCustom(124,131,flr(health).."%",16)
+		textCustom(218,131,flr(armour).."%",16)
+		textImitation(124-28-15,152,"HEALTH")
+		textImitation(218-28-15,152,"ARMOUR")
+		textImitation(2,131,"ROM:")
+		textImitation(26,131,romCr)
+		textImitation(2,138,"TPS:")
+		textImitation(26,138,M[12][1][17])
+		textImitation(2,145,"DIF:")
+		textImitation(26,145,flr(mn(difficulty-3000,3)))
+		textImitation(2,152,"LOD:")
+		textImitation(26,152,flr(LOD))
+		textImitation(232,131,"BULL")
+		textImitation(232,138,"SHEL")
+		textImitation(232,145,"ROKT")
+		textImitation(232,152,"CELL")
 		
-		text(26,149,flr(LOD))
-		text(26,143,flr(mn(difficulty-3000,3)))
 		for i=1,4 do
 			a=124+i*7
-			textCustom(260,a,rnd(M[12][1][i]),15)
-			textCustom(281,a,rnd(M[19][17][i]),15)
-			stCl(15,15,15)
-			text(264,a,"/")
+			textCustom(265,a,rnd(M[12][1][i]),15)
+			textCustom(285,a,rnd(M[19][17][i]),15)
+			textImitation(268,a,"/")
 		end
-		stCl(15,15,15)
+		
+	else
+		text(1,131,"ROM:")
+		text(26,131,romCr)
 	end
-	
-	text(1,131,"ROM:")
-	text(26,131,romCr)
-	text(1,137,"TPS:")
-	
-	
 end
