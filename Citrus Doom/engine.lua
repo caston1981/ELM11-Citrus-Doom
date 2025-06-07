@@ -103,7 +103,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 	end	
 	
 	if tp-bt<h or bt>p[9]+24 then-- or tp<p[9]+h
-		valid=checkPlayerPosLoop<8 or tick%4>0 or bounds[6]<18 or damageThing(collObject,10) -- crushes object if all 3 conditions are false
+		valid=(checkPlayerPosLoop or 1)<8 or tick%4>0 or bounds[6]<18 or damageThing(collObject,10) -- crushes object if all 3 conditions are false
 		return falseVar -- returns if an object can't fit in the current sector
 	end
 	for i=1,#blkCr do
@@ -328,9 +328,9 @@ function autoAim()
 	end
 end
 
-function fall(cr) -- I do not know why cr must be passed through to this function, the cr I want is a global variable so having an empty funtion input should be fine
-	if cr[9]~=bounds[1] and not flying then	 --    but it doesn't work otherwise, so this must be done
-		cr[9]=bounds[1] --    maybe lua gets confused as to whether cr is a local or global variable or something
+function fall(cr)
+	if cr[9]~=bounds[1] and not flying then
+		cr[9]=bounds[1]
 		cr[10]=true
 	end
 end
