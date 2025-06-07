@@ -103,6 +103,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 	end	
 	
 	if tp-bt<h or bt>p[9]+24 then-- or tp<p[9]+h
+		valid=checkPlayerPosLoop<8 or tick%4>0 or bounds[6]<18 or damageThing(collObject,10) -- crushes object if all 3 conditions are false
 		return falseVar -- returns if an object can't fit in the current sector
 	end
 	for i=1,#blkCr do
@@ -234,7 +235,7 @@ function rand()
 	return M[13][1][pRandom]
 end
 
-function damageThing(cr,i)-- thing array, damage, function declaration variables are local so the most common should be used
+function damageThing(cr,i,pos)-- thing array, damage, function declaration variables are local so the most common should be used
 	s1=M15[cr[4]]
 	if s1[23]&2>0 and cr[7]>0 then
 		cr[8]=cr[8]-(i+1)//2
@@ -243,7 +244,7 @@ function damageThing(cr,i)-- thing array, damage, function declaration variables
 		if rand()<s1[10] then
 			cr[6]=s1[9]
 			cr[15]=0
-			cr[23]=pTng
+			cr[23]=pos or pTng
 			cr[10]=trueVar
 		end
 	end
@@ -289,7 +290,7 @@ function fireWeapon(source,index)
 				a[19]=1
 				if valid then
 					a=M1[wall]
-					damageThing(a,crWeapon[9]*((rand()&3)+2))
+					damageThing(a,crWeapon[9]*((rand()&3)+2),source)
 				end
 			end
 		end
@@ -324,6 +325,13 @@ function autoAim()
 				end
 			end
 		end
+	end
+end
+
+function fall(cr) -- I do not know why cr must be passed through to this function, the cr I want is a global variable so having an empty funtion input should be fine
+	if cr[9]~=bounds[1] and not flying then	 --    but it doesn't work otherwise, so this must be done
+		cr[9]=bounds[1] --    maybe lua gets confused as to whether cr is a local or global variable or something
+		cr[10]=true
 	end
 end
 
@@ -492,6 +500,7 @@ function onTick()
 						cr[6]=state[4]
 						cr[15]=0
 						state3=M[16][cr[6]][3]
+						flying=s1[23]&4>0
 						if state3==1 then-- explode logic
 							for i,stg in ipairsVar(M1) do
 								if stg then
@@ -506,11 +515,13 @@ function onTick()
 								cr[23]=pTng-- set target
 								cr[6]=s1[5]
 							end
+							chkPs(cr,falseVar,i,8)
+							fall(cr)
 						elseif state3==3 then-- chase logic
+							cr[23]=cr[23][20] and cr[23] or pTng
 							angle=flr(at2(cr,cr[23])/45+0.5)*45
 							valid=falseVar
 							stg=1
-							flying=s1[23]&4>0
 							while stg<5 and not valid do-- checks angles 0, 45, -45, 90, -90 relative to desired direction
 								nm=add(cr,dVec(angle+M[19][2][stg],8))
 								nm[9]=cr[9]
@@ -525,9 +536,9 @@ function onTick()
 								cr[3]=angle
 								cr[10]=trueVar
 							else
-								chkPs(cr,falseVar,i)
+								chkPs(cr,falseVar,i,8)
 							end
-							cr[9]=flying and cr[9] or bounds[1]
+							fall(cr)
 
 							a=dist(cr,cr[23])
 							if s1[13]>0 and chkRayCol(cr,cr[23],1)and mn(a,230)<rand()then
@@ -556,7 +567,7 @@ function onTick()
 						crWeapon=M[14][cr[17]]
 						if not chkPs(cr,falseVar,i) or cr[9]<=bounds[1] then
 							if hitThing then
-								damageThing(hitThing,s1[21]*((rand()&7)+1))
+								damageThing(hitThing,s1[21]*((rand()&7)+1),M1[cr[14]])
 							end
 							cr[1]=cr[1]-cr[11]
 							cr[2]=cr[2]-cr[12]
@@ -613,7 +624,6 @@ function onTick()
 			else
 				pTng[19]=0
 				pTng[9]=bounds[1] -- puts the player's heigh back in-bounds
-				valid=tick%4>0 or bounds[6]<18 or damageThing(pTng,10) -- crushes player if both conditions are false
 			end
 			
 			ammo=M12[1]

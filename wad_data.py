@@ -438,7 +438,7 @@ if __name__ == '__main__':
         end = text.find(find_end,start)
         if i==-1:
             None
-            print(code.split("\n")[79-1])
+            print(code.split("\n")[413-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -539,6 +539,7 @@ if __name__ == '__main__':
     for i in range(10):
         char_sprite_table_large[i+ord("0")-1] = all_sprite_textures_expanded.index("STTNUM"+str(i))+1
     char_sprite_table_large[ord("%")-1] = all_sprite_textures_expanded.index("STTPRCNT")+1
+    char_sprite_table_large[ord("-")-1] = all_sprite_textures_expanded.index("STTMINUS")+1
     char_sprite_table_large[0] = 14
     
         
