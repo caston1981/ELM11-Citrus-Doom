@@ -400,23 +400,23 @@ function onTick()
 				M12[1][i]=0
 			end
 			levelCr=levelCr+1
-			for i,cr in ipairsVar(M1)do
+			for i=#M1,1,-1 do
+				cr=M1[i]
 				for j=7,40 do
 					cr[j]=0
 				end
-				test=cr[5]+1
 				cr[7]=M15[cr[4]][4]-- health
 				cr[9],cr[10]=findMe(#M[7],cr)[1]-- vertical position
 				--cr[10]=falseVar-- send update to render block, set to nil above which counts as false
 				--cr[20]=trueVar-- alive state, set to zero above which counts as true
-				if cr[4]==1 then-- identify player
+				if cr[5]&difficulty<1 then
+					tableRemove(M1,i)
+				elseif cr[4]==1 then-- identify player
 					if pTng then
 						cr[7]=pTng[7]
 						cr[8]=pTng[8]
 					end
 					pTng=cr
-				elseif cr[5]&difficulty<1 then
-					M1[i]=falseVar
 				end
 			end
 			blockmapLim=M101[3]

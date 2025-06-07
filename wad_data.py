@@ -247,7 +247,7 @@ if __name__ == '__main__':
     #map_order=["SET1"]+map_order
     #map_order=["SET1","E2M3","E1M1","E1M2","E1M3","E1M4","E1M5","E1M6","E1M7","E1M8"]
     map_order=["SET1"]+["E"+str(1+i//9)+"M"+str(1+i%9) for i in range(3*9)]
-    map_order=["SET1","E2M3"] # self explanitory, first level is the settings one
+    #map_order=["SET1","E2M3"] # self explanitory, first level is the settings one
     #map_order[1]="E1M3"
     skys = {"E1":"SKY1","E2":"SKY2","E3":"SKY3","E4":"SKY4"}
     sky_textures = [skys[i] for i in skys]
@@ -436,9 +436,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==-1:
+        if i==2:
             None
-            print(code.split("\n")[82-1])
+            print(code.split("\n")[147-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"

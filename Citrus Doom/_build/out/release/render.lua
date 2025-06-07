@@ -1,314 +1,313 @@
 
-bI=screen
-aP=ipairs
-bS=table
-bV=input
-v=math
-D=v.max
-w=v.min
-z=v.abs
-ah=v.floor
-ceil=v.ceil
-sqrt=v.sqrt
-F=bV.getNumber
-bb=bV.getBool
-pi=v.pi/180
-L=false
-Q=true
+co=screen
+bX=table
+bO=input
+x=math
+C=x.max
+w=x.min
+B=x.abs
+aj=x.floor
+ceil=x.ceil
+sqrt=x.sqrt
+G=bO.getNumber
+bd=bO.getBool
+pi=x.pi/180
+bg=false
+P=true
+ap=ipairs
+cb=bX.remove
 bk=string
-function bg(b,m)return b[1]*m[2]-b[2]*m[1]end
-function sub(b,m)return{(b[1]-m[1]),(b[2]-m[2])}end
-function bm(b)return((b+180)%360)-180 end
-function sin(b)return v.sin(b*pi)end
-function cos(b)return v.cos(b*pi)end
-function tan(b)return v.tan(b*pi)end
-function cR(b)return v.atan(b)/pi end
-function aG(b)return v.atan(b[2],b[1])/pi end
-function bA(b,m,_)return w(D(m,b),_)end
-function ar(b)return ah(b+.5)end
-function aQ(b,m)return sqrt(((b[1]-m[1])^2)+((b[2]-m[2])^2))end
-function bR(b)b=b-1
+function bA(b,n)return b[1]*n[2]-b[2]*n[1]end
+function sub(b,n)return{(b[1]-n[1]),(b[2]-n[2])}end
+function ba(b)return((b+180)%360)-180 end
+function sin(b)return x.sin(b*pi)end
+function cos(b)return x.cos(b*pi)end
+function tan(b)return x.tan(b*pi)end
+function cS(b)return x.atan(b)/pi end
+function aZ(b)return x.atan(b[2],b[1])/pi end
+function bi(b,n,_)return w(C(n,b),_)end
+function ay(b)return aj(b+.5)end
+function aO(b,n)return sqrt(((b[1]-n[1])^2)+((b[2]-n[2])^2))end
+function bN(b)b=b-1
 b=b|(b>>1)b=b|(b>>2)b=b|(b>>4)return b+1
 end
-function aS(b)q=w(b/255+bK,1)^2.2 end
-c={}br=1
-ay=3
-aJ=L
-ak=Q
-g={{0,0},0,0}O=288
-y=O//2
-aj=128
-s=aj//2
-aH={}aN=400
-cq=200
-bN=100
-cS=0
-av={}aK=2^15
-co=3002
-bj=0
-aY=0
-aw=0
-bw=1.2
-K=52
-N=tan(K)aO=s*bw*O/aj/N
-W=1
-bE={}for a=-y,y do bE[a]=aG({1,a/y*N})end
-function bx(a)if a<aK then
-local u,bi=c[7][a]bi=0<bg({u[3],u[4]},sub(g[1],u))and 8 or 7
-bx(u[bi])bx(u[15-bi])else
-am[#am+1]=a-aK
+function aX(b)p=w(b/255+bR,1)^2.2 end
+c={}bc=1
+ar=3
+at=P
+k={{0,0},0}E=0
+M=288
+y=M//2
+ad=128
+u=ad//2
+aY={}aM=400
+bH=200
+ct=1
+cV=0
+aD={}aP=2^15
+br=3002
+bC=0
+aG=0
+av=0
+bp=1.2
+N=52
+O=tan(N)aH=u*bp*M/ad/O
+U=1
+cs={}for a=-y,y do cs[a]=aZ({1,a/y*O})end
+function bm(a)if a<aP then
+local s,bq=c[7][a]bq=0<bA({s[3],s[4]},sub(k[1],s))and 8 or 7
+bm(s[bq])bm(s[15-bq])else
+an[#an+1]=a-aP
 end
 end
-function aW(a,b)if a<aK then
-u=c[7][a]return aW(u[0<bg({u[3],u[4]},sub(b,u))and 8 or 7],b)else
-return a-aK
+function aF(a,b)if a<aP then
+s=c[7][a]return aF(s[0<bA({s[3],s[4]},sub(b,s))and 8 or 7],b)else
+return a-aP
 end
 end
-function bv(b)u=c[5][c[6][b][2]]return an[c[3][c[2][u[4]][u[5]+6]][6]]end
-function onTick()bz=0
-for n=1,3 do
-if bb(9)and(not aJ)or not c[21]then
-bl=property.getText(br)a=1
-A=""
-_=bk.sub(bl,a,a)while _~=""do
-bU=bk.byte(_)if bU>64 then
-A=(A..bU-65)+0
-if W==1 then
-ca=A
-c[A]=c[A]or{}elseif W==2 then
-ct=A
-aC=0
-elseif W==3 then
-bs=A
+function bu(b)s=c[5][c[6][b][2]]return aB[c[3][c[2][s[4]][s[5]+6]][6]]end
+function onTick()bt=0
+for o=1,3 do
+if bd(9)and(not bs)or not c[21]then
+bj=property.getText(bc)a=1
+z=""
+_=bk.sub(bj,a,a)while _~=""do
+bY=bk.byte(_)if bY>64 then
+z=(z..bY-65)+0
+if U==1 then
+bE=z
+c[z]=c[z]or{}elseif U==2 then
+cz=z
+ak=0
+elseif U==3 then
+bf=z
 else
-if aC==0 then
-aC=ct
-bs=bs-1
-bh={}c[ca][#c[ca]+1]=bh
+if ak==0 then
+ak=cz
+bf=bf-1
+bn={}c[bE][#c[bE]+1]=bn
 end
-bh[#bh+1]=A
-aC=aC-1
-W=D(aC,bs)>0 and W-1 or 0
+bn[#bn+1]=z
+ak=ak-1
+U=C(ak,bf)>0 and U-1 or 0
 end
-W=W+1
-A=""
+U=U+1
+z=""
 else
-A=A.._
+z=z.._
 end
 a=a+1
-_=bk.sub(bl,a,a)end
-br=br+1
-aJ=bl==""
+_=bk.sub(bj,a,a)end
+bc=bc+1
+bs=bj==""
 end
 end
-if aJ then
-if F(9)>0 then
-ak=Q
-ay=F(9)end
-if bN>0 and not ak then
-af={}av[#av+1]=af
-aB=5
-_=F(aB)while _~=0 do
-ad={}af[#af+1]=ad
+if bs then
+if G(9)>0 then
+at=P
+ar=G(9)end
+if ct>0 and not at then
+ai={}aD[#aD+1]=ai
+ax=5
+_=G(ax)while _~=0 do
+ag={}ai[#ai+1]=ag
 for a=0,8 do
-ad[a+1]=F(aB+a)end
-aB=aB+9
-_=F(aB)end
+ag[a+1]=G(ax+a)end
+ax=ax+9
+_=G(ax)end
 end
-if bb(1)then
-bH=0
-bp=F(1)bN=F(3)aw=aw+1
-ck=aw//10
-if ak then
+if bd(1)then
+cl=0
+ce=G(1)ct=G(3)av=av+1
+bL=av//10
+if at then
 for a=1,10 do
-c[a]=c[a+10*ay]end
-l=c[1]bW={l[1][1],l[1][2]}an=c[8]ay=ay+1
+c[a]=c[a+10*ar]end
+j=c[1]cT={j[1][1],j[1][2]}for a=#j,1,-1 do
+_=j[a]_=_[5]&(br-3000)>0 or cb(j,a)end
+aB=c[8]ar=ar+1
 end
-if F(2)>0 then
-_=c[2][F(2)]if _ then
+if G(2)>0 then
+_=c[2][G(2)]if _ then
 b=_[4]if b>0 then
 if b==3008 then
-aX=_[5]>0 and _[5]elseif b>3004 then
-aN=D(aN+3*(_[4]-3006),1)cq=aN/2
+aI=_[5]>0 and _[5]elseif b>3004 then
+aM=C(aM+3*(_[4]-3006),1)bH=aM/2
 elseif b>3000 then
-co=_[4]end
-bH=F(2)if b<3000 and c[9][_[5]][7]==0 then
+br=_[4]end
+cl=G(2)if b<3000 and c[9][_[5]][7]==0 then
 _[8]=1
 end
 end
 end
 end
-if bb(3)and bp~=1 and bp~=3 then
-bK=.1
-aY=bp==5 and 5 or 3
+if bd(3)and ce~=1 and ce~=3 then
+bR=.1
+aG=5
 else
-aY=aY-1
-if aY<1 then
-bK=0
+aG=aG-1
+if aG<1 then
+bR=0
 end
 end
-for a=1,#av do
-af=av[a]for n=1,#af do
-ad=af[n]_=ad[1]if _>(2^15)then
-_=an[_-(2^15)]for h=1,6 do
-_[h]=ad[h+1]end
+for a=1,#aD do
+ai=aD[a]for o=1,#ai do
+ag=ai[o]_=ag[1]if _>(2^15)then
+_=aB[_-(2^15)]for g=1,6 do
+_[g]=ag[g+1]end
 elseif _<0 then
-while-_>#l do
-l[#l+1]=L
+while-_>#j do
+j[#j+1]=bg
 end
-bS.remove(l,-_)else
-if not l[_]then
-l[_]={}end
-_=l[_]for h=1,8 do
-_[c[19][1][h]]=ad[h+1]end
+cb(j,-_)else
+if not j[_]then
+j[_]={}end
+_=j[_]for g=1,8 do
+_[c[19][1][g]]=ag[g+1]end
 _[15]=0
-_[7]=aW(#c[7],_)_[8]=bv(_[7])end
+_[7]=aF(#c[7],_)_[8]=bu(_[7])end
 end
 end
-av={}for a=1,#c[6]do
-aH[a]={}end
-for a=1,#l do
-_=l[a]if ak then
-_[7]=aW(#c[7],_)_[8]=bv(_[7])_[9]=_[8][1]_[11]=0
+aD={}for a=1,#c[6]do
+aY[a]={}end
+for a,_ in ap(j)do
+if at then
+_[7]=aF(#c[7],_)_[8]=bu(_[7])_[9]=_[8][1]_[11]=0
 _[12]=0
 _[15]=0
 _[19]=0
 end
 if _ and a>1 then
-by=0
-for n,d in aP({1,2,9})do
-_[d]=_[d]+_[d+10]by=by+_[d+10]end
-if by~=0 then
-_[7]=aW(#c[7],_)_[8]=bv(_[7])end
+bz=0
+for o,d in ap({1,2,9})do
+_[d]=_[d]+_[d+10]bz=bz+_[d+10]end
+if bz~=0 then
+_[7]=aF(#c[7],_)_[8]=bu(_[7])end
 _[15]=_[15]+1
-_[20]=aQ(_,g[1])M=c[16][_[6]]if M~=nil then
-if M[5]>0 then
+_[20]=aO(_,k[1])L=c[16][_[6]]if L~=nil then
+if L[5]>0 then
 _[9]=_[8][1]end
-if _[15]>=M[2]and M[2]~=-1 then
-_[6]=M[4]_[15]=0
+if _[15]>=L[2]and L[2]~=-1 then
+_[6]=L[4]_[15]=0
 end
 end
-aH[_[7]][#aH[_[7]]+1]=a
+aY[_[7]][#aY[_[7]]+1]=a
 end
 end
-ak=L
-_=l[1]g[1]={_[1],_[2]}g[3]=_[3]cI=w(aQ(g[1],bW)^2/4,16)bW={_[1],_[2]}g[2]=_[9]+41+cI*sin(aw*20)/4
-am={}bx(#c[7])aE={}p={}aF={}aM={}V={}S={}aL={}be=O
-for a=0,O-1 do
-aE[a],V[a],S[a]=#c[6]+2,s+1,-s
+_,at=j[1]cx=w(aO(_,k[1])^2/4,16)k[1]={_[1],_[2]}E=_[3]cU=_[9]+1
+k[2]=_[9]+41+cx*sin(av*20)/4
+an={}bm(#c[7])aS={}r={}aJ={}aR={}W={}S={}aK={}bl=M
+for a=0,M-1 do
+aS[a],W[a],S[a]=#c[6]+2,u+1,-u
 end
 a=1
-while a<=#am and be>0 do
-_=c[6][am[a]]aF[a]={}aM[a]={}p[a]={}aL[a]=aH[am[a]]bS.sort(aL[a],function(b,m)return l[b][20]>l[m][20]end)for n=_[2],_[1]+_[2]-1 do
-aa=c[5][n]B=c[2][aa[4]]cf,cc=c[4][aa[1]],c[4][aa[2]]aT,bC=sub(cf,g[1]),sub(cc,g[1])bM=aG(aT)G,b_=bm(bM-g[3]),bm(aG(bC)-g[3])if z(G)<90 or z(b_)<90 then
-ag,ab=bA(G,-K,K),bA(b_,-K,K)if z(G)>=90 or z(b_)>=90 then
-cr=bg(aT,bC)if z(G)>=90 then
-if cr>0 then ag=-K else ag=K end
+while a<=#an and bl>0 do
+_=c[6][an[a]]aJ[a]={}aR[a]={}r[a]={}aK[a]=aY[an[a]]bX.sort(aK[a],function(b,n)return j[b][20]>j[n][20]end)for o=_[2],_[1]+_[2]-1 do
+T=c[5][o]F=c[2][T[4]]bG,bQ=c[4][T[1]],c[4][T[2]]aQ,cf=sub(bG,k[1]),sub(bQ,k[1])ck=aZ(aQ)K,aT=ba(ck-E),ba(aZ(cf)-E)if B(K)<90 or B(aT)<90 then
+ae,ah=bi(K,-N,N),bi(aT,-N,N)if B(K)>=90 or B(aT)>=90 then
+bT=bA(aQ,cf)if B(K)>=90 then
+if bT>0 then ae=-N else ae=N end
 else
-if cr<0 then ab=-K else ab=K end
+if bT<0 then ah=-N else ah=N end
 end
 end
-k,o=ar(tan(ag)/N*y),ar(tan(ab)/N*y)if k~=o then
-r,as=aQ(g[1],cf),aQ(g[1],cc)aZ=aa[3]+90
-bD=aZ-bM
-cB=r*sin(bD)aR=(r*cos(bD))if G~=ag then
-r=aR/cos(aZ-(ag+g[3]))end
-if b_~=ab then
-as=aR/cos(aZ-(ab+g[3]))end
-r,as=r*cos(ag),as*cos(ab)h=aa[5]+6
-cQ=(k>o)if cQ and B[h]~=0 then
-aD=B[3]&4>0
-if aD then
-Y,U=an[c[3][B[6]][6]],an[c[3][B[7]][6]]end
-ai=c[3][B[h]]cE={ai[3],ai[4],ai[5]}H,bP,cs=an[ai[6]]for j,d in aP(cE)do
-az=d>0
-at=Q
-if(az or(j==3 and not(bP and cs)))and(j==3 or aD)then
-cn=L
-cj=0
-if j<3 then
-cn=j==1 and D(Y[4],U[4])==0
-C,x=Y[3-j],U[3-j]at=(C<x)~=(j==2)~=(h==6)and C~=x and Y~=U
-C,x=w(C,x),D(C,x)if at then
-if j==1 then
-bP=Q
+l,m=ay(tan(ae)/O*y),ay(tan(ah)/O*y)if l~=m then
+q,as=aO(k[1],bG),aO(k[1],bQ)aN=T[3]+90
+cd=aN-ck
+cw=q*sin(cd)aL=(q*cos(cd))if K~=ae then
+q=aL/cos(aN-(ae+E))end
+if aT~=ah then
+as=aL/cos(aN-(ah+E))end
+q,as=q*cos(ae),as*cos(ah)g=T[5]+6
+cv=(l>m)if cv and F[g]~=0 then
+am=F[3]&4>0
+if am then
+aa,V=aB[c[3][F[6]][6]],aB[c[3][F[7]][6]]end
+ab=c[3][F[g]]cQ={ab[3],ab[4],ab[5]}I,bV,bM=aB[ab[6]]for i,d in ap(cQ)do
+ao=d>0
+aA=P
+if(ao or(i==3 and not(bV and bM)))and(i==3 or am)then
+bI,bZ=0
+if i<3 then
+bZ=i==1 and C(aa[4],V[4])==0
+A,v=aa[3-i],V[3-i]aA=(A<v)~=(i==2)~=(g==6)and A~=v and aa~=V
+A,v=w(A,v),C(A,v)if aA then
+if i==1 then
+bV=P
 else
-cs=Q
-cj=B[3]&16>0 and D(Y[2],U[2])-x or 0
+bM=P
+bI=F[3]&16>0 and C(aa[2],V[2])-v or 0
 end
 end
 else
-if aD then
-C,x=D(Y[1],U[1]),w(Y[2],U[2])at=Y~=U
+if am then
+A,v=C(aa[1],V[1]),w(aa[2],V[2])aA=aa~=V
 else
-C,x=H[1],H[2]end
+A,v=I[1],I[2]end
 end
-C,x=C-g[2],x-g[2]bF,bL=C*aO,x*aO
-if(at or az)and not cn then
-bd=aa[6]-ai[1]if B[4]==48 then
-bd=bd-aw
+A,v=A-k[2],v-k[2]bK,bJ=A*aH,v*aH
+if(aA or ao)and not bZ then
+bo=T[6]-ab[1]if F[4]==48 then
+bo=bo-av
 end
-cP,cO=bF/r,bL/r
-cH,cv=bF/as,bL/as
-bY=0
-ax=L
-if az then
-_=c[21][d][4]if(aa[4]==bH or co==B[4]or B[8])and _>0 then
+cR,cO=bK/q,bJ/q
+cL,cP=bK/as,bJ/as
+cn,aw=0
+if ao then
+_=c[21][d][4]if(T[4]==cl or br==F[4]or F[8])and _>0 then
 d=_
 end
-al=c[21][d][3]t=1
-if(j==3 and B[3]&16>0)or(j==1 and B[3]&8==0)then
+aC=c[21][d][3]t=1
+if(i==3 and F[3]&16>0)or(i==1 and F[3]&8==0)then
 t=-1
 end
 end
-for h=k,o,-1 do
-cJ=bE[h]bn=(aZ-g[3])-cJ
-f=y-h
-ci=L
-if f>=0 and f<=O-1 then
-if a<aE[f]then
-aV=(h-k)/(o-k)J,I=(cP*(1-aV)+cH*aV),(cO*(1-aV)+cv*aV)if z(I+J)-(I-J)<aj then
-if az then
-if J~=I then
-ci=Q
-ch=aR*tan(bn)aq=bR(w(((z(ch)+z(aR))//cq)+1,16))cl=ah((D(ch-cB,0)-bd)/(al*aq))cm=cl*aq
-bJ={f,s-J,s-I,d,cl,x-C,H[5],ai[2]+cj,Q,al*aq,aq,t,not ax,j==3 and aD}if cm>bY or(not ax)or h==o then
-bY=cm-1+aq
-ax=Q
-p[a][#p[a]+1]=bJ
+for g=l,m,-1 do
+cy=cs[g]bh=(aN-E)-cy
+f,bW=y-g
+if f>=0 and f<=M-1 then
+if a<aS[f]then
+aV=(g-l)/(m-l)H,J=(cR*(1-aV)+cL*aV),(cO*(1-aV)+cP*aV)if B(J+H)-(J-H)<ad then
+if ao then
+if H~=J then
+bW=P
+cj=aL*tan(bh)az=bN(w(((B(cj)+B(aL))//bH)+1,16))ca=aj((C(cj-cw,0)-bo)/(aC*az))bS=ca*az
+bU={f,u-H,u-J,d,ca,v-A,I[5],ab[2]+bI,P,aC*az,az,t,not aw,i==3 and am}if bS>cn or(not aw)or g==m then
+cn=bS-1+az
+aw=P
+r[a][#r[a]+1]=bU
 end
-cz=bJ
+cI=bU
 end
 end
-if at then
-if j~=2 then
-if I<V[f]then
-aM[a][#aM[a]+1]={f,D(I,S[f]),V[f],H}end
-if j==3 then T=I else T=J end
-if V[f]>T then V[f]=T end
+if aA then
+if i~=2 then
+if J<W[f]then
+aR[a][#aR[a]+1]={f,C(J,S[f]),W[f],I}end
+if i==3 then X=J else X=H end
+if W[f]>X then W[f]=X end
 end
-if j~=1 then
-if J>S[f]then
-aF[a][#aF[a]+1]={f,S[f],w(J,V[f]),H}end
-if j==3 then T=J else T=I end
-if S[f]<T then S[f]=T end
+if i~=1 then
+if H>S[f]then
+aJ[a][#aJ[a]+1]={f,S[f],w(H,W[f]),I}end
+if i==3 then X=H else X=J end
+if S[f]<X then S[f]=X end
 end
-if(V[f]<=S[f])or(j==3 and(not aD)and az)then
-aE[f]=a
-be=be-1
-end
+if(W[f]<=S[f])or(i==3 and(not am)and ao)then
+aS[f]=a
+bl=bl-1
 end
 end
 end
 end
-if(not ci)and ax then
-ax=L
-p[a][#p[a]+1]=cz
-p[a][#p[a]][9]=L
+end
+if(not bW)and aw then
+r[a][#r[a]+1],aw=cI
+r[a][#r[a]][9]=bg
 end
 end
-if#p[a]>0 then
-p[a][#p[a]][9]=L
+if#r[a]>0 then
+r[a][#r[a]][9]=bg
 end
 end
 end
@@ -322,95 +321,93 @@ end
 end
 end
 end
-function onDraw()bq=bI
-local bO,bt,ac=bq.drawTriangleF,bq.drawRectF,bq.setColor
-cM={aF,aM}if aJ then
-e=c[24][c[19][8][ay-3]]Z,ap=e[1],e[2]E=O/ceil(Z*N)cg=E*1
-for a=0,ceil(Z*N),1 do
-k=(Z/2-a-1+g[3]/90*Z)%Z
-o=(k%1-1)*E
-k=ah(k)*ap
-for n=0,ap-1,1 do
-R=e[5+n+k]i=c[20][R]ac(i[1],i[2],i[3])bt(a*E+o,n*E,cg,cg)end
+function onDraw()b_=co
+local bF,be,af=b_.drawTriangleF,b_.drawRectF,b_.setColor
+cK={aJ,aR}if bs then
+e=c[24][c[19][8][ar-3]]Z,aq=e[1],e[2]D=M/ceil(Z*O)cg=D*1
+for a=0,ceil(Z*O),1 do
+l=(Z/2-a-1+E/90*Z)%Z
+m=(l%1-1)*D
+l=aj(l)*aq
+for o=0,aq-1,1 do
+R=e[5+o+l]h=c[20][R]af(h[1],h[2],h[3])be(a*D+m,o*D,cg,cg)end
 end
-for a=#p,1,-1 do
-for n=1,#p[a]do
-d=p[a][n]if d[9]or d[13]then
+for a=#r,1,-1 do
+for o=1,#r[a]do
+d=r[a][o]if d[9]or d[13]then
 if d[9]then
-P=p[a][n+1]else
-P=d
+Q=r[a][o+1]else
+Q=d
 end
-e=c[21][d[4]]e=c[21][d[4]+(ck%e[5])*c[19][3][2]+c[19][12][d[11]]]t=d[12]X=w(t,0)f=d[1]o=P[1]bQ=d[2-X]cu=P[2-X]h=d[3+X]bu=P[3+X]if not P[9]then o=o+1 end
-aS(d[7])cw=t*(d[2]-d[3])*e[3]/d[6]cG=t*(P[2]-P[3])*e[3]/P[6]bG=t>0 and w or D
-bc=0
-while h*t<bQ*t and(bc<e[2]or not d[14])do
-cb=bG(h+cw,bQ)bf=bG(bu+cG,cu)R=e[7+((X+d[8]//e[3])%e[2])+e[2]*((d[5])%e[1])]i=c[20][R]if i then
-ac(i[1]*q,i[2]*q,i[3]*q)bO(f,h,f,cb,o,bf)bO(f,h,o,bu,o,bf)end
-h=cb
-bu=bf
-X=X+t
-bc=bc+1
+e=c[21][d[4]]e=c[21][d[4]+(bL%e[5])*c[19][3][2]+c[19][12][d[11]]]t=d[12]Y=w(t,0)f=d[1]m=Q[1]cc=d[2-Y]cC=Q[2-Y]g=d[3+Y]by=Q[3+Y]if not Q[9]then m=m+1 end
+aX(d[7])cB=t*(d[2]-d[3])*e[3]/d[6]cM=t*(Q[2]-Q[3])*e[3]/Q[6]cq=t>0 and w or C
+bx=0
+while g*t<cc*t and(bx<e[2]or not d[14])do
+bD=cq(g+cB,cc)bB=cq(by+cM,cC)R=e[7+((Y+d[8]//e[3])%e[2])+e[2]*((d[5])%e[1])]h=c[20][R]if h then
+af(h[1]*p,h[2]*p,h[3]*p)bF(f,g,f,bD,m,bB)bF(f,g,m,by,m,bB)end
+g=bD
+by=bB
+Y=Y+t
+bx=bx+1
 end
 end
 end
 for b=1,2 do
-_=cM[b]cp={}ao,au,bo=aj,-aj
-for n,d in aP(_[a])do
-ao=w(ao,d[2])au=D(au,d[3])bo=d
-e=c[22][d[4][b+2]]if e and not aX then
-aS(d[4][5])i=c[20][e[5]]ac(i[1]*q,i[2]*q,i[3]*q)bI.drawLine(d[1],s-d[2],d[1],ah(s-d[3]-1))end
+_=cK[b]bP={}al,au,bv=ad,-ad
+for o,d in ap(_[a])do
+al=w(al,d[2])au=C(au,d[3])bv=d
+e=c[22][d[4][b+2]]if e and not aI then
+aX(d[4][5])h=c[20][e[5]]af(h[1]*p,h[2]*p,h[3]*p)co.drawLine(d[1],u-d[2],d[1],aj(u-d[3]-1))end
 end
-if bo and aX then
-H=bo[4]cL=(H[b]-g[2])ba=cos(g[3])bB=sin(g[3])for aA=ah(ao+s),ceil(au+s)do
-ae=aO*cL/(s-aA)cd=ba*ae-g[1][1]ce=bB*ae-g[1][2]bT=-bB*ae+cd
-bZ=ba*ae+ce
-cF=bB*ae+cd
-cC=-ba*ae+ce
-cy=(cF-bT)/O
-cK=(cC-bZ)/O
-cp[aA]={cy,cK,bT,bZ}end
-for n,d in aP(_[a])do
-if H[b+2]~=0 then
-f=d[1]if f%aX==0 then
-aS(H[5])m=H[b+2]e=c[22][m]e=c[22][m+(ck%e[4])]bX=y-(y-f)*N
-ao,au=ah(d[2]+s),ceil(d[3]+s)al=e[3]for aA=ao,au do
-aI=cp[aA]cN=(aI[3]+aI[1]*bX)//al
-cD=(aI[4]+aI[2]*bX)//al
-R=6+(cD%e[1])+e[1]*(cN%e[2])i=c[20][e[R]]if i then
-ac(i[1]*q,i[2]*q,i[3]*q)bt(f,-aA+aj,aX,1)end
-end
-end
+if bv and aI then
+I=bv[4]cH=(I[b]-k[2])bb=cos(E)bw=sin(E)for aE=aj(al+u),ceil(au+u)do
+ac=aH*cH/(u-aE)c_=bb*ac-k[1][1]cm=bw*ac-k[1][2]cp=-bw*ac+c_
+cr=bb*ac+cm
+cF=bw*ac+c_
+cu=-bb*ac+cm
+cG=(cF-cp)/M
+cE=(cu-cr)/M
+bP[aE]={cG,cE,cp,cr}end
+for o,d in ap(_[a])do
+if I[b+2]~=0 then
+f=d[1]if f%aI==0 then
+aX(I[5])n=I[b+2]e=c[22][n]e=c[22][n+(bL%e[4])]ci=y-(y-f)*O
+al,au=aj(d[2]+u),ceil(d[3]+u)aC=e[3]for aE=al,au do
+aU=bP[aE]cA=(aU[3]+aU[1]*ci)//aC
+cN=(aU[4]+aU[2]*ci)//aC
+R=6+(cN%e[1])+e[1]*(cA%e[2])h=c[20][e[R]]if h then
+af(h[1]*p,h[2]*p,h[3]*p)be(f,-aE+ad,aI,1)end
 end
 end
 end
 end
-for n=1,#aL[a]do
-_=l[aL[a][n]]if _[6]~=0 then
-aT=sub(_,g[1])r=_[20]if r>1 then
-G=bm(aG(aT)-g[3])r=r*cos(G)if z(G)<90 then
-k=y-ar(tan(G)/N*y)bn=ar((180+G+g[3]-_[3]+bz*4)/360*8)M=c[16][_[6]][1]if M~=0 and _[6]~=1 then
-e=c[17][z(M)][bn%8+1]t=e<0 and-1 or 1
-e=z(e)if e>0 then
-e=c[23][e+c[19][12][w(bR(r//aN+1),8)]]Z,ap=e[1],e[2]E=y/(N*r)aU=E*bw
-J=s+(g[2]-_[9])/r*aO
-I=J-e[5]*aU
-o=k-t*e[4]*E
-E,aU=E*e[3],aU*e[3]aS(_[8][5])q=M>0 and q or 1
-c_=E
-cx=c_*bw
-cA=_[4]and c[15][_[4]][23]&8>0
-for h=0,Z-1 do
-k=o+h*E*t
-if a<=aE[bA(ar(k),0,O-1)]then
-for j=0,ap-1 do
-R=e[7+j+h*ap]if R~=0 then
-if cA then
-bj=bj%50+1
-ac(0,0,0,w(75*c[13][2][bj],255))else
-i=c[20][R]ac(i[1]*q,i[2]*q,i[3]*q)end
-bt(k,I+j*aU,c_,cx)end
 end
 end
+for o=1,#aK[a]do
+_=j[aK[a][o]]if _[6]~=0 then
+aQ=sub(_,k[1])q=_[20]if q>1 then
+K=ba(aZ(aQ)-E)q=q*cos(K)if B(K)<90 then
+l=y-ay(tan(K)/O*y)bh=ay((180+K+E-_[3]+bt*4)/360*8)L=c[16][_[6]][1]if L~=0 and _[6]~=1 then
+e=c[17][B(L)][bh%8+1]t=e<0 and-1 or 1
+e=B(e)if e>0 then
+e=c[23][e+c[19][12][w(bN(q//aM+1),8)]]Z,aq=e[1],e[2]D=y/(O*q)aW=D*bp
+H=u+(k[2]-_[9])/q*aH
+J=H-e[5]*aW
+m=l-t*e[4]*D
+D,aW=D*e[3],aW*e[3]aX(_[8][5])p=L>0 and p or 1
+ch=D
+cD=ch*bp
+cJ=_[4]and c[15][_[4]][23]&8>0
+for g=0,Z-1 do
+l=m+g*D*t
+if a<=aS[bi(ay(l),0,M-1)]then
+for i=0,aq-1 do
+R=e[7+i+g*aq]if R~=0 then
+if cJ then
+bC=bC%50+1
+af(0,0,0,w(75*c[13][2][bC],255))else
+h=c[20][R]af(h[1]*p,h[2]*p,h[3]*p)end
+be(l,J+i*aW,ch,cD)end
 end
 end
 end
@@ -420,5 +417,7 @@ end
 end
 end
 end
-bz=bz+1
+end
+end
+bt=bt+1
 end

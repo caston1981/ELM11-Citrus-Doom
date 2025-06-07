@@ -10,6 +10,8 @@ gB=input.getBool
 pi=m.pi/180
 falseVar=false
 trueVar=true
+ipairsVar=ipairs
+tableRemove=table.remove
 str=string
 
 function cross(a,b)return a[1]*b[2]-a[2]*b[1]end
@@ -35,10 +37,10 @@ function lghtMath(a)lght=mn(a/255+screenBrightOffset,1)^2.2 end
 M={}
 romCr=1
 levelCr=3
-loaded=falseVar
 init=trueVar
 
-pp={{0,0},0,0}
+pp={{0,0},0}
+playerRotation=0
 
 wdth=288
 wdthH=wdth//2
@@ -47,7 +49,7 @@ hghtH=hght//2
 thngs={}
 LOD=400-- higher is more quality
 LODH=200
-health=100
+health=1
 mRandom=0
 transferCache={}
 bigNumb=2^15
@@ -174,6 +176,10 @@ function onTick()
 				end
 				M1=M[1]
 				ppPos={M1[1][1],M1[1][2]}
+				for i=#M1,1,-1 do
+					cr=M1[i]
+					cr=cr[5]&(difficulty-3000)>0 or tableRemove(M1,i) -- cr will be overwritten immediently afterwards so changing it is alright
+				end
 				M8=M[8]
 				--for i=1,#M8 do
 				--	M8[i][5]=M8[i][5]/255
@@ -204,7 +210,7 @@ function onTick()
 			
 			if gB(3) and weapon~=1 and weapon~=3 then
 				screenBrightOffset=0.1
-				screenBrightTimer=weapon==5 and 5 or 3
+				screenBrightTimer=5
 			else
 				screenBrightTimer=screenBrightTimer-1
 				if screenBrightTimer<1 then
@@ -227,7 +233,7 @@ function onTick()
 						while -cr>#M1 do
 							M1[#M1+1]=falseVar -- used to keep the render's thing indexing the same as the engines'
 						end
-						table.remove(M1,-cr)
+						tableRemove(M1,-cr)
 					else
 						if not M1[cr] then
 							M1[cr]={}
@@ -247,8 +253,7 @@ function onTick()
 			for i=1,#M[6]do
 				thngs[i]={}
 			end
-			for i=1,#M1 do
-				cr=M1[i]
+			for i,cr in ipairsVar(M1) do
 				if init then
 					cr[7]=findMe(#M[7],cr)
 					cr[8]=findSec(cr[7])
@@ -262,7 +267,7 @@ function onTick()
 				if cr and i>1 then
 					
 					crMx=0
-					for j,v in ipairs({1,2,9}) do -- move moving thing
+					for j,v in ipairsVar({1,2,9}) do -- move moving thing
 						cr[v]=cr[v]+cr[v+10]
 						crMx=crMx+cr[v+10]
 					end
@@ -285,20 +290,14 @@ function onTick()
 					end
 					thngs[cr[7]][#thngs[cr[7]]+1]=i -- inserting thing in relevant sub-sector's thing collection
 				end
-				
-				
 			end
 			
 			
-			init=falseVar
-			
-			
-			
-			cr=M1[1]
+			cr,init=M1[1]
+			bobBase=mn(dist(cr,pp[1])^2/4,16)
 			pp[1]={cr[1],cr[2]}
-			pp[3]=cr[3]
-			bobBase=mn(dist(pp[1],ppPos)^2/4,16)
-			ppPos={cr[1],cr[2]}
+			playerRotation=cr[3]
+			test=cr[9]+1
 			pp[2]=cr[9]+41+bobBase*sin(tick*20)/4 -- I think it should be /2, but that's a nauseating amount of view bob
 			
 
@@ -327,7 +326,6 @@ function onTick()
 				thngsOrd[i]=thngs[ssecs[i]] -- because the sub-sectors are sorted, this also sorts the sub-sector-based thing collections
 				table.sort(thngsOrd[i],function(a,b)return M1[a][20]>M1[b][20]end) -- sort the things within a sub-sector
 				
-
 				for j=cr[2],cr[1]+cr[2]-1 do
 					seg=M[5][j]
 					line=M[2][seg[4]]
@@ -335,7 +333,7 @@ function onTick()
 					p1,p2=M[4][seg[1]],M[4][seg[2]] -- positions of seg start and end points
 					pl1,pl2=sub(p1,pp[1]),sub(p2,pp[1]) -- positions relative to player
 					ga1=at2(pl1)
-					a1,a2=wrap(ga1-pp[3]),wrap(at2(pl2)-pp[3]) -- angles relative to player's rotation
+					a1,a2=wrap(ga1-playerRotation),wrap(at2(pl2)-playerRotation) -- angles relative to player's rotation
 
 					if absFunc(a1)<90 or absFunc(a2)<90 then -- if either end point is to the player's front
 						a3,a4=clmp(a1,-fov,fov),clmp(a2,-fov,fov) -- angles clamped to the player's fov
@@ -358,10 +356,10 @@ function onTick()
 							txOff1=d1*sin(aOff) -- used for texture mapping (the wall is part of an infinitely long line, this is the distance from the closest point on the line to the wall's first vertex)
 							d3=(d1*cos(aOff)) -- shortest distance to the line the wall is on
 							if a1~=a3 then -- if first vertex has been clipped by the edge of the screen
-								d1=d3/cos(aNorm-(a3+pp[3])) -- re-find the distance to be to the point that's actually being shown on the screen
+								d1=d3/cos(aNorm-(a3+playerRotation)) -- re-find the distance to be to the point that's actually being shown on the screen
 							end
 							if a2~=a4 then -- if second vertex has been clipped by the edge of the screen
-								d2=d3/cos(aNorm-(a4+pp[3])) -- re-find the distance to be to the point that's actually being shown on the screen
+								d2=d3/cos(aNorm-(a4+playerRotation)) -- re-find the distance to be to the point that's actually being shown on the screen
 							end
 
 							d1,d2=d1*cos(a3),d2*cos(a4) -- part of what turns it from a fisheye to rectilinear projection
@@ -380,13 +378,12 @@ function onTick()
 
 								sec,tpRnd,btRnd=M8[side[6]] -- sets current sector, and tpRnd and btRnd to nil (works like false)
 
-								for n,v in ipairs(parts) do
+								for n,v in ipairsVar(parts) do
 									render=v>0
 									calculate=trueVar
 
 									if (render or (n==3 and not (tpRnd and btRnd)))and (n==3 or double)then -- all the possible reasons to render
-										sky=falseVar
-										yOff=0
+										yOff,sky=0
 										if n<3 then
 											sky=n==1 and mx(sec1[4],sec2[4])==0 -- don't render if doing upper texture and both neighbouring sectors are sky
 											y1,y2=sec1[3-n],sec2[3-n]
@@ -422,8 +419,7 @@ function onTick()
 											yb2,yt2=ys1/d2,ys2/d2
 
 											--nextAngRender=0
-											xLast=0
-											passL=falseVar
+											xLast,passL=0
 
 											if render then
 												cr=M[21][v][4]
@@ -440,9 +436,8 @@ function onTick()
 
 											for k=x1,x2,-1 do
 												screenAng=xAng[k]
-												ang=(aNorm-pp[3])-screenAng
-												x = wdthH-k
-												pass=falseVar
+												ang=(aNorm-playerRotation)-screenAng
+												x,pass = wdthH-k
 												if x>=0 and x<=wdth-1 then
 													if i<dpth[x] then
 														lrp=(k-x1)/(x2-x1)
@@ -480,7 +475,7 @@ function onTick()
 																	--	walls[i][#walls[i]+1]=dCur
 																	--	
 																	--	nextDistAlongWall=cD+(resScl*cSclH)
-																	--	nextAngRender=wrap((aNorm-pp[3])+at(nextDistAlongWall/d3))
+																	--	nextAngRender=wrap((aNorm-playerRotation)+at(nextDistAlongWall/d3))
 																	--end
 																	dLast=dCur
 																end
@@ -510,8 +505,7 @@ function onTick()
 													end
 												end
 												if (not pass) and passL then -- lable cut-off vertical line of quads as cut off
-													passL=falseVar
-													walls[i][#walls[i]+1]=dLast
+													walls[i][#walls[i]+1],passL=dLast
 													walls[i][#walls[i]][9]=falseVar
 												end
 											end
@@ -552,7 +546,7 @@ function onDraw()
 		scl=wdth/ceil(tW*fovT)
 		scl2=scl*1
 		for i=0,ceil(tW*fovT),1 do
-			x1=(tW/2-i-1+pp[3]/90*tW)%tW
+			x1=(tW/2-i-1+playerRotation/90*tW)%tW
 			x2=(x1%1-1)*scl
 			x1=flr(x1)*tH
 			for j=0,tH-1,1 do
@@ -622,7 +616,7 @@ function onDraw()
 				cache={}
 				bt,tp,vg=hght,-hght
 				
-				for j,v in ipairs(cr[i]) do
+				for j,v in ipairsVar(cr[i]) do
 					bt=mn(bt,v[2])
 					tp=mx(tp,v[3])
 					vg=v
@@ -637,8 +631,8 @@ function onDraw()
 				if vg and vsTex then
 					sec=vg[4]
 					height=(sec[a]-pp[2])
-					p_dir_x = cos(pp[3])
-					p_dir_y = sin(pp[3])
+					p_dir_x = cos(playerRotation)
+					p_dir_y = sin(playerRotation)
 					for iy=flr(bt+hghtH),ceil(tp+hghtH) do
 						z = vMult * height / (hghtH - iy) -- copied straight from Coder Space's level viewer
 									
@@ -656,7 +650,7 @@ function onDraw()
 						cache[iy]={dx,dy,l_x,l_y}
 					end
 
-					for j,v in ipairs(cr[i]) do
+					for j,v in ipairsVar(cr[i]) do
 						
 						if sec[a+2]~=0 then
 							x=v[1]
@@ -697,11 +691,11 @@ function onDraw()
 					pl1=sub(cr,pp[1])
 					d1=cr[20]
 					if d1>1 then
-						a1=wrap(at2(pl1)-pp[3])
+						a1=wrap(at2(pl1)-playerRotation)
 						d1=d1*cos(a1)
 						if absFunc(a1)<90 then
 							x1=wdthH-rnd(tan(a1)/fovT*wdthH)
-							ang=rnd((180+a1+pp[3]-cr[3]+mN*4)/360*8)
+							ang=rnd((180+a1+playerRotation-cr[3]+mN*4)/360*8)
 							state=M[16][cr[6]][1]
 							if state~=0 and cr[6]~=1 then
 								tex=M[17][absFunc(state)][ang%8+1] --(cr[15]//10)%#tex+1

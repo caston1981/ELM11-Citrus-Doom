@@ -10,6 +10,7 @@ sN=output.setNumber
 pi=m.pi
 falseVar=false
 trueVar=true
+tableRemove=table.remove
 str=string
 
 function add(a,b)return{(a[1]+b[1]),(a[2]+b[2])}end
@@ -215,8 +216,9 @@ function onTick()
 				end
 				levelCr=levelCr+1
 				init=falseVar
-				for i=1,#M[1] do
+				for i=#M[1],1,-1 do
 					cr=M[1][i]
+					cr = cr[5]&(difficulty-3000)>0 or tableRemove(M[1],i) -- cr will be overwritten immediently afterwards so changing it is alright
 				end
 				for i=1,#M[8] do
 					M[8][i][8]={}
@@ -278,7 +280,7 @@ function onTick()
 						cr[2]=M[16][cr[2][4]]
 						cr[3]=0
 					else
-						table.remove(weaponObjects,i)
+						tableRemove(weaponObjects,i)
 					end
 				end
 			end
@@ -298,7 +300,7 @@ function onTick()
 				end
 				soundCr[2]=soundCr[2]+2
 				if soundCr[2] >= noteLn+#cr then
-					table.remove(sounds,i)
+					tableRemove(sounds,i)
 				end
 			end
 			
@@ -355,7 +357,7 @@ function onTick()
 						while -cr>#M[1] do
 							M[1][#M[1]+1]=falseVar
 						end
-						table.remove(M[1],-cr)
+						tableRemove(M[1],-cr)
 					else
 						if not M[1][cr] then
 							M[1][cr]={}
