@@ -45,7 +45,7 @@ playerRotation=0
 wdth=288
 wdthH=144
 hght=128
-hghtH=hght//2
+hghtH=64
 thngs={}
 LOD=400-- higher is more quality
 LODH=200
@@ -370,14 +370,13 @@ function onTick()
 
 								double=line[3]&4>0 -- double-sided flag
 								if double then
-									sec1,sec2=M8[M[3][line[6]][6]],M8[M[3][line[7]][6]] -- find neighbouring sectors
+									sec2=M8[M[3][line[13-k]][6]] -- find neighbouring sectors
 								end
 
 								side=M[3][line[k]] -- current sidedef
 								parts={side[3],side[4],side[5]} -- upper, lower, middle, texture indexes
-
-								sec,tpRnd,btRnd=M8[side[6]] -- sets current sector, and tpRnd and btRnd to nil (works like false)
-
+								
+								sec1,tpRnd,btRnd=M8[side[6]] -- sets current sector, and tpRnd and btRnd to nil (works like false)
 								for n,v in ipairsVar(parts) do
 									render=v>0
 									calculate=trueVar
@@ -386,7 +385,7 @@ function onTick()
 										yOff,sky=0
 										if n<3 then
 											sky=n==1 and mx(sec1[4],sec2[4])==0 -- don't render if doing upper texture and both neighbouring sectors are sky
-											y1,y2=sec1[3-n],sec2[3-n]
+											y1,y2=sec1[3-n],(n==1 and mx or mn)(sec2[3-n],sec1[n]) -- the weird y2 stuff is to handle when sec2's ceiling/floor is below/above sec1's floor/ceiling 
 											calculate=(y1<y2)~=(n==2)~=(k==6)and y1~=y2 and sec1~=sec2
 											y1,y2=mn(y1,y2),mx(y1,y2) -- make sure they're the right way up for rendering
 											if calculate then 
@@ -399,10 +398,10 @@ function onTick()
 											end
 										else
 											if double then
-												y1,y2=mx(sec1[1],sec2[1]),mn(sec1[2],sec2[2])
+												y1,y2=mn(mx(sec1[1],sec2[1]),sec1[2]),mx(mn(sec1[2],sec2[2]),sec1[1]) -- this is like the y2 stuff above, but to get floors working in those cases
 												calculate=sec1~=sec2 -- don't need to do floor/ceiling if it's the same sector on both sides
 											else
-												y1,y2=sec[1],sec[2]
+												y1,y2=sec1[1],sec1[2]
 											end
 										end
 										y1,y2=y1-pp[2],y2-pp[2] -- makes the screen ys relative to the player's height
@@ -453,7 +452,7 @@ function onTick()
 																	
 																	xCur=flr((mx(cD-txOff1,0)-txOff2)/(resScl*cScl)) -- turns out this isn't as bad as I expected, the revised code below doen't really help
 																	xCur2=xCur*cScl
-																	dCur={x,hghtH-yb,hghtH-yt,v,xCur,y2-y1,sec[5],side[2]+yOff,trueVar,resScl*cScl,cScl,flip,not passL,n==3 and double} -- bit long innit
+																	dCur={x,hghtH-yb,hghtH-yt,v,xCur,y2-y1,sec1[5],side[2]+yOff,trueVar,resScl*cScl,cScl,flip,not passL,n==3 and double} -- bit long innit
 																	if xCur2>xLast or (not passL) or k==x2 then
 																		xLast=xCur2-1+cScl
 																		passL=trueVar
@@ -484,14 +483,14 @@ function onTick()
 															if calculate then -- floor/ceiling stuff
 																if n~=2 then -- ceiling
 																	if yt<clH[x]then
-																		ceils[i][#ceils[i]+1]={x,mx(yt,flH[x]),clH[x],sec}
+																		ceils[i][#ceils[i]+1]={x,mx(yt,flH[x]),clH[x],sec1}
 																	end
 																	if n==3 then yNew=yt else yNew=yb end
 																	if clH[x]>yNew then clH[x]=yNew end
 																end
 																if n~=1 then -- floor
 																	if yb>flH[x]then
-																		floors[i][#floors[i]+1]={x,flH[x],mn(yb,clH[x]),sec}
+																		floors[i][#floors[i]+1]={x,flH[x],mn(yb,clH[x]),sec1}
 																	end
 																	if n==3 then yNew=yb else yNew=yt end
 																	if flH[x]<yNew then flH[x]=yNew end
@@ -629,8 +628,8 @@ function onDraw()
 					end
 				end
 				if vg and vsTex then
-					sec=vg[4]
-					height=(sec[a]-pp[2])
+					sec1=vg[4]
+					height=(sec1[a]-pp[2])
 					p_dir_x = cos(playerRotation)
 					p_dir_y = sin(playerRotation)
 					for iy=flr(bt+hghtH),ceil(tp+hghtH) do
@@ -652,12 +651,12 @@ function onDraw()
 
 					for j,v in ipairsVar(cr[i]) do
 						
-						if sec[a+2]~=0 then
+						if sec1[a+2]~=0 then
 							x=v[1]
 							if x%vsTex==0 then
 								
-								lghtMath(sec[5])
-								b=sec[a+2]
+								lghtMath(sec1[5])
+								b=sec1[a+2]
 								tex=M[22][b]
 								tex=M[22][b+(animationFrame%tex[4])]
 								
