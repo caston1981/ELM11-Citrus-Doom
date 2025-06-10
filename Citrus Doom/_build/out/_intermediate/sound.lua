@@ -68,7 +68,8 @@ weaponObjects={}
 mapScale=0.05
 
 sounds={}
-noteLn=3
+notes={}
+noteLn=2
 
 faceTick=0
 tickGlobal=0
@@ -259,7 +260,10 @@ function onTick()
 					cr=weaponObjects[1]
 					cr[2]=M[16][cr[1][4]]
 					cr[3]=-1
-					sounds[#sounds+1]={1,1}
+					soundCr=M[19][6][weapon]
+					if soundCr>0 then
+						sounds[#sounds+1]={soundCr,1}
+					end
 				end
 			end
 			
@@ -286,24 +290,9 @@ function onTick()
 				end
 			end
 
-			for i=1,32 do
-				sN(i,0)
-			end
+			
 
-			for i=#sounds,1,-1 do
-				soundCr=sounds[i]
-				cr=M[18][soundCr[1]]
-				for j=0,noteLn-1 do
-					note=cr[(soundCr[2]+j)*2-1]
-					if note and note>0 then
-						sN(2+(i-1)*noteLn+j,clmp(rnd((note+12)//2),1,60))
-					end
-				end
-				soundCr[2]=soundCr[2]+2
-				if soundCr[2] >= noteLn+#cr then
-					tableRemove(sounds,i)
-				end
-			end
+			
 			
 			
 			if init then
@@ -418,6 +407,37 @@ function onTick()
 			end
 			healthOld=health
 			
+		end
+		
+		for i=#sounds,1,-1 do
+			soundCr=sounds[i]
+			cr=M[18][soundCr[1]]
+			
+			if gB(1) then
+				noteCr=cr[soundCr[2]]
+				soundCr[2]=soundCr[2]+4
+			else
+				noteCr=cr[soundCr[2]+2]
+			end
+			if noteCr and noteCr>0 then
+				notes[#notes+1]={noteCr,1}
+			end
+			if soundCr[2] >= #cr then
+				tableRemove(sounds,i)
+			end
+		end
+		
+		for i=1,32 do
+			sN(i,0)
+		end
+		
+		for i=#notes,1,-1 do
+			noteCr=notes[i]
+			sN(i+3,clmp(rnd((noteCr[1]+12)//2),1,60))
+			noteCr[2]=noteCr[2]+1
+			if noteCr[2]>noteLn then
+				tableRemove(notes,i)
+			end
 		end
 		
 

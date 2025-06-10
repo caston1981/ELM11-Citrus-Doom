@@ -312,6 +312,8 @@ if __name__ == '__main__':
     all_sprite_textures = [*all_sprites]
     sound_names = [*wad.sounds]
 
+    weapon_fire_sound_names = ["DPPISTOL","DPSAWFUL","DPSHOTGN","DPPISTOL","DPRLAUNC","DPPLASMA","DPBFG"]
+
     wall_textures_expanded = []
     for i in wall_textures:
         for j in range(res_count_walls):
@@ -2202,7 +2204,7 @@ if __name__ == '__main__':
                       [all_sprite_textures_expanded.index("STFST01")+1,res_count_walls,res_count_sprites,all_sprite_textures_expanded.index("STKEYS0")+1], #3
                       [0,0,7,8,4,1,2,9,0,0,0,0,3], #4
                       [0,2,1], #5
-                      [0], #6 unused
+                      [0]+[sound_names.index(i)+1 for i in weapon_fire_sound_names], #6
                       [0], #7 unused
                       sky_order, #8
                       [-20]+[4 for i in range(10)], #9
