@@ -386,8 +386,9 @@ function onTick()
 										yOff,sky=0
 										if n<3 then
 											sky=n==1 and mx(sec1[4],sec2[4])==0 -- don't render if doing upper texture and both neighbouring sectors are sky
-											y1,y2=sec1[3-n],(n==1 and mx or mn)(sec2[3-n],sec1[n])
-											calculate=(y1<y2)~=(n==2)~=(k==6)and y1~=y2 and sec1~=sec2
+											y1,y2=sec1[3-n],(n==1 and mx or mn)(sec2[3-n],sec1[n]) -- the weird y2 stuff is to handle when sec2's ceiling/floor is below/above sec1's floor/ceiling 
+											calculate=(y1<y2)==(n==2)and y1~=y2 and sec1~=sec2
+											render=calculate
 											y1,y2=mn(y1,y2),mx(y1,y2) -- make sure they're the right way up for rendering
 											if calculate then 
 												if n==1 then
@@ -399,7 +400,7 @@ function onTick()
 											end
 										else
 											if double then
-												y1,y2=mn(mx(sec1[1],sec2[1]),sec1[2]),mx(mn(sec1[2],sec2[2]),sec1[1])
+												y1,y2=mn(mx(sec1[1],sec2[1]),sec1[2]),mx(mn(sec1[2],sec2[2]),sec1[1]) -- this is like the y2 stuff above, but to get floors working in those cases
 												calculate=sec1~=sec2 -- don't need to do floor/ceiling if it's the same sector on both sides
 											else
 												y1,y2=sec1[1],sec1[2]
