@@ -625,7 +625,7 @@ function onDraw()
 						lghtMath(v[4][5])
 						col=M[20][tex[5]]
 						stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-						screen.drawLine(v[1],hghtH-v[2],v[1],flr(hghtH-v[3]-1))
+						drLine(v[1],hghtH-v[2],v[1],flr(hghtH-v[3]-1))
 					end
 				end
 				if vg and vsTex then
