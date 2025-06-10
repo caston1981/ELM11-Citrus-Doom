@@ -326,7 +326,7 @@ function onTick()
 						end
 					elseif cr<0 then
 						pos=M[1][-cr]
-						if pos~=nil then
+						if pos then
 							info=pos[6]
 							if M[16][info][5]>0 then
 								yellow=mx(yellow,15)
