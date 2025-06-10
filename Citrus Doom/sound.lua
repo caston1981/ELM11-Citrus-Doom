@@ -92,7 +92,7 @@ function findSec(a) -- finds a sub sector's sector
 end
 
 function textCustom(x1,y1,textToDraw,charSet) -- draws text using a charset (14 small+dim, 15 small+bright, 16 large), position defines the top right of the drawn text
-	local rec,stCl=screenVar.drawRectF,screenVar.setColor
+	local drLine,stCl=screenVar.drawLine,screenVar.setColor
 	textToDraw=textToDraw..""
 	charSet=M[19][charSet]
 	for i=#textToDraw,1,-1 do
@@ -109,7 +109,7 @@ function textCustom(x1,y1,textToDraw,charSet) -- draws text using a charset (14 
 					if pix~=0 then
 						col=M[20][pix]
 						stCl(col[1],col[2],col[3])
-						rec(x2+j,y2+k,1,1)
+						drLine(x2+j,y2+k,x2+j,y2+k+1)
 					end
 				end
 			end
@@ -441,7 +441,7 @@ function onDraw()
 				if pix~=0 then
 					col=M[20][pix]
 					stCl(col[1],col[2],col[3])
-					rec(x2,y1+n,1,1)
+					drLine(x2,y1+n,x2,y1+n+1)
 				end
 			end
 		end
@@ -519,7 +519,7 @@ function onDraw()
 				if pix~=0 then
 					col=M[20][pix]
 					stCl(col[1],col[2],col[3])
-					rec(x1+i,hght+1+j,1,1)
+					drLine(x1+i,hght+1+j,x1+i,hght+2+j)
 				end
 			end
 		end
@@ -534,7 +534,7 @@ function onDraw()
 						if pix~=0 then
 							col=M[20][pix]
 							stCl(col[1],col[2],col[3])
-							rec(x1+j,y1+k,1,1)
+							drLine(x1+j,y1+k,x1+j,y1+k+1)
 						end
 					end
 				end
@@ -558,7 +558,7 @@ function onDraw()
 							if pix~=0 then
 								col=M[20][pix]
 								stCl(col[1],col[2],col[3])
-								rec(x2+i,y2+j,1,1)
+								drLine(x2+i,y2+j,x2+i,y2+j+1)
 							end
 						end
 					end

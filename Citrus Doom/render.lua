@@ -43,7 +43,7 @@ pp={{0,0},0}
 playerRotation=0
 
 wdth=288
-wdthH=wdth//2
+wdthH=144
 hght=128
 hghtH=hght//2
 thngs={}
@@ -534,7 +534,7 @@ end
 
 function onDraw()
 	screenVar=screen
-	local tri,rec,stCl=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor --locals are faster because lua
+	local tri,rec,stCl,drLine=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawLine --locals are faster because lua
 	vises={floors,ceils}
 
 
@@ -676,7 +676,7 @@ function onDraw()
 									col=M[20][tex[pix]]
 									if col then
 										stCl(col[1]*lght,col[2]*lght,col[3]*lght)
-										rec(x,-iy+hght,vsTex,1)
+										drLine(x,hght-iy,x+vsTex+1,hght-iy)
 									end
 								end
 							end
