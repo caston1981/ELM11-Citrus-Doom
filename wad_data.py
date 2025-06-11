@@ -438,9 +438,9 @@ if __name__ == '__main__':
 
         start = text.find(find_start)
         end = text.find(find_end,start)
-        if i==2:
+        if i==0:
             None
-            print(code.split("\n")[206-1])
+            print(code.split("\n")[134-1])
             
 
         assert start>0 and end>0, "Code insertion search terms not in base doom file"
@@ -1526,6 +1526,15 @@ if __name__ == '__main__':
 
                 i.line_type=2
 
+            elif i.line_type==74: #WR Stop Crusher
+                cur_secs = find_sector(i.sector_tag)
+                
+                for sec in cur_secs:
+                    thinker = (sec, 7, level_wad.sectors[sec-1].tag, 2, 1, 0, 2, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+
+                i.line_type=2
+
             elif i.line_type==75: #WR Door Close
                 cur_secs = find_sector(i.sector_tag)
                 
@@ -1910,11 +1919,11 @@ if __name__ == '__main__':
             elif i.line_type>=3000:
                 i.thinker_id = i.sector_tag
 
-            elif i.line_type>0 and not i.line_type in [48,#moving texture
-                                                            74,#crush stop
-                                                            ]:
+            elif i.line_type in [48,#moving texture
+                                 ]:
+                i.line_type=0
+            elif i.line_type>0:
                 print("unknown linedef type",i.line_type,"in level",map_name)
-                None
 
             
         
