@@ -52,7 +52,6 @@ LOD=400-- higher is more quality
 LODH=200
 health=1
 mRandom=0
-transferCache={}
 bigNumb=2^15
 difficulty=3002
 fuzz=0
@@ -185,6 +184,7 @@ function onTick()
 				--for i=1,#M8 do
 				--	M8[i][5]=M8[i][5]/255
 				--end
+				transferCache={}
 				levelCr=levelCr+1
 			end
 			

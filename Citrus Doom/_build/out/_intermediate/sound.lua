@@ -62,7 +62,6 @@ textTimer=0
 yellow=0
 red=0
 difficulty=3002
-transferCache={}
 bigNumb=32768 -- 2^15
 weaponObjects={}
 mapScale=0.05
@@ -229,6 +228,7 @@ function onTick()
 					cr=findSec(i)
 					cr[8][#cr[8]+1]=i
 				end
+				transferCache={}
 			end
 
 
