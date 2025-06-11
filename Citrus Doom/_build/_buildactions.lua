@@ -23,7 +23,13 @@ end
 ---@param name string               "require"-style name of the script that's about to be built
 ---@param inputFile Filepath        filepath to the file that is about to be built
 function onLBBuildFileStarted(builder, params, workspaceRoot, name, inputFile)
-
+    params.reduceAllWhitespace = true
+    params.reduceNewlines = true
+    params.removeComments = true
+    params.shortenGlobals = false
+    params.shortenNumbers = true
+    params.shortenStringDuplicates = false
+    params.shortenVariables = true
 end
 
 --- Runs after each file has been combined and minimized
