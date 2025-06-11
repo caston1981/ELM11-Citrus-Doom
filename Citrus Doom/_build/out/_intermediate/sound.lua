@@ -338,7 +338,7 @@ function onTick()
 									s2=M[15][pos[4]]
 									if s2[29]==M[19][13][1] then -- for map computer
 										for k=1,#M[2] do
-											M[2][k][8]=true
+											M[2][k][8]=1
 										end
 									end
 								end
@@ -379,7 +379,7 @@ function onTick()
 				for j=cr[2],cr[1]+cr[2]-1 do
 					seg=M[5][j]
 					line=M[2][seg[4]]
-					line[8]=true
+					line[8]=2
 				end
 			end
 
@@ -501,7 +501,9 @@ function onDraw()
 					p1=add(invY(mul(sub(M[4][cr[1]],pp[1]),mapScale)),{wdthH,hghtH})
 					p2=add(invY(mul(sub(M[4][cr[2]],pp[1]),mapScale)),{wdthH,hghtH})
 					
-					if cr[3]&4>0 then
+					if cr[8]==1 then
+						stCl(0,50,0)
+					elseif cr[3]&4>0 then
 						stCl(50,50,50)
 					else
 						stCl(255,255,255)
