@@ -2214,7 +2214,7 @@ if __name__ == '__main__':
                       [0,0,7,8,4,1,2,9,0,0,0,0,3], #4
                       [0,2,1], #5
                       [0]+[sound_names.index(i)+1 for i in weapon_fire_sound_names], #6
-                      [0], #7 unused
+                      [info_spawn[info_spawn_zip[1].index(3006)][12]], #7 lost soul
                       sky_order, #8
                       [-20]+[4 for i in range(10)], #9
                       [0,5,0,-5,-3,0,0,-5,3,0,0,-5], #10
