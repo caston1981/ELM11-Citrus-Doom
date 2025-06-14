@@ -139,16 +139,16 @@ function onTick()
 	end
 
 	if loaded then
-		if gN(9)>0 then
+		if gN(10)>0 then
 			init=trueVar
-			levelCr=gN(9)
+			levelCr=gN(10)
 		end
 
 		
 		if health>0 and not init then
 			tmp={}
 			transferCache[#transferCache+1]=tmp
-			rIn=5
+			rIn=6
 			cr=gN(rIn)
 			while cr~=0 do
 				info={}

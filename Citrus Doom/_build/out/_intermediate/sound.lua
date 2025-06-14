@@ -171,21 +171,21 @@ function onTick()
 	end
 
 	if loaded then
-		if gN(9)>0 then
+		if gN(10)>0 then
 			init=trueVar
-			levelCr=gN(9)
+			levelCr=gN(10)
 		end
 		
 		tickGlobal=tickGlobal+1
 		
-		M[12][1][tickGlobal%#M[12][1]+1] = rnd(gN(10))
+		M[12][1][tickGlobal%#M[12][1]+1] = rnd(gN(11))
 		
 		
 		
 		if health>0 and not init then
 			tmp={}
 			transferCache[#transferCache+1]=tmp
-			rIn=5
+			rIn=6
 			cr=gN(rIn)
 			while cr~=0 do
 				info={}
@@ -385,6 +385,9 @@ function onTick()
 
 			showMap=gB(2)
 			
+			if gN(12)>0 then
+				sounds[#sounds+1]={gN(12),1}
+			end
 			
 			faceTick=faceTick-1
 			weaponGrin=weaponGrin-1

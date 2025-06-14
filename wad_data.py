@@ -684,6 +684,16 @@ if __name__ == '__main__':
             if cur[j] != 0:
                 cur[j] = info_states_zip[7].index(cur[j])+1
 
+        for j in [5,7,10,15,21]:
+            if cur[j] != 0:
+                cur_sound = "DP"+cur[j][4:].upper()
+                if cur_sound != "DPNONE":
+                    if sound_names.count(cur_sound)>0:
+                        cur[j] = sound_names.index(cur_sound)+1
+                    else:
+                        None
+                        #print(cur_sound) # there's a lot of Doom 2 sounds which of course can't be found
+
         #print(cur[0])
         #if cur[0]=="MT_TROOP":
         #    for j in range(len(cur)):
@@ -2361,7 +2371,7 @@ if __name__ == '__main__':
     misc_additions = [[1,2,9,6,11,12,19,3], #1
                       [0,45,-45,90,-90], #2
                       [all_sprite_textures_expanded.index("STFST01")+1,res_count_walls,res_count_sprites,all_sprite_textures_expanded.index("STKEYS0")+1], #3
-                      [0,0,7,8,4,1,2,9,0,0,0,0,3], #4
+                      [0,0,7,8,0,4,1,2,9,0,0,0,0,3], #4
                       [0,2,1], #5
                       [0]+[sound_names.index(i)+1 for i in weapon_fire_sound_names], #6
                       [info_spawn[info_spawn_zip[1].index(3006)][12]], #7 lost soul

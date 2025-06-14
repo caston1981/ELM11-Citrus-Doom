@@ -310,7 +310,7 @@ function summonThinker(cr,pos)
 	else
 		init=trueVar
 		levelCr=-pos
-		out[9]=-pos
+		out[10]=-pos
 	end
 end
 
@@ -515,6 +515,7 @@ function onTick()
 							if chkView(cr,pTng,90) then
 								cr[23]=pTng-- set target
 								cr[6]=s1[5]
+								out[12]=s1[6]
 							end
 							chkPs(cr,falseVar,i,8)
 							fall(cr)
@@ -690,18 +691,18 @@ function onTick()
 		
 
 		out[1]=weapon
-		for i=3,13 do
-			out[i]=pTng[M[19][4][i]] or out[i]-- M[19][4] is 0,0,7,8,4,1,2,9,0,0,0,0,3 yes it's using the spawn state as the index, it's always 1 so it's alright
+		for i=3,14 do
+			out[i]=pTng[M[19][4][i]] or out[i]-- M[19][4] is 0,0,7,8,0,4,1,2,9,0,0,0,0,3 yes it's using the spawn state as the index, it's always 1 so it's alright
 		end
 		M12[1][17]=httpTkP
-		out[10]=M12[1][tickGlobal%#M12[1]+1]
+		out[11]=M12[1][tickGlobal%#M12[1]+1]
 
 		i=sndLst
 		running=trueVar
 		slt=1
 		ttEnd=#M1+#M8
 		while slt<3 and running do
-			pos=slt*9+5
+			pos=slt*9+6
 			if i<=#M1 then
 				cr=M1[i]
 				if i~=1 then
