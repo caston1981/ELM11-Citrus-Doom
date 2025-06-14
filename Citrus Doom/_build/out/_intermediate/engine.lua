@@ -27,7 +27,6 @@ function exp(a)return a[1],a[2]end
 M={}
 romCr=1
 levelCr=3
-loaded=falseVar
 init=trueVar
 weapon=2
 weaponFireDelay=0
@@ -69,7 +68,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 				if x1<bstDst and s2[23]&1>0 and (s1[23]&1>0 or clmp(p[9],pos[9]-h,pos[9]+s2[19])==p[9])then
 					hitThing=pos
 					if mv==falseVar then
-						return falseVar
+						return -- returns nil which acts as false
 					end
 					bstDst=x1
 					bstA=at2(p,pos)
@@ -105,7 +104,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 	
 	if tp-bt<h or bt>p[9]+24 then-- or tp<p[9]+h
 		valid=(checkPlayerPosLoop or 1)<8 or tick%4>0 or bounds[6]<18 or damageThing(collObject,10) -- crushes object if all 3 conditions are false
-		return falseVar -- returns if an object can't fit in the current sector
+		return -- returns false (well, nil) if an object can't fit in the current sector
 	end
 	for i=1,#blkCr do
 		cr=M[2][blkCr[i]]
@@ -164,12 +163,11 @@ end
 function chkRayCol(p1,p2,level,index,cr) -- raycast between two points
 	bsDst=dist(p1,p2)
 	crDst=bsDst
-	pass=trueVar
+	pass,valid=trueVar -- sets valid to nil which acts as false
 	x1,y1=exp(p1)
 	x2,y2=exp(p2)
 	x21,y21=exp(sub(p2,p1))
 	h1,h2=p1[9]+32,p2[9]+32 -- for simplicity it adds 32 to the points' vertical positions, almost always a good thing
-	valid=falseVar
 	for i,cr in ipairsVar(M[2])do
 		x3y3=M4[cr[1]]
 		x43,y43=exp(sub(M4[cr[2]],x3y3))
@@ -184,7 +182,7 @@ function chkRayCol(p1,p2,level,index,cr) -- raycast between two points
 			if clmp(intH,cr[8]+1,cr[9])~=intH then -- if the ray passes through the "window" of a 2-sided linedef
 				pass=falseVar -- note that cr[8] and cr[9] for 1-sided linedefs are 0 and 0
 				if level==1 then
-					return falseVar
+					return
 				end
 				if dst<crDst then
 					crDst=dst
@@ -209,8 +207,7 @@ function chkRayCol(p1,p2,level,index,cr) -- raycast between two points
 							intH=h1+(h2-h1)*d1
 							if clmp(intH,cr[9],cr[9]+s1[19])==intH and uA<s1[18] then
 								crDst=dst
-								valid=trueVar
-								pass=falseVar
+								valid,pass=trueVar -- sets pass to nil which counts as false
 								crX=x1+(x2-x1)*d1
 								crY=y1+(y2-y1)*d1
 								crH=intH
@@ -339,7 +336,7 @@ end
 function onTick()
 	sB(9,gB(32))
 	sB(2,gB(11))
-	sB(3,falseVar)
+	sB(3,falseVar) -- passing nothing will cound as nil which counts as false
 
 	for j=1,3 do
 		if gB(32)and (not loaded)or not M[21]then
@@ -521,8 +518,7 @@ function onTick()
 							fall(cr)
 						elseif state3==3 then-- chase logic
 							cr[23]=cr[23][20] and cr[23] or pTng
-							angle=flr(at2(cr,cr[23])/45+0.5)*45
-							valid=falseVar
+							angle,valid=flr(at2(cr,cr[23])/45+0.5)*45
 							stg=1
 							while stg<5 and not valid do-- checks angles 0, 45, -45, 90, -90 relative to desired direction
 								nm=add(cr,dVec(angle+M[19][2][stg],8))
@@ -708,8 +704,7 @@ function onTick()
 				if i~=1 then
 					if cr then
 						if cr[10] then
-							cr[10]=falseVar
-							out[pos]=i
+							out[pos],cr[10]=i
 							for j=1,8 do
 								out[pos+j]=cr[M[19][1][j]]-- M[19][1] is 1,2,9,6,11,12,19,3
 							end
@@ -725,8 +720,7 @@ function onTick()
 			else
 				cr=M8[i-#M1]
 				if cr[10] then
-					cr[10]=falseVar
-					out[pos]=i-#M1+2^15
+					out[pos],cr[10]=i-#M1+2^15
 					for j=1,6 do
 						out[pos+j]=cr[j]
 					end
