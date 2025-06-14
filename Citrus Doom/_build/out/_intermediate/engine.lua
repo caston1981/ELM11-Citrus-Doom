@@ -245,7 +245,7 @@ function damageThing(cr,i,pos)-- thing array, damage, function declaration varia
 		if rand()<s1[10] then
 			cr[6]=s1[9]
 			cr[15]=0
-			cr[23]=s1[13]~=M[19][7][1] and pos or pTng -- makes lost souls always target the player when being damaged
+			cr[23]=s1[13]~="lost soul missile state" and pos or pTng -- makes lost souls always target the player when being damaged
 			cr[10]=trueVar
 		end
 	end

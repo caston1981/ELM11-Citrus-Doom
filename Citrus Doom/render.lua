@@ -567,7 +567,7 @@ function onDraw()
 					v2=v
 				end
 				tex=M[21][v[4]]
-				tex=M[21][v[4]+(animationFrame%tex[5])*M[19][3][2]+M[19][12][v[11]]]
+				tex=M[21][v[4]+(animationFrame%tex[5])*"number of wall mipmap levels"+M[19][12][v[11]]]
 				flip=v[12]
 				y=mn(flip,0)
 				x=v[1]

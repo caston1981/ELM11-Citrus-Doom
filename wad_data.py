@@ -400,57 +400,6 @@ if __name__ == '__main__':
     drop_dict = {"MT_POSSESSED":"MT_CLIP","MT_SHOTGUY":"MT_SHOTGUN",
                  "MT_SPIDER":"MT_MISC6","MT_CYBORG":"MT_MISC6" # used for level exits
                  }
-                 
-    
-    
-    file = open(path_in)
-    text = file.read()
-    file.close()
-
-    path_root = ".\\"+obj_name+"\\_build\\out\\release\\"
-    print()
-
-    for i in range(3):
-        name = ["render.lua","engine.lua","sound.lua"][i]
-        file = open(path_root+name)
-        code = file.read()
-        file.close()
-        #print(code)
-
-        if False:
-            m_var=code[code.find("={}")-1]
-            
-            for j in range(0,30):
-                cur=m_var+"["+str(j)+"]"
-                
-                if cur in code:
-                    print(cur,"found",code.count(cur),"times")
-                
-        print(name)
-        code = compress(code,print_vars=i==-1,delete_newlines=True)
-        print()
-        
-        find_start = ["""<c type="56"><object id="4" script='""",
-                      """<c type="56"><object id="130" script='""",
-                      """<c type="56"><object id="139" script='""",
-                      ][i]
-        find_end = ["""'>""",
-                    """'>""",
-                    """'>"""
-                    ][i]
-
-        start = text.find(find_start)
-        end = text.find(find_end,start)
-        if i==1:
-            None
-            print(code.split("\n")[201-1])
-            
-
-        assert start>0 and end>0, "Code insertion search terms not in base doom file"
-        
-        text = text[:start+len(find_start)]+code+text[end:]
-        
-    
     
     
     flat_animations = {}
@@ -2370,15 +2319,15 @@ if __name__ == '__main__':
 
     misc_additions = [[1,2,9,6,11,12,19,3], #1
                       [0,45,-45,90,-90], #2
-                      [all_sprite_textures_expanded.index("STFST01")+1,res_count_walls,res_count_sprites,all_sprite_textures_expanded.index("STKEYS0")+1], #3
+                      [0], #3 unused
                       [0,0,7,8,0,4,1,2,9,0,0,0,0,3], #4
                       [0,2,1], #5
                       [0]+[sound_names.index(i)+1 for i in weapon_fire_sound_names], #6
-                      [info_spawn[info_spawn_zip[1].index(3006)][12]], #7 lost soul
+                      [0], #7 lost soul
                       sky_order, #8
                       [-20]+[4 for i in range(10)], #9
                       [0,5,0,-5,-3,0,0,-5,3,0,0,-5], #10
-                      [sound_names.index("DPITEMUP")+1], #11
+                      [0], #11 unused
                       [0,1,0,2,0,0,0,3,0,0,0,0,0,0,0,4], #12
                       [health_pickup_list_zip[0].index("MT_MISC15")+1,health_pickup_list_zip[0].index("MT_MISC16")+1], #13
                       char_sprite_table_small_dark, #14
@@ -2390,6 +2339,14 @@ if __name__ == '__main__':
         i=misc_additions[index]
         
         packets.append((19,i))
+
+    code_string_replacements = {"lost soul missile state":info_spawn[info_spawn_zip[1].index(3006)][12],
+                                "number of wall mipmap levels":res_count_walls,
+                                "number of sprite mipmap levels":res_count_sprites,
+                                "face textures start":all_sprite_textures_expanded.index("STFST01")+1,
+                                "key textures start":all_sprite_textures_expanded.index("STKEYS0")+1,
+                                "item pickup sound index":sound_names.index("DPITEMUP")+1,
+                                }
 
     
     cur=""
@@ -2784,6 +2741,57 @@ if __name__ == '__main__':
     #print(min(big_packet))
     #print(sum(big_packet)/len(big_packet))
     #print(sum(big_packet),len(big_packet))
+
+    file = open(path_in)
+    text = file.read()
+    file.close()
+
+    path_root = ".\\"+obj_name+"\\_build\\out\\release\\"
+    print()
+
+    for i in range(3):
+        name = ["render.lua","engine.lua","sound.lua"][i]
+        file = open(path_root+name)
+        code = file.read()
+        file.close()
+        #print(code)
+
+        if False:
+            m_var=code[code.find("={}")-1]
+            
+            for j in range(0,30):
+                cur=m_var+"["+str(j)+"]"
+                
+                if cur in code:
+                    print(cur,"found",code.count(cur),"times")
+                
+        print(name)
+        for j in code_string_replacements:
+            cur_replacement = '"' + j + '"'
+            code = code.replace(cur_replacement,str(code_string_replacements[j]))
+        code = compress(code,print_vars=i==-1,delete_newlines=True)
+        print()
+        
+        find_start = ["""<c type="56"><object id="4" script='""",
+                      """<c type="56"><object id="130" script='""",
+                      """<c type="56"><object id="139" script='""",
+                      ][i]
+        find_end = ["""'>""",
+                    """'>""",
+                    """'>"""
+                    ][i]
+
+        start = text.find(find_start)
+        end = text.find(find_end,start)
+        if i==1:
+            None
+            print(code.split("\n")[201-1])
+            
+
+        assert start>0 and end>0, "Code insertion search terms not in base doom file"
+        
+        text = text[:start+len(find_start)]+code+text[end:]
+    
 
     type_map = {20:"colours",21:"wall textures",22:"flat textures",23:"sprites",24:"sky textures",25:"orange"}
     parts = []

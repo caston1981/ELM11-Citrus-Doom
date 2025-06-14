@@ -333,7 +333,7 @@ function onTick()
 								yellow=mx(yellow,15)
 								textTimer=35
 								textIndex=M[16][info][5]
-								sounds[#sounds+1]={M[19][11][1],1}
+								sounds[#sounds+1]={"item pickup sound index",1}
 								if pos[4] then
 									s2=M[15][pos[4]]
 									if s2[29]==M[19][13][1] then -- for map computer
@@ -536,7 +536,7 @@ function onDraw()
 		rec(0,hght,wdth,32)
 		stCl(5,5,5)
 		rec(wdthH-16,hght,32,32)
-		tex=M[23][M[19][3][1]+(face)*M[19][3][3]]
+		tex=M[23]["face textures start"+(face)*"number of sprite mipmap levels"]
 		tW,tH=tex[1],tex[2]
 		x1=wdthH-tW/2
 		for i=0,tW-1 do
@@ -552,7 +552,7 @@ function onDraw()
 		for i=1,3 do
 			if M[12][1][13+i]>0 then
 				x1,y1=221,125+i*8
-				tex=M[23][M[19][3][4]+M[19][5][i]*M[19][3][3]]
+				tex=M[23]["key textures start"+M[19][5][i]*"number of sprite mipmap levels"]
 				tW,tH=tex[1],tex[2]
 				for j=0,tW-1 do
 					for k=0,tH-1 do
