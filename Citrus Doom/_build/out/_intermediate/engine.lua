@@ -482,6 +482,7 @@ function onTick()
 						cr[15]=0
 						cr[6]=s1[cr[7]<=-s1[4] and s1[15]>1 and 15 or 14]-- to gib or not to gib
 						cr[10],cr[20]=trueVar
+						out[12]=s1[16] -- death sound
 						if s1[27]>0 then-- item drop logic, copies what died and turns it into a pickup
 							pos={}
 							for j=1,30 do-- just to make sure it copies the entire thing
@@ -512,7 +513,7 @@ function onTick()
 							if chkView(cr,pTng,90) then
 								cr[23]=pTng-- set target
 								cr[6]=s1[5]
-								out[12]=s1[6]
+								out[12]=s1[6] -- see sound
 							end
 							chkPs(cr,falseVar,i,8)
 							fall(cr)
@@ -561,7 +562,7 @@ function onTick()
 							fireWeapon(cr,i)
 						end
 					end
-					if cr[17] and cr[17]>0 then
+					if cr[17] and cr[17]>0 then -- projectile logic
 						crWeapon=M[14][cr[17]]
 						if not chkPs(cr,falseVar,i) or cr[9]<=bounds[1] then
 							if hitThing then
@@ -574,6 +575,7 @@ function onTick()
 							cr[10]=trueVar
 							cr[11]=0
 							cr[12],cr[17]=0
+							out[12]=s1[16] -- death sound
 							cr[19]=0
 						end
 					end

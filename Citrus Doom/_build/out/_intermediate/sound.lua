@@ -303,7 +303,7 @@ function onTick()
 			yellow=mx(yellow-1.5,0)
 			health=gN(3)
 			armour=gN(4)
-			if gN(2)>0 then
+			if gN(2)>0 and health>0 then
 				cr=M[2][gN(2)]
 				if cr then
 					if cr[4]>3004 and cr[4]<3008 then
@@ -385,7 +385,7 @@ function onTick()
 
 			showMap=gB(2)
 			
-			if gN(12)>0 then
+			if gN(12)>0 and health>0 then
 				sounds[#sounds+1]={gN(12),1}
 			end
 			
