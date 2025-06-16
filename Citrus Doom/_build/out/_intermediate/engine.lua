@@ -60,7 +60,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 	blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]or{} -- gives default case so it doesn't crash when an object is out-of-bounds
 	for i,cr in ipairsVar(blkCr[0]or{}) do -- similar do-not-crash case
 		pos=M1[cr]
-		if cr~=index and pos and collObject[14]~=cr then
+		if cr~=index and pos and collObject[14]~=pos then
 			dst=dist(pos,p)
 			s2=M15[pos[4]]
 			if pos[20] then
@@ -233,7 +233,7 @@ function rand()
 	return M[13][1][pRandom]
 end
 
-function damageThing(cr,i,pos)-- thing array, damage, function declaration variables are local so the most common should be used
+function damageThing(cr,i,pos)-- thing array, damage, damage source (optional), function declaration variables are local so the most common should be used
 	s1=M15[cr[4]]
 	if s1[23]&2>0 and cr[7]>0 then
 		cr[8]=cr[8]-(i+1)//2
@@ -261,7 +261,7 @@ function fireWeapon(source,index)
 		end
 		a[4]=crWeapon[8]
 		a[10]=trueVar
-		a[14]=index
+		a[14]=source
 		
 		spreadOff=(rand()/128-1)*crWeapon[10]
 		vel=dVec(source[3]+spreadOff,crWeapon[6])
@@ -565,7 +565,7 @@ function onTick()
 						crWeapon=M[14][cr[17]]
 						if not chkPs(cr,falseVar,i) or cr[9]<=bounds[1] then
 							if hitThing then
-								damageThing(hitThing,s1[21]*((rand()&7)+1),M1[cr[14]])
+								damageThing(hitThing,s1[21]*((rand()&7)+1),cr[14])
 							end
 							cr[1]=cr[1]-cr[11]
 							cr[2]=cr[2]-cr[12]
