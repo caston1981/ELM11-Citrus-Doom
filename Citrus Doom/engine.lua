@@ -241,7 +241,7 @@ function damageThing(cr,i,pos)-- thing array, damage, damage source (optional), 
 		if rand()<s1[10] then
 			cr[6]=s1[9]
 			cr[15]=0
-			cr[23]=s1[13]~="lost soul missile state" and pos or pTng -- makes lost souls always target the player when being damaged
+			cr[41]=s1[13]~="lost soul missile state" and pos or pTng -- makes lost souls always target the player when being damaged
 			cr[10]=trueVar
 		end
 	end
@@ -493,6 +493,7 @@ function onTick()
 						end
 					end
 					state=M[16][cr[6]]
+					cr[41] = cr[41] and (cr[41][20] and cr[41] or pTng)
 					
 					if cr[15]>=state[2] and state[2]~=-1 then
 						cr[6]=state[4]
@@ -510,15 +511,14 @@ function onTick()
 							end
 						elseif state3==2 then-- view logic
 							if chkView(cr,pTng,90) then
-								cr[23]=pTng-- set target
+								cr[41]=pTng-- set target
 								cr[6]=s1[5]
 								out[12]=s1[6] -- see sound
 							end
 							chkPs(cr,falseVar,i,8)
 							fall(cr)
 						elseif state3==3 then-- chase logic
-							cr[23]=cr[23][20] and cr[23] or pTng
-							angle,valid=flr(at2(cr,cr[23])/45+0.5)*45
+							angle,valid=flr(at2(cr,cr[41])/45+0.5)*45
 							stg=1
 							while stg<5 and not valid do-- checks angles 0, 45, -45, 90, -90 relative to desired direction
 								nm=add(cr,dVec(angle+M[19][2][stg],8))
@@ -538,8 +538,8 @@ function onTick()
 							end
 							fall(cr)
 
-							a=dist(cr,cr[23])
-							if s1[13]>0 and chkRayCol(cr,cr[23],1)and mn(a,230)<rand()then
+							a=dist(cr,cr[41])
+							if s1[13]>0 and chkRayCol(cr,cr[41],1)and mn(a,230)<rand()then
 								cr[6]=s1[13]
 							end
 							if a<64 and s1[12]>0 then
@@ -554,10 +554,10 @@ function onTick()
 							end
 							pTng[3]=pTng[3]-20
 						elseif state3>9 and cr[20]then-- attack logic
-							cr[3]=at2(cr,cr[23])
+							cr[3]=at2(cr,cr[41])
 							crWeapon=M[14][state3]
 							cr[10]=trueVar
-							targ=cr[23]
+							targ=cr[41]
 							fireWeapon(cr,i)
 						end
 					end
