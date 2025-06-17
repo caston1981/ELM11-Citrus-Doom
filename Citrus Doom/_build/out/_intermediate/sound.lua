@@ -54,7 +54,7 @@ face=1
 
 levelCr=3
 
-LOD=400
+LOD=500
 health=100
 healthOld=100
 armour=0
