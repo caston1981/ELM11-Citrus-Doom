@@ -75,6 +75,7 @@ tickGlobal=0
 weaponGrin=0
 stg=1
 mN=0
+tps=0
 fireCooldown=0
 init=trueVar
 
@@ -118,10 +119,11 @@ function textCustom(x1,y1,textToDraw,charSet) -- draws text using a charset (14 
 	end
 end
 
-function textImitation(x,y,text)
+function textImitation(x,y,text,foreColour)
+	foreColour=foreColour or {59,59,59}
 	screenVar.setColor(13,0,0)
 	screenVar.drawText(x+1,y+1,text)
-	screenVar.setColor(59,59,59)
+	screenVar.setColor(foreColour[1],foreColour[2],foreColour[3])
 	screenVar.drawText(x,y,text)
 end
 
@@ -179,6 +181,7 @@ function onTick()
 		tickGlobal=tickGlobal+1
 		
 		M[12][1][tickGlobal%#M[12][1]+1] = rnd(gN(11))
+		tps = M[12][1][17]
 		
 		
 		
@@ -302,14 +305,19 @@ function onTick()
 			red=clmp(red+(health-gN(3) + armour-gN(4))*3,0,255)
 			yellow=mx(yellow-1.5,0)
 			health=gN(3)
-			armour=gN(4)
+			armour,difficultyChange,LODChange,vsTexChange=gN(4) -- sets all the changes to nil
 			if gN(2)>0 and health>0 then
 				cr=M[2][gN(2)]
 				if cr then
-					if cr[4]>3004 and cr[4]<3008 then
+					if cr[4]==3008 then
+						vsTex=cr[5]>0 and flr(cr[5])
+						vsTexChange=trueVar
+					elseif cr[4]>3004 then
 						LOD=mx(LOD+3*(cr[4]-3006),1)
+						LODChange=trueVar
 					elseif cr[4]>3000 then
 						difficulty=cr[4]
+						difficultyChange=trueVar
 					end
 				end
 			end
@@ -597,18 +605,24 @@ function onDraw()
 		--textCustom(wdth-1,0,321234567890,15)
 		
 		
-		textCustom(124,131,flr(health).."%",16)
+		textCustom(124,131,flr(health).."%",16) -- all these text writings are inefficient space-wise, but that doesn't matter for this block
 		textCustom(218,131,flr(armour).."%",16)
 		textImitation(124-28-15,152,"HEALTH")
 		textImitation(218-28-15,152,"ARMOUR")
-		textImitation(2,131,"ROM:")
-		textImitation(26,131,romCr)
-		textImitation(2,138,"TPS:")
-		textImitation(26,138,M[12][1][17])
-		textImitation(2,145,"DIF:")
-		textImitation(26,145,flr(mn(difficulty-3000,3)))
-		textImitation(2,152,"LOD:")
-		textImitation(26,152,flr(LOD))
+		foreColour = (tps<35 and tps>0) and {255,0,0}
+		textImitation(2,131,"TPS:",foreColour)
+		textImitation(26,131,tps>0 and tps or "N/A",foreColour)
+		foreColour = difficultyChange and {255, 255, 44}
+		textImitation(2,138,"DIF:",foreColour)
+		difficultyNames={"EASY","MED","HARD"}
+		textImitation(26,138,difficultyNames[flr(mn(difficulty-3000,3))],foreColour)
+		foreColour = LODChange and {255, 255, 44}
+		textImitation(2,145,"LOD:",foreColour)
+		textImitation(26,145,flr(LOD),foreColour)
+		foreColour = vsTexChange and {255, 255, 44}
+		textImitation(2,152,"TEX:",foreColour)
+		vsTexNames = {"FULL","HALF"}
+		textImitation(26,152,vsTex and vsTexNames[vsTex] or "OFF",foreColour)
 		textImitation(232,131,"BULL")
 		textImitation(232,138,"SHEL")
 		textImitation(232,145,"ROKT")
