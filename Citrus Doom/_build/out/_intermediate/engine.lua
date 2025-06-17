@@ -239,10 +239,10 @@ function damageThing(cr,i,pos)-- thing array, damage, damage source (optional), 
 		cr[8]=cr[8]-(i+1)//2
 		cr[7]=cr[7]-i//2+mn(cr[8],0)
 		cr[8]=mx(cr[8],0)
+		cr[41]=s1[13]~="lost soul missile state" and pos or pTng -- makes lost souls always target the player when being damaged
 		if rand()<s1[10] then
 			cr[6]=s1[9]
 			cr[15]=0
-			cr[41]=s1[13]~="lost soul missile state" and pos or pTng -- makes lost souls always target the player when being damaged
 			cr[10]=trueVar
 		end
 	end
@@ -494,7 +494,7 @@ function onTick()
 						end
 					end
 					state=M[16][cr[6]]
-					cr[41] = cr[41] and (cr[41][20] and cr[41] or pTng)
+					cr[41] = cr[41] and (cr[41][20] and cr[41] or pTng) -- switches back to player if there's no target or the target is dead
 					
 					if cr[15]>=state[2] and state[2]~=-1 then
 						cr[6]=state[4]
@@ -527,6 +527,7 @@ function onTick()
 								valid=chkPs(nm,falseVar,i,stg)and(bounds[1]>=nm[9]-24 or flying)
 								stg=stg+1
 							end
+							
 							if valid then
 								for j=1,2 do
 									cr[30+j]=nm[j]-cr[j]
@@ -538,7 +539,7 @@ function onTick()
 								chkPs(cr,falseVar,i,8)
 							end
 							fall(cr)
-
+							
 							a=dist(cr,cr[41])
 							if s1[13]>0 and chkRayCol(cr,cr[41],1)and mn(a,230)<rand()then
 								cr[6]=s1[13]
