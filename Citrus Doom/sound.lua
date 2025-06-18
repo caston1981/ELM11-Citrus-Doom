@@ -69,6 +69,7 @@ sounds={}
 notes={}
 noteLn=2
 
+second=35
 faceTick=0
 tickGlobal=0
 weaponGrin=0
@@ -317,6 +318,11 @@ function onTick()
 					elseif cr[4]>3000 then
 						difficulty=cr[4]
 						difficultyChange=trueVar
+					elseif cr[4]>=14 and cr[4]<=16 then
+						if M[12][1][cr[4]]==0 then
+							textTimer=second*4
+							textIndex=cr[4]-14+3
+						end
 					end
 				end
 			end
@@ -338,7 +344,7 @@ function onTick()
 							info=pos[6]
 							if M[16][info][5]>0 then
 								yellow=mx(yellow,15)
-								textTimer=35
+								textTimer=second*4
 								textIndex=M[16][info][5]
 								sounds[#sounds+1]={"item pickup sound index",1}
 								if pos[4] then
@@ -408,7 +414,7 @@ function onTick()
 			elseif weaponGrin>0 then --new weapon grin
 				face=newFace+6
 			elseif health<healthOld then --pain face, can't look in the direction of attacker since attackers aren't kept track of
-				faceTick=35
+				faceTick=second
 				face=newFace+7
 			elseif faceTick<=0 then --normal looking around
 				faceTick=16
@@ -608,7 +614,7 @@ function onDraw()
 		textCustom(218,131,flr(armour).."%",16)
 		textImitation(124-28-15,152,"HEALTH")
 		textImitation(218-28-15,152,"ARMOUR")
-		foreColour = (tps<35 and tps>0) and {255,0,0}
+		foreColour = (tps<second and tps>0) and {255,0,0}
 		textImitation(2,131,"TPS:",foreColour)
 		textImitation(26,131,tps>0 and tps or "N/A",foreColour)
 		foreColour = difficultyChange and {255, 255, 44}
