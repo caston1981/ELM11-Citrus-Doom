@@ -52,8 +52,6 @@ weaponList={1,1}
 mRandom=1
 face=1
 
-levelCr=3
-
 LOD=500
 health=100
 healthOld=100
@@ -220,7 +218,6 @@ function onTick()
 					M[i]=M[i+10*levelCr]
 				end
 				levelCr=levelCr+1
-				init=falseVar
 				for i=#M[1],1,-1 do
 					cr=M[1][i]
 					cr = cr[5]&(difficulty-3000)>0 or tableRemove(M[1],i) -- cr will be overwritten immediently afterwards so changing it is alright
@@ -301,7 +298,10 @@ function onTick()
 			
 			if init then
 				yellow=50
+				textTimer=second*8
+				textIndex=levelCr-4+"map name text start"
 			end
+			init=falseVar
 			red=mx(red-4,0)
 			red=clmp(red+(health-gN(3) + armour-gN(4))*3,0,255)
 			yellow=mx(yellow-1.5,0)
@@ -322,7 +322,7 @@ function onTick()
 					elseif cr[4]>=14 and cr[4]<=16 then
 						if M[12][1][cr[4]]==0 then
 							textTimer=second*4
-							textIndex=cr[4]-14+3
+							textIndex=cr[4]-14+"door text start"
 						end
 					end
 				end

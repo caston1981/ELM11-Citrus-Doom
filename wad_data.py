@@ -284,7 +284,7 @@ if __name__ == '__main__':
     orange = pygame.image.load("Orange.png")
 
     
-    
+    code_string_replacements = {}
 
     #print(wad.sound)
     #halt
@@ -497,9 +497,10 @@ if __name__ == '__main__':
     char_sprite_table_large[0] = 14
     
 
-    door_use_text = get_text("door_use_text.txt")
     ammo_pickup_text = get_text("ammo_pickup_text.txt")
     health_pickup_text = get_text("health_pickup_text.txt")
+    door_use_text = get_text("door_use_text.txt")
+    map_name_text = get_text("map_name_text.txt")
 
     
     
@@ -668,9 +669,6 @@ if __name__ == '__main__':
             i[27] = info_spawn[i[26]-1][2]
 
     text_index=2
-
-    for i in door_use_text:
-        text_index+=1
     
     for i in ammo_pickup_dict:
         text_index+=1
@@ -689,6 +687,14 @@ if __name__ == '__main__':
             seen.append(index)
             if cur[1]>0:
                 index=cur[3]-1
+
+    code_string_replacements["door text start"] = text_index+1
+    for i in door_use_text:
+        text_index+=1
+
+    code_string_replacements["map name text start"] = text_index+1
+    for i in map_name_text:
+        text_index+=1
             
 
     for i in info_spawn:
@@ -2218,13 +2224,16 @@ if __name__ == '__main__':
 
     packets.append((13,cur))
 
-    for i in door_use_text:
-        packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
-
     for i in ammo_pickup_text:
         packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
 
     for i in health_pickup_text:
+        packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
+
+    for i in door_use_text:
+        packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
+
+    for i in map_name_text:
         packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
 
     
@@ -2348,7 +2357,8 @@ if __name__ == '__main__':
         
         packets.append((19,i))
 
-    code_string_replacements = {"lost soul missile state":info_spawn[info_spawn_zip[1].index(3006)][12],
+    code_string_replacements = code_string_replacements | {
+                                "lost soul missile state":info_spawn[info_spawn_zip[1].index(3006)][12],
                                 "number of wall mipmap levels":res_count_walls,
                                 "number of sprite mipmap levels":res_count_sprites,
                                 "face textures start":all_sprite_textures_expanded.index("STFST01")+1,
