@@ -239,7 +239,7 @@ function damageThing(cr,i,pos)-- thing array, damage, damage source (optional), 
 		cr[8]=cr[8]-(i+1)//2
 		cr[7]=cr[7]-i//2+mn(cr[8],0)
 		cr[8]=mx(cr[8],0)
-		cr[41]=s1[13]~="lost soul missile state" and pos or pTng -- makes lost souls always target the player when being damaged
+		cr[33]=s1[13]~="lost soul missile state" and pos or pTng -- makes lost souls always target the player when being damaged
 		if rand()<s1[10] then
 			cr[6]=s1[9]
 			cr[15]=0
@@ -256,7 +256,7 @@ function fireWeapon(source,index)
 	ramp=targ and (targ[9]-source[9])*crWeapon[6]/dist(targ,source)or 0
 	for i=1,crWeapon[12]do
 		a={}
-		for i=1,30 do
+		for i=1,33 do
 			a[i]=source[i]
 		end
 		a[4]=crWeapon[8]
@@ -400,7 +400,7 @@ function onTick()
 			levelCr=levelCr+1
 			for i=#M1,1,-1 do
 				cr=M1[i]
-				for j=7,40 do
+				for j=7,32 do
 					cr[j]=0
 				end
 				cr[7]=M15[cr[4]][4]-- health
@@ -494,7 +494,7 @@ function onTick()
 						end
 					end
 					state=M[16][cr[6]]
-					cr[41] = cr[41] and (cr[41][20] and cr[41] or pTng) -- switches back to player if there's no target or the target is dead
+					cr[33] = cr[33] and (cr[33][20] and cr[33] or pTng) -- switches back to player if there's no target or the target is dead
 					
 					if cr[15]>=state[2] and state[2]~=-1 then
 						cr[6]=state[4]
@@ -512,14 +512,14 @@ function onTick()
 							end
 						elseif state3==2 then-- view logic
 							if chkView(cr,pTng,90) then
-								cr[41]=pTng-- set target
+								cr[33]=pTng-- set target
 								cr[6]=s1[5]
 								out[12]=s1[6] -- see sound
 							end
 							chkPs(cr,falseVar,i,8)
 							fall(cr)
 						elseif state3==3 then-- chase logic
-							angle,valid=flr(at2(cr,cr[41])/45+0.5)*45
+							angle,valid=flr(at2(cr,cr[33])/45+0.5)*45
 							stg=1
 							while stg<5 and not valid do-- checks angles 0, 45, -45, 90, -90 relative to desired direction
 								nm=add(cr,dVec(angle+M[19][2][stg],8))
@@ -540,8 +540,8 @@ function onTick()
 							end
 							fall(cr)
 							
-							a=dist(cr,cr[41])
-							if s1[13]>0 and chkRayCol(cr,cr[41],1)and mn(a,230)<rand()then
+							a=dist(cr,cr[33])
+							if s1[13]>0 and chkRayCol(cr,cr[33],1)and mn(a,230)<rand()then
 								cr[6]=s1[13]
 							end
 							if a<64 and s1[12]>0 then
@@ -556,10 +556,10 @@ function onTick()
 							end
 							pTng[3]=pTng[3]-20
 						elseif state3>9 and cr[20]then-- attack logic
-							cr[3]=at2(cr,cr[41])
+							cr[3]=at2(cr,cr[33])
 							crWeapon=M[14][state3]
 							cr[10]=trueVar
-							targ=cr[41]
+							targ=cr[33]
 							fireWeapon(cr,i)
 						end
 					end
