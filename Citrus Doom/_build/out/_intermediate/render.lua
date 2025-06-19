@@ -51,7 +51,6 @@ thngs={}
 LOD=500-- higher is more quality
 LODH=250
 health=1
-mRandom=0
 bigNumb=2^15
 difficulty=3002
 fuzz=0
@@ -224,8 +223,8 @@ function onTick()
 				for j=1,#tmp do
 					info=tmp[j]
 					cr=info[1]
-					if cr>(2^15) then -- wall update
-						cr=M8[cr-(2^15)]
+					if cr>bigNumb then -- wall update
+						cr=M8[cr-bigNumb]
 						for k=1,6 do
 							cr[k]=info[k+1]
 						end
@@ -298,7 +297,6 @@ function onTick()
 			bobBase=mn(dist(cr,pp[1])^2/4,16)
 			pp[1]={cr[1],cr[2]}
 			playerRotation=cr[3]
-			test=cr[9]+1
 			pp[2]=cr[9]+41+bobBase*sin(tick*20)/4 -- I think it should be /2, but that's a nauseating amount of view bob
 			
 
@@ -506,8 +504,8 @@ function onTick()
 													end
 												end
 												if (not pass) and passL then -- lable cut-off vertical line of quads as cut off
+													dLast[9]=falseVar
 													walls[i][#walls[i]+1],passL=dLast
-													walls[i][#walls[i]][9]=falseVar
 												end
 											end
 											if #walls[i]>0 then
@@ -545,7 +543,6 @@ function onDraw()
 		tex=M[24][M[19][8][levelCr-3]]
 		tW,tH=tex[1],tex[2]
 		scl=wdth/ceil(tW*fovT)
-		scl2=scl*1
 		for i=0,ceil(tW*fovT),1 do
 			x1=(tW/2-i-1+playerRotation/90*tW)%tW
 			x2=(x1%1-1)*scl
@@ -554,7 +551,7 @@ function onDraw()
 				pix=tex[5+j+x1]
 				col=M[20][pix]
 				stCl(col[1],col[2],col[3])
-				rec(i*scl+x2,j*scl,scl2,scl2)
+				rec(i*scl+x2,j*scl,scl,scl)
 			end
 		end
 
