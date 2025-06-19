@@ -1,225 +1,225 @@
 
-ak=152
-L=131
-l=255
-H=180
-r=math
-S=r.max
-au=r.min
-abs=r.abs
-O=r.floor
-sqrt=r.sqrt
+aj=152
+G=131
+m=255
+L=180
+s=math
+P=s.max
+av=s.min
+abs=s.abs
+Q=s.floor
+sqrt=s.sqrt
 j=input.getNumber
-ab=input.getBool
-bh=output.setNumber
-pi=r.pi
-aG=false
-Z=true
-ai=table.remove
-am=string
-function at(c,n)return{(c[1]+n[1]),(c[2]+n[2])}end
-function bo(c,n)return c[1]*n[2]-c[2]*n[1]end
+ad=input.getBool
+aS=output.setNumber
+pi=s.pi
+aI=false
+al=true
+ao=table.remove
+ab=string
+function as(c,n)return{(c[1]+n[1]),(c[2]+n[2])}end
+function bp(c,n)return c[1]*n[2]-c[2]*n[1]end
 function sub(c,n)return{(c[1]-n[1]),(c[2]-n[2])}end
-function bd(c,n)return{c[1]*n,c[2]*n}end
-function by(c)return((c+H)%360)-H end
-function sin(c)return r.sin(c/H*pi)end
-function cos(c)return r.cos(c/H*pi)end
-function tan(c)return r.tan(c/H*pi)end
-function bA(c)return r.atan(c)*H/pi end
-function bC(c)return r.atan(c[2],c[1])*H/pi end
-function bi(c,n,bp)return au(S(n,c),bp)end
-function ay(c)return O(c+.5)end
-function bz(c,n)return sqrt(((c[1]-n[1])^2)+((c[2]-n[2])^2))end
-function ba(c)return{c[1],-c[2]}end
+function b_(c,n)return{c[1]*n,c[2]*n}end
+function by(c)return((c+L)%360)-L end
+function sin(c)return s.sin(c/L*pi)end
+function cos(c)return s.cos(c/L*pi)end
+function tan(c)return s.tan(c/L*pi)end
+function bC(c)return s.atan(c)*L/pi end
+function bB(c)return s.atan(c[2],c[1])*L/pi end
+function aV(c,n,bm)return av(P(n,c),bm)end
+function au(c)return Q(c+.5)end
+function bA(c,n)return sqrt(((c[1]-n[1])^2)+((c[2]-n[2])^2))end
+function aR(c)return{c[1],-c[2]}end
 function bD(c)c=c-1
 c=c|(c>>1)c=c|(c>>2)c=c|(c>>4)return c+1
 end
-a={}as=1
-an=3
-ah=aG
-D={{0,0},0,0}av=288
-E=av//2
-F=128
-aw=F//2
-aY=1.2
-aU={1,1}aO=1
-af=1
-aN=500
-t=100
-aR=100
+a={}aw=1
+ae=3
+af=aI
+E={{0,0},0,0}ap=288
+F=ap//2
+C=128
+aB=C//2
+bh=1.2
+bj={1,1}aM=1
+ak=1
+aQ=500
+u=100
+bi=100
 aF=0
-Q=0
-T=0
-P=0
-aI=3002
-aV=32768
-x={}bl=.05
-A={}ad={}bx=2
-ag=35
-V=0
-aD=0
-aA=0
-G=1
-aQ=0
-X=0
-al=0
-aa=Z
-function aZ(b,c)if b<aV then
-M=a[7][b]return aZ(M[0<bo({M[3],M[4]},sub(c,M))and 8 or 7],c)else
-return b-aV
+O=0
+S=0
+U=0
+aJ=3002
+bg=32768
+w={}aW=.05
+B={}aa={}bq=2
+ai=35
+an=0
+aE=0
+ax=0
+M=1
+aN=0
+ag=0
+Y=0
+Z=al
+function bf(b,c)if b<bg then
+I=a[7][b]return bf(I[0<bp({I[3],I[4]},sub(c,I))and 8 or 7],c)else
+return b-bg
 end
 end
-function aX(c)M=a[5][a[6][c][2]]return a[8][a[3][a[2][M[4]][M[5]+6]][6]]end
-function ar(h,u,aq,ap)local C,p=v.drawLine,v.setColor
+function aT(c)I=a[5][a[6][c][2]]return a[8][a[3][a[2][I[4]][I[5]+6]][6]]end
+function az(h,r,aq,aA)local D,p=x.drawLine,x.setColor
 aq=aq..""
-ap=a[19][ap]for b=#aq,1,-1 do
-_=ap[am.byte(am.sub(aq,b,b))]h=h-ap[1]if _>0 then
-d=a[23][_]q,i=d[1],d[2]w=h-d[4]+1
-ae=u-d[5]for g=0,q-1 do
+aA=a[19][aA]for b=#aq,1,-1 do
+_=aA[ab.byte(ab.sub(aq,b,b))]h=h-aA[1]if _>0 then
+d=a[23][_]q,i=d[1],d[2]v=h-d[4]+1
+W=r-d[5]for g=0,q-1 do
 for f=0,i-1 do
-m=d[7+f+g*i]if m~=0 then
-e=a[20][m]p(e[1],e[2],e[3])C(w+g,ae+f,w+g,ae+f+1)end
+k=d[7+f+g*i]if k~=0 then
+e=a[20][k]p(e[1],e[2],e[3])D(v+g,W+f,v+g,W+f+1)end
 end
 end
 end
 end
 end
-function o(aW,bg,ao,k)k=k or{59,59,59}v.setColor(13,0,0)v.drawText(aW+1,bg+1,ao)v.setColor(k[1],k[2],k[3])v.drawText(aW,bg,ao)end
-function onTick()aQ=0
+function o(aY,bd,X,l)l=l or{59,59,59}x.setColor(13,0,0)x.drawText(aY+1,bd+1,X)x.setColor(l[1],l[2],l[3])x.drawText(aY,bd,X)end
+function onTick()aN=0
 for g=1,3 do
-if ab(9)and(not ah)or not a[21]then
-aH=property.getText(as)b=1
-s=""
-_=am.sub(aH,b,b)while _~=""do
-K=am.byte(_)if K>64 then
-s=(s..K-65)+0
-if G==1 then
-aS=s
-a[s]=a[s]or{}elseif G==2 then
-bu=s
-ac=0
-elseif G==3 then
-aP=s
+if ad(9)and(not af)or not a[21]then
+aG=property.getText(aw)b=1
+t=""
+_=ab.sub(aG,b,b)while _~=""do
+J=ab.byte(_)if J>64 then
+t=(t..J-65)+0
+if M==1 then
+bc=t
+a[t]=a[t]or{}elseif M==2 then
+bn=t
+am=0
+elseif M==3 then
+aL=t
 else
-if ac==0 then
-ac=bu
-aP=aP-1
-aL={}a[aS][#a[aS]+1]=aL
+if am==0 then
+am=bn
+aL=aL-1
+aH={}a[bc][#a[bc]+1]=aH
 end
-aL[#aL+1]=s
-ac=ac-1
-G=S(ac,aP)>0 and G-1 or 0
+aH[#aH+1]=t
+am=am-1
+M=P(am,aL)>0 and M-1 or 0
 end
-G=G+1
-s=""
+M=M+1
+t=""
 else
-s=s.._
+t=t.._
 end
 b=b+1
-_=am.sub(aH,b,b)end
-as=as+1
-ah=aH==""
+_=ab.sub(aG,b,b)end
+aw=aw+1
+af=aG==""
 end
 end
-if ah then
+if af then
 if j(10)>0 then
-aa=Z
-an=j(10)end
-aD=aD+1
-a[12][1][aD%#a[12][1]+1]=ay(j(11))X=a[12][1][17]if t>0 and not aa then
-R={}Y[#Y+1]=R
-W=6
-_=j(W)while _~=0 do
-y={}R[#R+1]=y
+Z=al
+ae=j(10)end
+aE=aE+1
+a[12][1][aE%#a[12][1]+1]=au(j(11))ag=a[12][1][17]if u>0 and not Z then
+N={}ac[#ac+1]=N
+V=6
+_=j(V)while _~=0 do
+A={}N[#N+1]=A
 for b=0,8 do
-y[b+1]=j(W+b)end
-W=W+9
-_=j(W)end
+A[b+1]=j(V+b)end
+V=V+9
+_=j(V)end
 end
-if ab(1)then
-if aa then
+if ad(1)then
+if Z then
 for b=1,10 do
-a[b]=a[b+10*an]end
-an=an+1
+a[b]=a[b+10*ae]end
+ae=ae+1
 for b=#a[1],1,-1 do
-_=a[1][b]_=_[5]&(aI-3000)>0 or ai(a[1],b)end
+_=a[1][b]_=_[5]&(aJ-3000)>0 or ao(a[1],b)end
 for b=1,#a[8]do
 a[8][b][8]={}end
 for b=1,#a[6]do
-_=aX(b)_[8][#_[8]+1]=b
+_=aT(b)_[8][#_[8]+1]=b
 end
-Y={}end
-Q=Q-1
-if t>0 then
-if U~=j(1)and j(1)>0 then
-x={}_={}_[1]=a[29][j(1)]_[2]=a[16][_[1][3]]bB=_[2][1]_[3]=0
-x[1]=_
+ac={}end
+O=O-1
+if u>0 then
+if R~=j(1)and j(1)>0 then
+w={}_={}_[1]=a[29][j(1)]_[2]=a[16][_[1][3]]bz=_[2][1]_[3]=0
+w[1]=_
 end
-U=j(1)aK=ab(3)if aK and U==5 then
-if al<=0 then
-al=7
+R=j(1)aK=ad(3)if aK and R==5 then
+if Y<=0 then
+Y=7
 else
 aK=false
 end
 end
-al=al-1
+Y=Y-1
 if aK then
-_=x[1]_[2]=a[16][_[1][4]]_[3]=-1
-B=a[19][6][U]if B>0 then
-A[#A+1]={B,1}end
+_=w[1]_[2]=a[16][_[1][4]]_[3]=-1
+y=a[19][6][R]if y>0 then
+B[#B+1]={y,1}end
 end
 end
-for b=#x,1,-1 do
-_=x[b]if _[3]==0 then
+for b=#w,1,-1 do
+_=w[b]if _[3]==0 then
 if _[2][3]==4 then
-if U==5 and al<5 then
-bf=1
+if R==5 and Y<5 then
+bk=1
 else
-bf=0
+bk=0
 end
-x[#x+1]={_[1],a[16][_[1][5]+bf],2}end
+w[#w+1]={_[1],a[16][_[1][5]+bk],2}end
 end
 _[3]=_[3]+1
 if _[3]>=_[2][2]then
 if _[2][4]>2 then
 _[2]=a[16][_[2][4]]_[3]=0
 else
-ai(x,b)end
+ao(w,b)end
 end
 end
-if aa then
-T=50
-Q=ag*8
-aJ=an-4+"map name text start"
+if Z then
+S=50
+O=ai*8
+aP=ae-4+"map name text start"
 end
-aa=aG
-P=S(P-4,0)P=bi(P+(t-j(3)+aF-j(4))*3,0,l)T=S(T-1.5,0)t=j(3)aF,bk,b_,bb=j(4)if j(2)>0 and t>0 then
+Z=aI
+U=P(U-4,0)U=aV(U+(u-j(3)+aF-j(4))*3,0,m)S=P(S-1.5,0)u=j(3)aF,be,ba,bl=j(4)if j(2)>0 and u>0 then
 _=a[2][j(2)]if _ then
 if _[4]==3008 then
-be=_[5]>0 and O(_[5])bb=Z
+aU=_[5]>0 and Q(_[5])bl=al
 elseif _[4]>3004 then
-aN=S(aN+3*(_[4]-3006),1)b_=Z
+aQ=P(aQ+3*(_[4]-3006),1)ba=al
 elseif _[4]>3000 then
-aI=_[4]bk=Z
+aJ=_[4]be=al
 elseif _[4]>=14 and _[4]<=16 then
 if a[12][1][_[4]]==0 then
-Q=ag*4
-aJ=_[4]-14+"door text start"
+O=ai*4
+aP=_[4]-14+"door text start"
 end
 end
 end
 end
-for b=1,#Y do
-R=Y[b]for g=1,#R do
-y=R[g]_=y[1]if _>(2^15)then
+for b=1,#ac do
+N=ac[b]for g=1,#N do
+A=N[g]_=A[1]if _>(2^15)then
 _=a[8][_-(2^15)]for f=1,6 do
-_[f]=y[f+1]end
+_[f]=A[f+1]end
 elseif _<0 then
-K=a[1][-_]if K then
-y=K[6]if a[16][y][5]>0 then
-T=S(T,15)Q=ag*4
-aJ=a[16][y][5]A[#A+1]={"item pickup sound index",1}if K[4]then
-bq=a[15][K[4]]if bq[29]=="computer area map index" then
+J=a[1][-_]if J then
+A=J[6]if a[16][A][5]>0 then
+S=P(S,15)O=ai*4
+aP=a[16][A][5]B[#B+1]={"item pickup sound index",1}if J[4]then
+bw=a[15][J[4]]if bw[29]=="computer area map index" then
 for f=1,#a[2]do
 a[2][f][8]=a[2][f][8]or 1
 end
@@ -228,134 +228,134 @@ end
 end
 end
 while-_>#a[1]do
-a[1][#a[1]+1]=aG
+a[1][#a[1]+1]=aI
 end
-ai(a[1],-_)else
+ao(a[1],-_)else
 if not a[1][_]then
 a[1][_]={}end
 _=a[1][_]for f=1,8 do
-_[a[19][1][f]]=y[f+1]end
+_[a[19][1][f]]=A[f+1]end
 _[15]=0
 end
 end
 end
-Y={}_=a[1][1]D[1]={_[1],_[2]}D[3]=_[3]bn=aZ(#a[7],D[1])aB=aX(bn)D[2]=aB[1]+41
-bm=au(aB[5]/l,1)^1.3
-for b=1,#aB[8]do
-_=a[6][aB[8][b]]for g=_[2],_[1]+_[2]-1 do
-bs=a[5][g]br=a[2][bs[4]]br[8]=2
+ac={}_=a[1][1]E[1]={_[1],_[2]}E[3]=_[3]bt=bf(#a[7],E[1])ay=aT(bt)E[2]=ay[1]+41
+bo=av(ay[5]/m,1)^1.3
+for b=1,#ay[8]do
+_=a[6][ay[8][b]]for g=_[2],_[1]+_[2]-1 do
+br=a[5][g]bx=a[2][br[4]]bx[8]=2
 end
 end
-bc=ab(2)if j(12)>0 and t>0 then
-A[#A+1]={j(12),1}end
-V=V-1
-aA=aA-1
-if not aU[U]then
-aU[U]=1
-aA=70
+aZ=ad(2)if j(12)>0 and u>0 then
+B[#B+1]={j(12),1}end
+an=an-1
+ax=ax-1
+if not bj[R]then
+bj[R]=1
+ax=70
 end
-aM=(4-au(t//20,4))*8
-if t<=0 then
-af=41
-elseif aA>0 then
-af=aM+6
-elseif t<aR then
-V=ag
-af=aM+7
-elseif V<=0 then
-V=16
-aO=aO%256+1
-af=aM+a[13][1][aO]%3
+aC=(4-av(u//20,4))*8
+if u<=0 then
+ak=41
+elseif ax>0 then
+ak=aC+6
+elseif u<bi then
+an=ai
+ak=aC+7
+elseif an<=0 then
+an=16
+aM=aM%256+1
+ak=aC+a[13][1][aM]%3
 end
-aR=t
+bi=u
 end
-for b=#A,1,-1 do
-B=A[b]_=a[18][B[1]]if ab(1)then
-z=_[B[2]]B[2]=B[2]+4
+for b=#B,1,-1 do
+y=B[b]_=a[18][y[1]]if ad(1)then
+z=_[y[2]]y[2]=y[2]+4
 else
-z=_[B[2]+2]end
+z=_[y[2]+2]end
 if z and z>0 then
-ad[#ad+1]={z,1}end
-if B[2]>=#_ then
-ai(A,b)end
+aa[#aa+1]={z,1}end
+if y[2]>=#_ then
+ao(B,b)end
 end
 for b=1,32 do
-bh(b,0)end
-for b=#ad,1,-1 do
-z=ad[b]bh(b+3,bi(ay((z[1]+12)//2),1,60))z[2]=z[2]+1
-if z[2]>bx then
-ai(ad,b)end
+aS(b,0)end
+for b=#aa,1,-1 do
+z=aa[b]aS(b+3,aV(au((z[1]+12)//2),1,60))z[2]=z[2]+1
+if z[2]>bq then
+ao(aa,b)end
 end
 end
 end
-function onDraw()v=screen
-local aj,p,C,ao=v.drawRectF,v.setColor,v.drawLine,v.drawText
-aQ=aQ+1
-if a[21]and not ah then
-d=a[25][1]q,i=d[1],d[2]h,u=E-q/2,80-i/2
+function onDraw()x=screen
+local ah,p,D,X=x.drawRectF,x.setColor,x.drawLine,x.drawText
+aN=aN+1
+if a[21]and not af then
+d=a[25][1]q,i=d[1],d[2]h,r=F-q/2,80-i/2
 for f=0,q-1 do
-w=h+f
-for N=0,i-1 do
-m=d[5+N+f*i]if m~=0 then
-e=a[20][m]p(e[1],e[2],e[3])C(w,u+N,w,u+N+1)end
+v=h+f
+for T=0,i-1 do
+k=d[5+T+f*i]if k~=0 then
+e=a[20][k]p(e[1],e[2],e[3])D(v,r+T,v,r+T+1)end
 end
 end
 end
-if not bc then
-for b=1,#x do
-d=x[b][2][1]aC=d>0 and bm or 1
-d=a[17][abs(d)][1]d=a[23][d]q,i,aE=d[1],d[2],d[3]*.7
-aT=aE*aY
-h,u=E-(d[4]+160)*.7,F-(d[5]+148)*.7*aY
+if not aZ then
+for b=1,#w do
+d=w[b][2][1]aO=d>0 and bo or 1
+d=a[17][abs(d)][1]d=a[23][d]q,i,aD=d[1],d[2],d[3]*.7
+aX=aD*bh
+h,r=F-(d[4]+160)*.7,C-(d[5]+148)*.7*bh
 for f=0,q-1 do
-w=h+f*aE
-for N=0,i-1 do
-m=d[7+N+f*i]if m~=0 then
-e=a[20][m]p(e[1]*aC,e[2]*aC,e[3]*aC)aj(w,u+N*aT,aE,aT)end
+v=h+f*aD
+for T=0,i-1 do
+k=d[7+T+f*i]if k~=0 then
+e=a[20][k]p(e[1]*aO,e[2]*aO,e[3]*aO)ah(v,r+T*aX,aD,aX)end
 end
 end
 end
 end
-if ah then
-if bc then
-p(0,0,0)aj(0,0,av,F)for b=1,#a[2]do
+if af then
+if aZ then
+p(0,0,0)ah(0,0,ap,C)for b=1,#a[2]do
 _=a[2][b]if _[8]then
-J=at(ba(bd(sub(a[4][_[1]],D[1]),bl)),{E,aw})I=at(ba(bd(sub(a[4][_[2]],D[1]),bl)),{E,aw})if _[8]==1 then
+K=as(aR(b_(sub(a[4][_[1]],E[1]),aW)),{F,aB})H=as(aR(b_(sub(a[4][_[2]],E[1]),aW)),{F,aB})if _[8]==1 then
 p(0,50,0)elseif _[3]&4>0 then
 p(50,50,50)else
-p(l,l,l)end
-C(J[1],J[2],I[1],I[2])end
+p(m,m,m)end
+D(K[1],K[2],H[1],H[2])end
 end
-p(l,l,l)_=a[19][10]for b=1,#_,4 do
-ax=sin(D[3]-90)az=cos(D[3]-90)J={_[b]*az+_[b+1]*ax,_[b+1]*az-_[b]*ax}I={_[b+2]*az+_[b+3]*ax,_[b+3]*az-_[b+2]*ax}J=at(J,{E,aw})I=at(I,{E,aw})C(J[1],J[2],I[1],I[2])end
+p(m,m,m)_=a[19][10]for b=1,#_,4 do
+ar=sin(E[3]-90)at=cos(E[3]-90)K={_[b]*at+_[b+1]*ar,_[b+1]*at-_[b]*ar}H={_[b+2]*at+_[b+3]*ar,_[b+3]*at-_[b+2]*ar}K=as(K,{F,aB})H=as(H,{F,aB})D(K[1],K[2],H[1],H[2])end
 end
-p(l,P>0 and 0 or l,0,P+T)aj(0,0,av,F)p(30,30,30)aj(0,F,av,32)p(5,5,5)aj(E-16,F,32,32)d=a[23]["face textures start"+(af)*"number of sprite mipmap levels"]q,i=d[1],d[2]h=E-q/2
+p(m,U>0 and 0 or m,0,U+S)ah(0,0,ap,C)p(30,30,30)ah(0,C,ap,32)p(5,5,5)ah(F-16,C,32,32)d=a[23]["face textures start"+(ak)*"number of sprite mipmap levels"]q,i=d[1],d[2]h=F-q/2
 for b=0,q-1 do
 for g=0,i-1 do
-m=d[7+g+b*i]if m~=0 then
-e=a[20][m]p(e[1],e[2],e[3])C(h+b,F+1+g,h+b,F+2+g)end
+k=d[7+g+b*i]if k~=0 then
+e=a[20][k]p(e[1],e[2],e[3])D(h+b,C+1+g,h+b,C+2+g)end
 end
 end
 for b=1,3 do
 if a[12][1][13+b]>0 then
-h,u=221,125+b*8
+h,r=221,125+b*8
 d=a[23]["key textures start"+a[19][5][b]*"number of sprite mipmap levels"]q,i=d[1],d[2]for g=0,q-1 do
 for f=0,i-1 do
-m=d[7+f+g*i]if m~=0 then
-e=a[20][m]p(e[1],e[2],e[3])C(h+g,u+f,h+g,u+f+1)end
+k=d[7+f+g*i]if k~=0 then
+e=a[20][k]p(e[1],e[2],e[3])D(h+g,r+f,h+g,r+f+1)end
 end
 end
 end
 end
-if Q>0 then
-bj=a[13][aJ]h=0
-u=0
-for bw=1,#bj do
-_=bj[bw]if _>0 then
-d=a[23][_]q,i=d[1],d[2]w=h-d[4]ae=u-d[5]for b=0,q-1 do
+if O>0 then
+bb=a[13][aP]h=0
+r=0
+for bu=1,#bb do
+_=bb[bu]if _>0 then
+d=a[23][_]q,i=d[1],d[2]v=h-d[4]W=r-d[5]for b=0,q-1 do
 for g=0,i-1 do
-m=d[7+g+b*i]if m~=0 then
-e=a[20][m]p(e[1],e[2],e[3])C(w+b,ae+g,w+b,ae+g+1)end
+k=d[7+g+b*i]if k~=0 then
+e=a[20][k]p(e[1],e[2],e[3])D(v+b,W+g,v+b,W+g+1)end
 end
 end
 h=h+q
@@ -364,9 +364,9 @@ h=h+4
 end
 end
 end
-ar(124,L,O(t).."%",16)ar(218,L,O(aF).."%",16)o(124-28-15,ak,"HEALTH")o(218-28-15,ak,"ARMOUR")k=(X<ag and X>0)and{l,0,0}o(2,L,"TPS:",k)o(26,L,X>0 and X or "N/A",k)k=bk and{l,l,44}o(2,138,"DIF:",k)bv={"EASY","MED","HARD"}o(26,138,bv[O(au(aI-3000,3))],k)k=b_ and{l,l,44}o(2,145,"LOD:",k)o(26,145,O(aN),k)k=bb and{l,l,44}o(2,ak,"TEX:",k)bt={"FULL","HALF"}o(26,ak,be and bt[be]or "OFF",k)o(232,L,"BULL")o(232,138,"SHEL")o(232,145,"ROKT")o(232,ak,"CELL")for b=1,4 do
+az(124,G,Q(u).."%",16)az(218,G,Q(aF).."%",16)o(124-28-15,aj,"HEALTH")o(218-28-15,aj,"ARMOUR")l=(ag<ai and ag>0)and{m,0,0}o(2,G,"TPS:",l)o(26,G,ag>0 and ag or "N/A",l)l=be and{m,m,44}o(2,138,"DIF:",l)bv={"EASY","MED","HARD"}o(26,138,bv[Q(av(aJ-3000,3))],l)l=ba and{m,m,44}o(2,145,"LOD:",l)o(26,145,Q(aQ),l)l=bl and{m,m,44}o(2,aj,"TEX:",l)bs={"FULL","HALF"}o(26,aj,aU and bs[aU]or "OFF",l)o(232,G,"BULL")o(232,138,"SHEL")o(232,145,"ROKT")o(232,aj,"CELL")for b=1,4 do
 c=124+b*7
-ar(265,c,ay(a[12][1][b]),15)ar(285,c,ay(a[19][17][b]),15)o(268,c,"/")end
+az(265,c,au(a[12][1][b]),15)az(285,c,au(a[19][17][b]),15)o(268,c,"/")end
 else
-ao(1,L,"ROM:")ao(26,L,as)end
+X(1,G,"ROM:")X(26,G,aw)end
 end

@@ -235,9 +235,7 @@ function onTick()
 						end
 						tableRemove(M1,-cr)
 					else
-						if not M1[cr] then
-							M1[cr]={}
-						end
+						M1[cr]=M1[cr]or{}
 						cr=M1[cr]
 						for k=1,8 do
 							cr[M[19][1][k]]=info[k+1]-- M[19][1] is 1,2,9,6,11,12,19,3
@@ -279,7 +277,7 @@ function onTick()
 					cr[15]=cr[15]+1
 					cr[20]=dist(cr,pp[1]) -- used for thing sorting
 					state=M[16][cr[6]]
-					if state~=nil then
+					if state then
 						if state[5]>0 then
 							cr[9]=cr[8][1]
 						end
@@ -383,7 +381,7 @@ function onTick()
 									if (render or (n==3 and not (tpRnd and btRnd)))and (n==3 or double)then -- all the possible reasons to render
 										yOff,sky=0
 										if n<3 then
-											sky=n==1 and mx(sec1[4],sec2[4])==0 -- don't render if doing upper texture and both neighbouring sectors are sky
+											notSky=n~=1 or mx(sec1[4],sec2[4])~=0 -- don't render if doing upper texture and both neighbouring sectors are sky
 											y1,y2=sec1[3-n],(n==1 and mx or mn)(sec2[3-n],sec1[n]) -- the weird y2 stuff is to handle when sec2's ceiling/floor is below/above sec1's floor/ceiling 
 											calculate=(y1<y2)==(n==2)and y1~=y2 and sec1~=sec2
 											render=calculate
@@ -407,7 +405,7 @@ function onTick()
 										y1,y2=y1-pp[2],y2-pp[2] -- makes the screen ys relative to the player's height
 										ys1,ys2=y1*vMult,y2*vMult -- and resizes them appropriately
 
-										if (calculate or render) and not sky then
+										if (calculate or render) and notSky then
 
 											txOff2=seg[6]-side[1]
 											if line[4]==48 then
@@ -712,7 +710,7 @@ function onDraw()
 									lght=state>0 and lght or 1 -- full illuminate if the animation frame number is less than 0
 									pxSize=scl
 									pxSizeV=pxSize*pixelAspectCorrection
-									fuzzy=cr[4] and M[15][cr[4]][23]&8>0
+									fuzzy=M[15][cr[4]or 1][23]&8>0
 									
 									for k=0,tW-1 do -- was originally 2 separate loops for fuzzy and non fuzzy things
 										x1=x2+k*scl*flip -- now is 1 loop to save space, hopefully it doesn't impact performance too much
