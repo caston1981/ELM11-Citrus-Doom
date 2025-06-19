@@ -350,7 +350,7 @@ function onTick()
 								sounds[#sounds+1]={"item pickup sound index",1}
 								if pos[4] then
 									s2=M[15][pos[4]]
-									if s2[29]==M[19][13][1] then -- for map computer
+									if s2[29]=="computer area map index" then -- for map computer
 										for k=1,#M[2] do
 											M[2][k][8]=M[2][k][8] or 1
 										end

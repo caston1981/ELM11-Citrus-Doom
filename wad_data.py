@@ -2346,7 +2346,7 @@ if __name__ == '__main__':
                       [0,5,0,-5,-3,0,0,-5,3,0,0,-5], #10
                       [0], #11 unused
                       [0,1,0,2,0,0,0,3,0,0,0,0,0,0,0,4], #12
-                      [health_pickup_list_zip[0].index("MT_MISC15")+1,health_pickup_list_zip[0].index("MT_MISC16")+1], #13
+                      [0], #13
                       char_sprite_table_small_dark, #14
                       char_sprite_table_small_bright, #15
                       char_sprite_table_large, #16
@@ -2364,6 +2364,8 @@ if __name__ == '__main__':
                                 "face textures start":all_sprite_textures_expanded.index("STFST01")+1,
                                 "key textures start":all_sprite_textures_expanded.index("STKEYS0")+1,
                                 "item pickup sound index":sound_names.index("DPITEMUP")+1,
+                                "computer area map index":health_pickup_list_zip[0].index("MT_MISC15")+1,
+                                "light amp index":health_pickup_list_zip[0].index("MT_MISC16")+1,
                                 }
 
     
