@@ -1212,7 +1212,7 @@ if __name__ == '__main__':
                     
                     sector_thinkers.append((sec, 2, cur_sec.ceil_height, 1, 1, len(sector_thinkers)+2, 1, 0))
                     sector_thinkers.append((sec, 2, cur_sec.neighbouring_lowest_floor+8, 1, 1, len(sector_thinkers), 1, i.thinker_id))
-                    i.thinker_id = len(sector_thinkers)
+                    i.thinker_id = len(sector_thinkers)-1
                     cur_sec.type = 18 # enables crushing
 
                     i.line_type=2
@@ -1577,7 +1577,7 @@ if __name__ == '__main__':
                     
                     sector_thinkers.append((sec, 2, cur_sec.ceil_height, 1, 1, len(sector_thinkers)+2, 2, 0))
                     sector_thinkers.append((sec, 2, cur_sec.neighbouring_lowest_floor+8, 1, 1, len(sector_thinkers), 2, i.thinker_id))
-                    i.thinker_id = len(sector_thinkers)
+                    i.thinker_id = len(sector_thinkers)-1
                     cur_sec.type = 18 # enables crushing
 
                     i.line_type=2
@@ -1628,7 +1628,7 @@ if __name__ == '__main__':
                     
                     sector_thinkers.append((sec, 2, cur_sec.ceil_height, 2, 1, len(sector_thinkers)+2, 2, 0))
                     sector_thinkers.append((sec, 2, cur_sec.neighbouring_lowest_floor+8, 2, 1, len(sector_thinkers), 2, i.thinker_id))
-                    i.thinker_id = len(sector_thinkers)
+                    i.thinker_id = len(sector_thinkers)-1
                     cur_sec.type = 18 # enables crushing
 
                     i.line_type=2
