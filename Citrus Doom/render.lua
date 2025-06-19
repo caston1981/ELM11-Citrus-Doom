@@ -207,7 +207,7 @@ function onTick()
 				end
 			end
 			
-			if gB(3) and weapon~=1 and weapon~=3 then
+			if gB(3) and weapon~=1 and weapon~=3 and screenBrightOffset<1 then
 				screenBrightOffset=0.1
 				screenBrightTimer=5
 			else
@@ -229,6 +229,11 @@ function onTick()
 						end
 						--cr[5]=cr[5]/255
 					elseif cr<0 then -- delete thing
+						pos=M[1][-cr]
+						if pos and M[15][pos[4]or 1][29]=="light amp index" then
+							screenBrightOffset=1
+							screenBrightTimer=4200
+						end
 						while -cr>#M1 do
 							M1[#M1+1]=falseVar -- used to keep the render's thing indexing the same as the engines'
 						end

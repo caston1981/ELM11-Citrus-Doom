@@ -76,6 +76,8 @@ mN=0
 tps=0
 fireCooldown=0
 init=trueVar
+screenBrightOffset=0
+screenBrightTimer=0
 
 function findMe(i,a) -- finding sub-sector a position is in using BSP tree
 	if i<bigNumb then
@@ -327,6 +329,11 @@ function onTick()
 				end
 			end
 			
+			screenBrightTimer=screenBrightTimer-1
+			if screenBrightTimer<1 then
+				screenBrightOffset=0
+			end
+			
 			for i=1,#transferCache do
 				
 				tmp=transferCache[i]
@@ -349,6 +356,10 @@ function onTick()
 								sounds[#sounds+1]={"item pickup sound index",1}
 								if pos[4] then
 									s2=M[15][pos[4]]
+									if s2[29]=="light amp index" then
+										screenBrightOffset=1
+										screenBrightTimer=4200
+									end
 									if s2[29]=="computer area map index" then -- for map computer
 										for k=1,#M[2] do
 											M[2][k][8]=M[2][k][8] or 1
@@ -385,7 +396,7 @@ function onTick()
 			ppSubSec=findMe(#M[7],pp[1])
 			ppSec=findSec(ppSubSec)
 			pp[2]=ppSec[1]+41
-			ppLght=mn(ppSec[5]/255,1)^1.3-- the lower-than-2.2 corection factor means the weapon is brighter than the environment
+			ppLght=mn(ppSec[5]/255+screenBrightOffset,1)^1.3-- the lower-than-2.2 corection factor means the weapon is brighter than the environment
 			
 			for i=1,#ppSec[8] do
 				cr=M[6][ppSec[8][i]]
