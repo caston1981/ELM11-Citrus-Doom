@@ -384,7 +384,8 @@ function onTick()
 									calculate=trueVar
 
 									if (render or (n==3 and not (tpRnd and btRnd)))and (n==3 or double)then -- all the possible reasons to render
-										yOff,sky=0
+										yOff=0
+										notSky=trueVar
 										if n<3 then
 											notSky=n~=1 or mx(sec1[4],sec2[4])~=0 -- don't render if doing upper texture and both neighbouring sectors are sky
 											y1,y2=sec1[3-n],(n==1 and mx or mn)(sec2[3-n],sec1[n]) -- the weird y2 stuff is to handle when sec2's ceiling/floor is below/above sec1's floor/ceiling 
