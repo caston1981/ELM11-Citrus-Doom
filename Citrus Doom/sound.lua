@@ -531,7 +531,15 @@ function onDraw()
 					if cr[8]==1 then
 						stCl(0,50,0)
 					elseif cr[3]&4>0 then
-						stCl(50,50,50)
+						if cr[4]==14 then
+							stCl(0,0,255)
+						elseif cr[4]==15 then
+							stCl(255,0,0)
+						elseif cr[4]==16 then
+							stCl(255,255,0)
+						else
+							stCl(50,50,50)
+						end
 					else
 						stCl(255,255,255)
 					end
