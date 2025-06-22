@@ -44,7 +44,7 @@ function findMe(i,a,cr)
 		cr=M[7][i]
 		return findMe(cr[cr[3]*(a[2]-cr[2])-cr[4]*(a[1]-cr[1])>0 and 8 or 7],a)
 	else
-		i=M[5][M[6][i-32768][2]]
+		i=M[5][M[6][i-2^15][2]]
 		return M8[M[3][M[2][i[4]][i[5]+6]][6]]
 	end
 end
@@ -100,10 +100,14 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 		end
 	end	
 	
+	cr = (checkPlayerPosLoop or 1)<8
 	if tp-bt<h then-- or tp<p[9]+h
-		valid=(checkPlayerPosLoop or 1)<8 or tick%4>0 or bounds[6]<18 or damageThing(collObject,10) -- crushes object if all 3 conditions are false
+		valid=cr or tick%4>0 or bounds[6]<18 or damageThing(collObject,10) -- crushes object if all 3 conditions are false
 		return -- returns false (well, nil) if an object can't fit in the current sector
 	end
+	
+	
+	
 	for i=1,#blkCr do
 		cr=M[2][blkCr[i]]
 		dst,tmpA=chkLnDst(p,M4[cr[1]],M4[cr[2]])
@@ -143,8 +147,9 @@ function chkLnDst(p1,p2,p3)
 	d1=dist(p2,p1)
 	aNorm=at2(p2,p3)+90
 	aOff=aNorm-at2(p1,p2)
-	hOff=-d1*s(aOff)
-	d3=d1*c(aOff)
+	d3,hOff=exp(dVec(-aOff,d1))
+	--hOff=-d1*s(aOff)
+	--d3=d1*c(aOff)
 	aPsh=aNorm
 	if d3<0 then
 		aPsh=aPsh+180
@@ -158,7 +163,7 @@ function chkLnDst(p1,p2,p3)
 	end
 end
 
-function chkRayCol(p1,p2,level,index,cr) -- raycast between two points
+function chkRayCol(p1,p2,level,index) -- raycast between two points
 	bsDst=dist(p1,p2)
 	crDst=bsDst
 	pass,valid=trueVar -- sets valid to nil which acts as false
@@ -221,7 +226,7 @@ function chkRayCol(p1,p2,level,index,cr) -- raycast between two points
 	return trueVar
 end
 
-function httpReply(a,b,c)
+function httpReply()
 	httpTkP=httpTk//2
 	httpTk=0
 end
