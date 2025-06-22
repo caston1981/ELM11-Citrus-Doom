@@ -807,6 +807,12 @@ if __name__ == '__main__':
             else:
                 i.floor_texture = 0
 
+            if i.type in [7,4,16,4]:
+                i.type = 5
+
+            #elif i.type == 11:
+            #    print(map_name)
+
             #if i.tag == 666:
             #    print(map_name)
 
@@ -1008,7 +1014,7 @@ if __name__ == '__main__':
                         thinker = (sec, 1, cur_floor_height, step_speed, 1, 0, 0, i.thinker_id)
                         i.thinker_id = insert_thinker(thinker)
 
-            elif i.line_type==9: #S1 Floor Donut (doesn't change type)
+            elif i.line_type==9: #S1 Floor Donut
                 cur_secs = find_sector(i.sector_tag)
 
                 i.line_type=0
@@ -1030,6 +1036,9 @@ if __name__ == '__main__':
                     next_thinker = insert_thinker(thinker)
 
                     thinker = (sec2, 3, level_wad.sectors[sec3-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+
+                    thinker = (sec2, 6, level_wad.sectors[sec3-1].type, 256, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
                         
                     thinker = (sec, 1, level_wad.sectors[sec3-1].floor_height, 0.5, 1, 0, 0, i.thinker_id)
@@ -1128,7 +1137,7 @@ if __name__ == '__main__':
 
                     i.line_type=2
 
-            elif i.line_type==20: #S1 Floor To Higher Floor Change Text (highest floor)
+            elif i.line_type==20: #S1 Floor To Higher Floor Change Text And Set Type To 0 (highest floor)
                 cur_secs = find_sector(i.sector_tag)
 
                 i.line_type=0
@@ -1140,9 +1149,12 @@ if __name__ == '__main__':
                             sec2=potential_sec
                     assert sec2!=0
 
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 0, 0)
+                    thinker = (sec, 6, 0, 256, 1, 0, 0, 0)
                     next_thinker = insert_thinker(thinker)
-                            
+
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, next_thinker, 0, 0)
+                    next_thinker = insert_thinker(thinker)
+                    
                     thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
@@ -1316,7 +1328,7 @@ if __name__ == '__main__':
 
                     i.line_type=2
 
-            elif i.line_type==37: #W1 Floor To Lowest Adjacent Floor Change Texture and Type (doesn't change type)
+            elif i.line_type==37: #W1 Floor To Lowest Adjacent Floor Change Texture and Type
                 cur_secs = find_sector(i.sector_tag)
 
                 i.line_type=0
@@ -1327,8 +1339,11 @@ if __name__ == '__main__':
                         if potential_sec!=sec and level_wad.sectors[sec-1].neighbouring_lowest_floor==level_wad.sectors[potential_sec-1].floor_height:
                             sec2=potential_sec
                     assert sec2!=0
+
+                    thinker = (sec, 6, level_wad.sectors[sec2-1].type, 256, 1, 0, 0, 0)
+                    next_thinker = insert_thinker(thinker)
                     
-                    thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, 0, 0, i.thinker_id)
+                    thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, next_thinker, 0, 0)
                     next_thinker = insert_thinker(thinker)
                     
                     thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_lowest_floor, 1, 1, next_thinker, 0, i.thinker_id)
@@ -2045,7 +2060,6 @@ if __name__ == '__main__':
             elif i.line_type>0:
                 print("unknown linedef type",i.line_type,"in level",map_name)
 
-            
         
                 
         

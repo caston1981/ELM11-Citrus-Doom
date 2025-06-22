@@ -105,7 +105,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 		return -- returns false (well, nil) if an object can't fit in the current sector
 	end
 	
-	
+	valid=cr or tick%32>0 or bounds[6]~=5 or damageThing(collObject,10) -- for damaging floors, doesn't check the height because that uses more space
 	
 	for i=1,#blkCr do
 		cr=M[2][blkCr[i]]
