@@ -3,7 +3,7 @@ m=math
 mx=m.max
 mn=m.min
 flr=m.floor
-pi=m.pi
+pi=m.pi/180
 gN=input.getNumber
 gB=input.getBool
 sB=output.setBool
@@ -16,9 +16,9 @@ str=string
 
 function add(a,b)return{(a[1]+b[1]),(a[2]+b[2])}end
 function sub(a,b)return{(a[1]-b[1]),(a[2]-b[2])}end
-function s(a)return m.sin(a/180*pi)end
-function c(a)return m.cos(a/180*pi)end
-function at2(a,b)return m.atan(b[2]-a[2],b[1]-a[1])*180/pi end
+function s(a)return m.sin(a*pi)end
+function c(a)return m.cos(a*pi)end
+function at2(a,b)return m.atan(b[2]-a[2],b[1]-a[1])/pi end
 function clmp(a,b,c)return mx(mn(c,a),b)end
 function dist(a,b)return m.sqrt(((a[1]-b[1])^2)+((a[2]-b[2])^2))end
 function dVec(a,b)return{c(a)*b,s(a)*b}end
@@ -74,35 +74,33 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 					bstA=at2(p,pos)
 				end
 			end
-			if index==1 then
-				if dst<50 then
-					a=s2[25]
-					if a>0 then
-						for n,v in ipairsVar(M12[a])do
-							if v>0 and M12[1][n]<M12[2][n]then
-								pos=M12
-								M1[cr]=falseVar
-								pos[1][n]=flr(mn(pos[1][n]+v,pos[2][n]))
-								if clmp(n,5,12)==n then
-									weapon=n-4
-								end
+			if index==1 and dst<50 then
+				a=s2[25]
+				if a>0 then
+					for n,v in ipairsVar(M12[a])do
+						if v>0 and M12[1][n]<M12[2][n]then
+							pos=M12
+							M1[cr]=falseVar
+							pos[1][n]=flr(mn(pos[1][n]+v,pos[2][n]))
+							if clmp(n,5,12)==n then
+								weapon=n-4
 							end
 						end
 					end
-					a=s2[29]
-					if a>0 then
-						a=M[11][a]
-						for n=7,8 do
-							pTng[n]=clmp(pTng[n]+a[n*2-13],pTng[n],a[n*2-12])
-						end
-						M1[cr]=falseVar
+				end
+				a=s2[29]
+				if a>0 then
+					a=M[11][a]
+					for n=7,8 do
+						pTng[n]=clmp(pTng[n]+a[n*2-13],pTng[n],a[n*2-12])
 					end
+					M1[cr]=falseVar
 				end
 			end
 		end
 	end	
 	
-	if tp-bt<h or bt>p[9]+24 then-- or tp<p[9]+h
+	if tp-bt<h then-- or tp<p[9]+h
 		valid=(checkPlayerPosLoop or 1)<8 or tick%4>0 or bounds[6]<18 or damageThing(collObject,10) -- crushes object if all 3 conditions are false
 		return -- returns false (well, nil) if an object can't fit in the current sector
 	end
@@ -110,7 +108,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 		cr=M[2][blkCr[i]]
 		dst,tmpA=chkLnDst(p,M4[cr[1]],M4[cr[2]])
 		if dst<bstDst then
-			if (cr[3]&1>0 and s1[23]&1>0) or cr[3]&4==0 then -- in order: if the linedef is marked as solid, if the colliding object is marked as solid, if the linedef is one-sided
+			if cr[3]&1>0 and s1[23]&1>0 or cr[3]&4==0 then -- in order: if the linedef is marked as solid, if the colliding object is marked as solid, if the linedef is one-sided
 				if index>1 or d3>0 or cr[3]&4>0 then  -- this makes one-sided linedefs only work on one side for the player, allowing an out-of-bounds player to walk back in bounds
 					bstDst=dst
 					bstA=tmpA
@@ -336,7 +334,7 @@ end
 function onTick()
 	sB(9,gB(32))
 	sB(2,gB(11))
-	sB(3,falseVar) -- passing nothing will cound as nil which counts as false
+	sB(3,falseVar)
 
 	for j=1,3 do
 		if gB(32)and (not loaded)or not M[21]then
@@ -702,23 +700,21 @@ function onTick()
 		ttEnd=#M1+#M8
 		while slt<3 and running do
 			pos=slt*9+6
-			if i<=#M1 then
+			if i<=#M[1] then
 				cr=M1[i]
-				if i~=1 then
-					if cr then
-						if cr[10] then
-							out[pos],cr[10]=i
-							for j=1,8 do
-								out[pos+j]=cr[M[19][1][j]]-- M[19][1] is 1,2,9,6,11,12,19,3
-							end
-							slt=slt+1
+				if cr then
+					if cr[10] and i>1 then
+						out[pos],cr[10]=i
+						for j=1,8 do
+							out[pos+j]=cr[M[19][1][j]]-- M[19][1] is 1,2,9,6,11,12,19,3
 						end
-					else
-						out[pos]=-i
-						tableRemove(M1,i)
 						slt=slt+1
-						ttEnd=ttEnd-1
 					end
+				else
+					out[pos]=-i
+					tableRemove(M1,i)
+					slt=slt+1
+					ttEnd=ttEnd-1
 				end
 			else
 				cr=M8[i-#M1]
