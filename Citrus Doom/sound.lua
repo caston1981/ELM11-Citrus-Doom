@@ -68,9 +68,11 @@ notes={}
 noteLn=2
 
 second=35
+tick=0
 faceTick=0
 tickGlobal=0
 weaponGrin=0
+weaponBobStrength=0
 stg=1
 mN=0
 tps=0
@@ -213,6 +215,7 @@ function onTick()
 		--end
 		--
 		if gB(1) then
+			tick = tick+1
 			
 			if init then
 				for i=1,10 do
@@ -291,11 +294,6 @@ function onTick()
 					end
 				end
 			end
-
-			
-
-			
-			
 			
 			if init then
 				yellow=50
@@ -389,9 +387,15 @@ function onTick()
 			transferCache={}
 
 			cr=M[1][1]
-			pp[1]={cr[1],cr[2]}
 			--pp[2]=cr[9]+41,1
 			pp[3]=cr[3]
+			
+			weaponBobAngle=((tick%64)/64)*360
+			weaponBobStrength=weaponBobStrength*0.8+mn(dist(cr,pp[1])^2/4,16)*0.2
+			weaponBobX=cos(weaponBobAngle)*weaponBobStrength
+			weaponBobY=-abs(sin(weaponBobAngle)*weaponBobStrength)
+			
+			pp[1]={cr[1],cr[2]}
 
 			ppSubSec=findMe(#M[7],pp[1])
 			ppSec=findSec(ppSubSec)
@@ -503,7 +507,7 @@ function onDraw()
 			tex=M[23][tex]
 			tW,tH,pxSize=tex[1],tex[2],tex[3]*0.7
 			pxSizeV=pxSize*pixelAspectCorrection
-			x1,y1=wdthH-(tex[4]+160)*0.7,hght-(tex[5]+148)*0.7*pixelAspectCorrection
+			x1,y1=wdthH-(tex[4]+160+weaponBobX)*0.7,hght-(tex[5]+148+weaponBobY)*0.7*pixelAspectCorrection
 			for k=0,tW-1 do
 				x2=x1+k*pxSize
 				for n=0,tH-1 do
