@@ -393,7 +393,7 @@ function onTick()
 			weaponBobAngle=((tick%64)/64)*360
 			weaponBobStrength=weaponBobStrength*0.8+mn(dist(cr,pp[1])^2/4,16)*0.2
 			weaponBobX=cos(weaponBobAngle)*weaponBobStrength
-			weaponBobY=-abs(sin(weaponBobAngle)*weaponBobStrength)-(health>0 and 0 and 300)
+			weaponBobY=-abs(sin(weaponBobAngle)*weaponBobStrength)-(health>0 and 0 or 300)
 			
 			pp[1]={cr[1],cr[2]}
 

@@ -1174,7 +1174,7 @@ if __name__ == '__main__':
 
                     i.line_type=1
 
-            elif i.line_type==22: #W1 Floor To Higher Floor Change Text (highest floor)
+            elif i.line_type==22: #W1 Floor To Higher Floor Change Text And Set Type To 0 (highest floor)
                 cur_secs = find_sector(i.sector_tag)
 
                 i.line_type=0
@@ -1184,7 +1184,10 @@ if __name__ == '__main__':
                         if potential_sec!=sec and level_wad.sectors[sec-1].neighbouring_highest_floor==level_wad.sectors[potential_sec-1].floor_height:
                             sec2=potential_sec
                     
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 0, 0)
+                    thinker = (sec, 6, 0, 256, 1, 0, 0, 0)
+                    next_thinker = insert_thinker(thinker)
+                    
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, next_thinker, 0, 0)
                     next_thinker = insert_thinker(thinker)
 
                     thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
@@ -1485,13 +1488,16 @@ if __name__ == '__main__':
 
                     i.line_type=2
 
-            elif i.line_type==59: #W1 Floor Up 24 Change Texture And Type (doesn't change texture or type)
+            elif i.line_type==59: #W1 Floor Up 24 Change Texture And Type (doesn't change texture and sets type to zero)
                 cur_secs = find_sector(i.sector_tag)
 
                 i.line_type=0
                 
                 for sec in cur_secs:
                     thinker = (sec, 1, level_wad.sectors[sec-1].floor_height+24, 1, 1, 0, 0, i.thinker_id)
+                    i.thinker_id = insert_thinker(thinker)
+
+                    thinker = (sec, 6, 0, 256, 1, 0, 0, i.thinker_id)
                     i.thinker_id = insert_thinker(thinker)
 
                     i.line_type=2
