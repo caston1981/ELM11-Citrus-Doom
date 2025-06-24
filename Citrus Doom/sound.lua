@@ -71,6 +71,7 @@ second=35
 tick=0
 faceTick=0
 tickGlobal=0
+deathTimer=0
 weaponGrin=0
 weaponBobStrength=0
 stg=1
@@ -185,7 +186,16 @@ function onTick()
 		M[12][1][tickGlobal%#M[12][1]+1] = rnd(gN(11))
 		tps = M[12][1][17]
 		
-		
+		if health <= 0 then
+			if (levelCr-3)%9==0 and levelCr>5 and ppSec[6] == 5 then
+				if not dead then
+					textTimer=second*3600
+					textIndex=((levelCr-5)//9)+"episode end text start"
+				end
+				dead = trueVar
+				deathTimer = deathTimer+1
+			end
+		end
 		
 		if health>0 and not init then
 			tmp={}
@@ -523,91 +533,114 @@ function onDraw()
 	end
 	
 	if loaded then
-		if showMap then
-			stCl(0,0,0)
-			rec(0,0,wdth,hght)
-			for i=1,#M[2] do
-				cr=M[2][i]
-				if cr[8] then
-					p1=add(invY(mul(sub(M[4][cr[1]],pp[1]),mapScale)),{wdthH,hghtH})
-					p2=add(invY(mul(sub(M[4][cr[2]],pp[1]),mapScale)),{wdthH,hghtH})
-					
-					if cr[8]==1 then
-						stCl(0,50,0)
-					elseif cr[3]&4>0 then
-						if cr[4]==14 then
-							stCl(0,0,255)
-						elseif cr[4]==15 then
-							stCl(255,0,0)
-						elseif cr[4]==16 then
-							stCl(255,255,0)
+		if not dead then
+			if showMap then
+				stCl(0,0,0)
+				rec(0,0,wdth,hght)
+				for i=1,#M[2] do
+					cr=M[2][i]
+					if cr[8] then
+						p1=add(invY(mul(sub(M[4][cr[1]],pp[1]),mapScale)),{wdthH,hghtH})
+						p2=add(invY(mul(sub(M[4][cr[2]],pp[1]),mapScale)),{wdthH,hghtH})
+						
+						if cr[8]==1 then
+							stCl(0,50,0)
+						elseif cr[3]&4>0 then
+							if cr[4]==14 then
+								stCl(0,0,255)
+							elseif cr[4]==15 then
+								stCl(255,0,0)
+							elseif cr[4]==16 then
+								stCl(255,255,0)
+							else
+								stCl(50,50,50)
+							end
 						else
-							stCl(50,50,50)
+							stCl(255,255,255)
 						end
-					else
-						stCl(255,255,255)
+						drLine(p1[1],p1[2],p2[1],p2[2])
 					end
+				end
+				stCl(255,255,255)
+				cr=M[19][10]
+				for i=1,#cr,4 do
+					sinP=sin(pp[3]-90)
+					cosP=cos(pp[3]-90)
+					p1={cr[i]*cosP+cr[i+1]*sinP,cr[i+1]*cosP-cr[i]*sinP}
+					p2={cr[i+2]*cosP+cr[i+3]*sinP,cr[i+3]*cosP-cr[i+2]*sinP}
+
+					p1=add(p1,{wdthH,hghtH})
+					p2=add(p2,{wdthH,hghtH})
+
 					drLine(p1[1],p1[2],p2[1],p2[2])
 				end
 			end
-			stCl(255,255,255)
-			cr=M[19][10]
-			for i=1,#cr,4 do
-				sinP=sin(pp[3]-90)
-				cosP=cos(pp[3]-90)
-				p1={cr[i]*cosP+cr[i+1]*sinP,cr[i+1]*cosP-cr[i]*sinP}
-				p2={cr[i+2]*cosP+cr[i+3]*sinP,cr[i+3]*cosP-cr[i+2]*sinP}
 
-				p1=add(p1,{wdthH,hghtH})
-				p2=add(p2,{wdthH,hghtH})
-
-				drLine(p1[1],p1[2],p2[1],p2[2])
-			end
-		end
-
-		stCl(255,red>0 and 0 or 255,0,red+yellow)
-		rec(0,0,wdth,hght)
-		
-		stCl(30,30,30)
-		rec(0,hght,wdth,32)
-		stCl(5,5,5)
-		rec(wdthH-16,hght,32,32)
-		tex=M[23]["face textures start"+(face)*"number of sprite mipmap levels"]
-		tW,tH=tex[1],tex[2]
-		x1=wdthH-tW/2
-		for i=0,tW-1 do
-			for j=0,tH-1 do
-				pix=tex[7+j+i*tH]
-				if pix~=0 then
-					col=M[20][pix]
-					stCl(col[1],col[2],col[3])
-					drLine(x1+i,hght+1+j,x1+i,hght+2+j)
+			stCl(255,red>0 and 0 or 255,0,red+yellow)
+			rec(0,0,wdth,hght)
+			
+			stCl(30,30,30)
+			rec(0,hght,wdth,32)
+			stCl(5,5,5)
+			rec(wdthH-16,hght,32,32)
+			tex=M[23]["face textures start"+(face)*"number of sprite mipmap levels"]
+			tW,tH=tex[1],tex[2]
+			x1=wdthH-tW/2
+			for i=0,tW-1 do
+				for j=0,tH-1 do
+					pix=tex[7+j+i*tH]
+					if pix~=0 then
+						col=M[20][pix]
+						stCl(col[1],col[2],col[3])
+						drLine(x1+i,hght+1+j,x1+i,hght+2+j)
+					end
 				end
 			end
-		end
-		for i=1,3 do
-			if M[12][1][13+i]>0 then
-				x1,y1=221,125+i*8
-				tex=M[23]["key textures start"+M[19][5][i]*"number of sprite mipmap levels"]
-				tW,tH=tex[1],tex[2]
-				for j=0,tW-1 do
-					for k=0,tH-1 do
-						pix=tex[7+k+j*tH]
-						if pix~=0 then
-							col=M[20][pix]
-							stCl(col[1],col[2],col[3])
-							drLine(x1+j,y1+k,x1+j,y1+k+1)
+			for i=1,3 do
+				if M[12][1][13+i]>0 then
+					x1,y1=221,125+i*8
+					tex=M[23]["key textures start"+M[19][5][i]*"number of sprite mipmap levels"]
+					tW,tH=tex[1],tex[2]
+					for j=0,tW-1 do
+						for k=0,tH-1 do
+							pix=tex[7+k+j*tH]
+							if pix~=0 then
+								col=M[20][pix]
+								stCl(col[1],col[2],col[3])
+								drLine(x1+j,y1+k,x1+j,y1+k+1)
+							end
 						end
 					end
+				end
+			end
+		else
+			tex=M[22][M[19][3][((levelCr-5)//9)+1]]
+			pxSize=tex[3]
+			tW,tH=tex[1],tex[2]
+			for x=0,wdth+pxSize,pxSize do
+				for y=0,32*5+pxSize,pxSize do
+					pix=tex[6+((x//pxSize)%tW)*tH+((y//pxSize)%tH)]
+					col=M[20][pix]
+					stCl(col[1],col[2],col[3])
+					rec(x,y,pxSize,pxSize)
 				end
 			end
 		end
 
 		if textTimer>0 then
 			crText=M[13][textIndex]
-			x1=0
-			y1=0
-			for index=1,#crText do
+			if dead then
+				x0=3
+				y1=3
+				textEnd=mn(#crText,deathTimer//3)
+			else
+				x0=0
+				y1=0
+				textEnd=#crText
+			end
+			
+			x1=x0
+			for index=1,textEnd do
 				cr=crText[index]
 				if cr>0 then
 					tex=M[23][cr]
@@ -625,44 +658,47 @@ function onDraw()
 						end
 					end
 					x1=x1+tW
-				else
+				elseif cr==0 then
 					x1=x1+4
+				elseif cr==-1 then
+					x1=x0
+					y1=y1+9
 				end
 			end
 		end
 		--textCustom(wdth-1,0,321234567890,15)
 		
-		
-		textCustom(124,131,flr(health).."%",16) -- all these text writings are inefficient space-wise, but that doesn't matter for this block
-		textCustom(218,131,flr(armour).."%",16)
-		textImitation(124-28-15,152,"HEALTH")
-		textImitation(218-28-15,152,"ARMOUR")
-		foreColour = (tps<second and tps>0) and {255,0,0}
-		textImitation(2,131,"TPS:",foreColour)
-		textImitation(26,131,tps>0 and tps or "N/A",foreColour)
-		foreColour = difficultyChange and {255, 255, 44}
-		textImitation(2,138,"DIF:",foreColour)
-		difficultyNames={"EASY","MED","HARD"}
-		textImitation(26,138,difficultyNames[flr(mn(difficulty-3000,3))],foreColour)
-		foreColour = LODChange and {255, 255, 44}
-		textImitation(2,145,"LOD:",foreColour)
-		textImitation(26,145,flr(LOD),foreColour)
-		foreColour = vsTexChange and {255, 255, 44}
-		textImitation(2,152,"TEX:",foreColour)
-		vsTexNames = {"FULL","HALF"}
-		textImitation(26,152,vsTex and vsTexNames[vsTex] or "OFF",foreColour)
-		textImitation(232,131,"BULL")
-		textImitation(232,138,"SHEL")
-		textImitation(232,145,"ROKT")
-		textImitation(232,152,"CELL")
-		
-		for i=1,4 do
-			a=124+i*7
-			textCustom(265,a,rnd(M[12][1][i]),15)
-			textCustom(285,a,rnd(M[19][17][i]),15)
-			textImitation(268,a,"/")
+		if not dead then
+			textCustom(124,131,flr(health).."%",16) -- all these text writings are inefficient space-wise, but that doesn't matter for this block
+			textCustom(218,131,flr(armour).."%",16)
+			textImitation(124-28-15,152,"HEALTH")
+			textImitation(218-28-15,152,"ARMOUR")
+			foreColour = (tps<second and tps>0) and {255,0,0}
+			textImitation(2,131,"TPS:",foreColour)
+			textImitation(26,131,tps>0 and tps or "N/A",foreColour)
+			foreColour = difficultyChange and {255, 255, 44}
+			textImitation(2,138,"DIF:",foreColour)
+			difficultyNames={"EASY","MED","HARD"}
+			textImitation(26,138,difficultyNames[flr(mn(difficulty-3000,3))],foreColour)
+			foreColour = LODChange and {255, 255, 44}
+			textImitation(2,145,"LOD:",foreColour)
+			textImitation(26,145,flr(LOD),foreColour)
+			foreColour = vsTexChange and {255, 255, 44}
+			textImitation(2,152,"TEX:",foreColour)
+			vsTexNames = {"FULL","HALF"}
+			textImitation(26,152,vsTex and vsTexNames[vsTex] or "OFF",foreColour)
+			textImitation(232,131,"BULL")
+			textImitation(232,138,"SHEL")
+			textImitation(232,145,"ROKT")
+			textImitation(232,152,"CELL")
+			
+			for i=1,4 do
+				a=124+i*7
+				textCustom(265,a,rnd(M[12][1][i]),15)
+				textCustom(285,a,rnd(M[19][17][i]),15)
+				textImitation(268,a,"/")
+			end
 		end
-		
 	else
 		text(1,131,"ROM:")
 		text(26,131,romCr)

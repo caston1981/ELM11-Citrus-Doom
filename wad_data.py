@@ -501,7 +501,20 @@ if __name__ == '__main__':
     health_pickup_text = get_text("health_pickup_text.txt")
     door_use_text = get_text("door_use_text.txt")
     map_name_text = get_text("map_name_text.txt")
+    
+    file = open("episode_end_text.txt")
+    text = file.read()
+    file.close()
 
+    episode_end_text = text.split("\n\n\n")
+    for i in range(len(episode_end_text)):
+        cur = episode_end_text[i][17:]
+        for j in ['"', "\\n", "\\"]:
+            cur = cur.replace(j,"")
+        
+        episode_end_text[i] = cur
+    
+    
     
     
     file = open("info_states.txt")
@@ -695,6 +708,10 @@ if __name__ == '__main__':
     code_string_replacements["map name text start"] = text_index+1
     for i in map_name_text:
         text_index+=1
+
+    code_string_replacements["episode end text start"] = text_index+1
+    for i in episode_end_text:
+        text_index+=1
             
 
     for i in info_spawn:
@@ -807,7 +824,7 @@ if __name__ == '__main__':
             else:
                 i.floor_texture = 0
 
-            if i.type in [7,4,16,4]:
+            if i.type in [7,4,16,4,11]:
                 i.type = 5
 
             #elif i.type == 11:
@@ -2243,19 +2260,11 @@ if __name__ == '__main__':
     #print(cur)
 
     packets.append((13,cur))
+    char_extra_lookup = {" ":0,"\n":-1}
 
-    for i in ammo_pickup_text:
-        packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
-
-    for i in health_pickup_text:
-        packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
-
-    for i in door_use_text:
-        packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
-
-    for i in map_name_text:
-        packets.append((13,[(char_sprite_lookup[j] if j!=" " else 0) for j in i]))
-
+    for cur_set in [ammo_pickup_text, health_pickup_text, door_use_text, map_name_text,episode_end_text]:
+        for i in cur_set:
+            packets.append((13,[(char_sprite_lookup[j] if not j in char_extra_lookup else char_extra_lookup[j]) for j in i]))
     
 
     file = open("weapons.txt")
@@ -2356,7 +2365,7 @@ if __name__ == '__main__':
 
     misc_additions = [[1,2,9,6,11,12,19,3], #1
                       [0,45,-45,90,-90], #2
-                      [0], #3 unused
+                      [flat_looker.index(i) for i in ["FLOOR4_8","SFLR6_1","MFLR8_4"]   ], #3
                       [0,0,7,8,0,4,1,2,9,0,0,0,0,3], #4
                       [0,2,1], #5
                       [0]+[sound_names.index(i)+1 for i in weapon_fire_sound_names], #6
