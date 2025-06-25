@@ -1079,7 +1079,7 @@ if __name__ == '__main__':
 
                     i.flags+=monster_usable
 
-            elif i.line_type==11: #Normal Exit
+            elif i.line_type==11 or i.line_type==52: #Normal Exit / Walkover Exit
                 secret_returns = {"E1M9":"E1M4","E2M9":"E2M6","E3M9":"E3M7","E4M9":"E4M3"}
                 if map_name in secret_returns:
                     i.thinker_id = -(map_order.index(secret_returns[map_name])+3)
@@ -1088,7 +1088,7 @@ if __name__ == '__main__':
                 else:
                     i.thinker_id = -(map_name_index+3+i.sector_tag)
                 
-                i.line_type=1
+                i.line_type=(1 if i.line_type==11 else 2)
 
             elif i.line_type==51: #Secret Exit
                 
@@ -1474,11 +1474,6 @@ if __name__ == '__main__':
                     i.thinker_id = insert_thinker(thinker)
 
                     i.line_type=1
-
-            elif i.line_type==52: #Walkover Exit
-                i.thinker_id = -(map_name_index+4)
-                
-                i.line_type=2
 
             elif i.line_type==56: #W1 Floor To 8 Below Lowest Adjacent Ceiling and Crush
                 cur_secs = find_sector(i.sector_tag)
