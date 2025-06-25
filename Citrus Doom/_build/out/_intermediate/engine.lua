@@ -53,7 +53,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 	collObject = M1[index]
 	s1=M15[collObject[4]]
 	r,h=s1[18],s1[19]
-	bstDst=r
+	bstDst,hitThing=r
 	bounds=findMe(#M[7],p)
 	bt,tp=exp(bounds)
 	blkPs=sub(p,M101)
@@ -67,9 +67,6 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 				x1=dst-s2[18]
 				if x1<bstDst and s2[23]&1>0 and (s1[23]&1>0 or clmp(p[9],pos[9]-h,pos[9]+s2[19])==p[9])then
 					hitThing=pos
-					if mv==falseVar then
-						return -- returns nil which acts as false
-					end
 					bstDst=x1
 					bstA=at2(p,pos)
 				end
@@ -131,7 +128,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 			end
 		end
 	end
-	bounds,hitThing={bt,tp}
+	bounds={bt,tp}
 	if mv then
 		if bstDst~=r then
 			cr=add(p,dVec(bstA,bstDst-r))
@@ -473,7 +470,15 @@ function onTick()
 			end
 			
 			--pTng[7]=mx(5,pTng[7]) -- invulnerability
-			
+			for i,cr in ipairsVar(M1)do
+				if cr then
+					blkPs=sub(cr,M101)
+					blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
+					if blkCr then
+						blkCr[0][#blkCr[0]+1]=i
+					end
+				end
+			end
 			for i,cr in ipairsVar(M1)do
 				if cr then
 					for j,v in ipairsVar({1,2,9})do-- updates position based on velocity
@@ -585,12 +590,6 @@ function onTick()
 					end
 					if cr[6]==1 then
 						M1[i]=falseVar
-					else
-						blkPs=sub(cr,M101)
-						blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
-						if blkCr then
-							blkCr[0][#blkCr[0]+1]=i
-						end
 					end
 				end
 			end
