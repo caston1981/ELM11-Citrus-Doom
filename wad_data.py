@@ -348,11 +348,11 @@ if __name__ == '__main__':
     
     
     ammo_item_list = ["Bullet","Shell","Rocket","Cells","Fist","Pistol","Chainsaw","Shotgun","Chaingun","Rocket Launcher","Plasma Rifle",
-                 "BFG","SSGun","Blue Key","Red Key","Yellow Key","TPS",
+                 "BFG","SSGun","Blue Key","Red Key","Yellow Key","TPS","RadSheilding",
                  ]
     #print(len(ammo_item_list))
     
-    ammo_pickup_list = [{"Bullet":50,"Fist":1,"Pistol":1},{"Bullet":200,"Shell":50,"Rocket":50,"Cells":300},
+    ammo_pickup_list = [{"Bullet":50,"Fist":1,"Pistol":1},{"Bullet":200,"Shell":50,"Rocket":50,"Cells":300,"RadSheilding":35*60},
                    {"Bullet":10},{"Bullet":50},{"Bullet":20,"Chaingun":1},
                    {"Shell":4},{"Shell":20},{"Shell":8,"Shotgun":1},{"Shell":8,"SSGun":1},
                    {"Rocket":1},{"Rocket":5},{"Rocket":2,"Rocket Launcher":1},
@@ -360,6 +360,7 @@ if __name__ == '__main__':
                    {"Blue Key":1},{"Red Key":1},{"Yellow Key":1},
                    {"Chainsaw":1},
                    {"Bullet":10,"Shell":4,"Rocket":1,"Cells":20},
+                   {"RadSheilding":35*60}
                    ]
 
     ammo_pickup_dict = {"MT_CLIP":3,"MT_MISC17":4,"MT_CHAINGUN":5,
@@ -370,6 +371,7 @@ if __name__ == '__main__':
                    "MT_MISC9":17,"MT_MISC8":18,"MT_MISC7":19,
                    "MT_MISC26":20,
                    "MT_MISC24":21,
+                   "MT_MISC14":22,
                    }
 
     health_pickup_list = [("MT_MISC2",(1,200,0,0,0)), # health bonus/potion
@@ -2088,7 +2090,7 @@ if __name__ == '__main__':
             i=level_wad.things[index]
             
             
-            if i.type in info_spawn_zip[1] and i.flags&16==0 and not (i.type in [2024,2025]): # gets rid of multiplayer-only things and invis/rad suit
+            if i.type in info_spawn_zip[1] and i.flags&16==0 and not (i.type in [2024]): # gets rid of multiplayer-only things and invis/rad suit
                 begining = info_spawn_zip[1].index(i.type)+1
                 state = info_spawn_zip[2][begining-1]
 

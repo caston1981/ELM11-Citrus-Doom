@@ -56,6 +56,7 @@ health=100
 healthOld=100
 armour=0
 textTimer=0
+green=0
 yellow=0
 red=0
 difficulty=3002
@@ -314,6 +315,7 @@ function onTick()
 			red=mx(red-4,0)
 			red=clmp(red+(health-gN(3) + armour-gN(4))*3,0,255)
 			yellow=mx(yellow-1.5,0)
+			green=(M[12][1][18]>140 or M[12][1][18]>0 and tick%20<10) and 15 or 0
 			health=gN(3)
 			armour,difficultyChange,LODChange,vsTexChange=gN(4) -- sets all the changes to nil
 			if gN(2)>0 and health>0 then
@@ -576,7 +578,7 @@ function onDraw()
 				end
 			end
 
-			stCl(255,red>0 and 0 or 255,0,red+yellow)
+			stCl((green>0 and 0 or 255),((red>0 and green==0) and 0 or 255),0,red+yellow+green)
 			rec(0,0,wdth,hght)
 			
 			stCl(30,30,30)

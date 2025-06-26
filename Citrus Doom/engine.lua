@@ -102,7 +102,8 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 		return -- returns false (well, nil) if an object can't fit in the current sector
 	end
 	
-	valid=cr or tick%32>0 or bounds[6]~=5 or damageThing(collObject,10) -- for damaging floors, doesn't check the height because that uses more space
+	valid=cr or tick%32>0 or bounds[6]~=5 or M12[1][18]>0 or damageThing(collObject,10) -- for damaging floors, doesn't check the height because that uses more space
+	-- the M12[1][17]>0 is for the rad suit, yes this means the rad suit effects every thing instead of just the player, it's fine
 	
 	for i=1,#blkCr do
 		cr=M[2][blkCr[i]]
@@ -601,6 +602,7 @@ function onTick()
 			
 			crWeapon=M[14][weapon]
 			
+			M12[1][18]=M12[1][18]-1
 			
 			pTng[3]=pTng[3]-gN(3)*(clmp(lookAcl,5,6)*1.5-6)-- lookAcl>5 and 3 or 1.5
 			lookAcl=abs(gN(3))*lookAcl+1

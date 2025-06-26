@@ -26,3 +26,4 @@
 
 #define GOTCHAINSAW	"A chainsaw!  Find some meat!"
 #define GOTBACKPACK	"Picked up a backpack full of ammo!"
+#define GOTSUIT	"Radiation Shielding Suit"
