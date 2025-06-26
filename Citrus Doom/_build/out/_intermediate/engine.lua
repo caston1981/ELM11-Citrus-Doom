@@ -12,6 +12,7 @@ falseVar=false
 ipairsVar=ipairs
 abs=m.abs
 tableRemove=table.remove
+exp=table.unpack
 str=string
 
 function add(a,b)return{(a[1]+b[1]),(a[2]+b[2])}end
@@ -22,7 +23,6 @@ function at2(a,b)return m.atan(b[2]-a[2],b[1]-a[1])/pi end
 function clmp(a,b,c)return mx(mn(c,a),b)end
 function dist(a,b)return m.sqrt(((a[1]-b[1])^2)+((a[2]-b[2])^2))end
 function dVec(a,b)return{c(a)*b,s(a)*b}end
-function exp(a)return a[1],a[2]end
 
 M={}
 romCr=1
@@ -71,7 +71,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 					bstA=at2(p,pos)
 				end
 			end
-			if index==1 and dst<50 then
+			if index<2 and dst<50 then -- <2 is smaller than ==1, and 50 is a random radius I picked
 				a=s2[25]
 				if a>0 then
 					for n,v in ipairsVar(M12[a])do
@@ -97,7 +97,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 		end
 	end	
 	
-	cr = (checkPlayerPosLoop or 1)<8
+	cr = checkPlayerPosLoop<8
 	if tp-bt<h then-- or tp<p[9]+h
 		valid=cr or tick%4>0 or bounds[6]<18 or damageThing(collObject,10) -- crushes object if all 3 conditions are false
 		return -- returns false (well, nil) if an object can't fit in the current sector
@@ -109,7 +109,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 		cr=M[2][blkCr[i]]
 		dst,tmpA=chkLnDst(p,M4[cr[1]],M4[cr[2]])
 		if dst<bstDst then
-			if cr[3]&1>0 and s1[23]&1>0 or cr[3]&4==0 then -- in order: if the linedef is marked as solid, if the colliding object is marked as solid, if the linedef is one-sided
+			if cr[3]&1>0 and s1[23]&1>0 or cr[3]&4<1 then -- in order: if the linedef is marked as solid, if the colliding object is marked as solid, if the linedef is one-sided
 				if index>1 or d3>0 or cr[3]&4>0 then  -- this makes one-sided linedefs only work on one side for the player, allowing an out-of-bounds player to walk back in bounds
 					bstDst=dst
 					bstA=tmpA
@@ -120,8 +120,8 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 					bstDst=dst
 					bstA=tmpA
 				else
-					if checkPlayerPosLoop==1 and (cr[3]&512>0 or index==1) and (cr[4]==2 or index>1) then -- 512 is the monster-usable tag, which is the only thing monsters care about
-						summonThinker(cr,cr[5])
+					if checkPlayerPosLoop<2 and (cr[3]&512>0 or index<2) and (cr[4]==2 or index>1) then -- 512 is the monster-usable tag, which is the only thing monsters care about
+						summonThinker(cr,cr[5]) -- also <2 takes up less space than ==2
 					end
 					tp,bt=tmpTp,tmpBt
 				end
@@ -195,7 +195,7 @@ function chkRayCol(p1,p2,level,index) -- raycast between two points
 	end
 	
 	if level>1 then
-		if level==3 then
+		if level>2 then --level==3
 			for i,cr in ipairsVar(M1) do
 				if cr and i~=index then
 					s1=M15[cr[4]]
@@ -510,7 +510,7 @@ function onTick()
 						state3=M[16][cr[6]][3]
 						flying=s1[23]&4>0
 						if state3==1 then-- explode logic
-							for i,stg in ipairsVar(M1) do
+							for j,stg in ipairsVar(M1) do
 								if stg then
 									nm=128-dist(cr,stg)
 									if nm>0 then
@@ -556,8 +556,8 @@ function onTick()
 								cr[6]=s1[12]
 							end
 						elseif state3==5 then-- bfg tracers
-							for i=1,11 do
-								pTng[3]=pTng[3]+M[19][9][i]
+							for j=1,11 do
+								pTng[3]=pTng[3]+M[19][9][j]
 								crWeapon=M[14][23]
 								autoAim()
 								fireWeapon(pTng,1)
@@ -573,7 +573,7 @@ function onTick()
 					end
 					if cr[17] and cr[17]>0 then -- projectile logic
 						crWeapon=M[14][cr[17]]
-						if not chkPs(cr,falseVar,i) or cr[9]<=bounds[1] then
+						if not chkPs(cr,falseVar,i,2) or cr[9]<=bounds[1] then
 							if hitThing then
 								damageThing(hitThing,s1[21]*((rand()&7)+1),cr[14])
 							end
@@ -631,7 +631,7 @@ function onTick()
 			
 			ammo=M12[1]
 			pos=crWeapon[1]
-			if gB(31) and weaponFireDelay<=0 and (pos==0 or ammo[pos]>=crWeapon[2])then -- player shooting logic
+			if gB(31) and weaponFireDelay<=0 and ammo[pos]>=crWeapon[2] then -- player shooting logic
 				sB(3,trueVar) -- announces player is firing
 				weaponFireDelay=crWeapon[3]
 				if pos>0 then -- drain ammo
