@@ -1168,10 +1168,10 @@ if __name__ == '__main__':
                             sec2=potential_sec
                     assert sec2!=0
 
-                    thinker = (sec, 6, 0, 256, 1, 0, 0, 0)
+                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, 0, 0, 0)
                     next_thinker = insert_thinker(thinker)
 
-                    thinker = (sec, 1, level_wad.sectors[sec-1].neighbouring_highest_floor, 1, 1, next_thinker, 0, 0)
+                    thinker = (sec, 6, 0, 256, 1, next_thinker, 0, 0)
                     next_thinker = insert_thinker(thinker)
                     
                     thinker = (sec, 3, level_wad.sectors[sec2-1].floor_texture, len(flat_textures), 1, next_thinker, 0, i.thinker_id)
