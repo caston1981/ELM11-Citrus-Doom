@@ -360,7 +360,7 @@ if __name__ == '__main__':
                    {"Blue Key":1},{"Red Key":1},{"Yellow Key":1},
                    {"Chainsaw":1},
                    {"Bullet":10,"Shell":4,"Rocket":1,"Cells":20},
-                   {"RadSheilding":35*60}
+                   {"RadSheilding":35*60*60*24*365}
                    ]
 
     ammo_pickup_dict = {"MT_CLIP":3,"MT_MISC17":4,"MT_CHAINGUN":5,
