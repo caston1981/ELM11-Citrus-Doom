@@ -1244,8 +1244,8 @@ if __name__ == '__main__':
                 for sec in cur_secs: # this doesn't use the normal insert_thinker because I couldn't think of a way to make a thinker loop with it
                     cur_sec = level_wad.sectors[sec-1]
                     
-                    sector_thinkers.append((sec, 2, cur_sec.ceil_height, 1, 1, len(sector_thinkers)+2, 1, 0))
-                    sector_thinkers.append((sec, 2, cur_sec.neighbouring_lowest_floor+8, 1, 1, len(sector_thinkers), 1, i.thinker_id))
+                    sector_thinkers.append((sec, 2, cur_sec.ceil_height, 1, 1, len(sector_thinkers)+2, 1, i.thinker_id))
+                    sector_thinkers.append((sec, 2, cur_sec.neighbouring_lowest_floor+8, 1, 1, len(sector_thinkers), 1, 0))
                     i.thinker_id = len(sector_thinkers)-1
                     cur_sec.type = 18 # enables crushing
 
@@ -1610,8 +1610,8 @@ if __name__ == '__main__':
                 for sec in cur_secs: # this doesn't use the normal insert_thinker because I couldn't think of a way to make a thinker loop with it
                     cur_sec = level_wad.sectors[sec-1]
                     
-                    sector_thinkers.append((sec, 2, cur_sec.ceil_height, 1, 1, len(sector_thinkers)+2, 2, 0))
-                    sector_thinkers.append((sec, 2, cur_sec.neighbouring_lowest_floor+8, 1, 1, len(sector_thinkers), 2, i.thinker_id))
+                    sector_thinkers.append((sec, 2, cur_sec.ceil_height, 1, 1, len(sector_thinkers)+2, 2, i.thinker_id))
+                    sector_thinkers.append((sec, 2, cur_sec.neighbouring_lowest_floor+8, 1, 1, len(sector_thinkers), 2, 0))
                     i.thinker_id = len(sector_thinkers)-1
                     cur_sec.type = 18 # enables crushing
 
@@ -1661,8 +1661,8 @@ if __name__ == '__main__':
                 for sec in cur_secs: # this doesn't use the normal insert_thinker because I couldn't think of a way to make a thinker loop with it
                     cur_sec = level_wad.sectors[sec-1]
                     
-                    sector_thinkers.append((sec, 2, cur_sec.ceil_height, 2, 1, len(sector_thinkers)+2, 2, 0))
-                    sector_thinkers.append((sec, 2, cur_sec.neighbouring_lowest_floor+8, 2, 1, len(sector_thinkers), 2, i.thinker_id))
+                    sector_thinkers.append((sec, 2, cur_sec.ceil_height, 2, 1, len(sector_thinkers)+2, 2, i.thinker_id))
+                    sector_thinkers.append((sec, 2, cur_sec.neighbouring_lowest_floor+8, 2, 1, len(sector_thinkers), 2, 0))
                     i.thinker_id = len(sector_thinkers)-1
                     cur_sec.type = 18 # enables crushing
 
