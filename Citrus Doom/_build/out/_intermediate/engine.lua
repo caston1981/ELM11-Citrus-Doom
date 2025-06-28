@@ -181,11 +181,11 @@ function chkRayCol(p1,p2,level,index) -- raycast between two points
 			dst=dist(p1,crPos)
 			intH=h1+(h2-h1)*(dst/bsDst)
 			if clmp(intH,cr[8]+1,cr[9])~=intH then -- if the ray passes through the "window" of a 2-sided linedef
-				pass=falseVar -- note that cr[8] and cr[9] for 1-sided linedefs are 0 and 0
-				if level==1 then
-					return
-				end
 				if dst<crDst then
+					pass=falseVar -- note that cr[8] and cr[9] for 1-sided linedefs are 0 and 0
+					if level==1 then
+						return
+					end
 					crDst=dst
 					crX,crY=exp(crPos)
 					crH=intH
