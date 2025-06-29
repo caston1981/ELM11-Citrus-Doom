@@ -2392,6 +2392,7 @@ if __name__ == '__main__':
                                 "item pickup sound index":sound_names.index("DPITEMUP")+1,
                                 "computer area map index":health_pickup_list_zip[0].index("MT_MISC15")+1,
                                 "light amp index":health_pickup_list_zip[0].index("MT_MISC16")+1,
+                                "rad suit index":ammo_pickup_dict["MT_MISC14"],
                                 }
 
     

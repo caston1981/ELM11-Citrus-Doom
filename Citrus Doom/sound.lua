@@ -57,6 +57,7 @@ healthOld=100
 armour=0
 textTimer=0
 green=0
+tempGreen=0
 yellow=0
 red=0
 difficulty=3002
@@ -315,7 +316,8 @@ function onTick()
 			red=mx(red-4,0)
 			red=clmp(red+(health-gN(3) + armour-gN(4))*3,0,255)
 			yellow=mx(yellow-1.5,0)
-			green=(M[12][1][18]>140 or M[12][1][18]>0 and tick%20<10) and 15 or 0
+			green=(M[12][1][18]>140 or tempGreen>0 or M[12][1][18]>0 and tick%20<10) and 10 or 0
+			tempGreen=tempGreen-1
 			health=gN(3)
 			armour,difficultyChange,LODChange,vsTexChange=gN(4) -- sets all the changes to nil
 			if gN(2)>0 and health>0 then
@@ -374,6 +376,9 @@ function onTick()
 										for k=1,#M[2] do
 											M[2][k][8]=M[2][k][8] or 1
 										end
+									end
+									if s2[25]=="rad suit index" then
+										tempGreen=20
 									end
 								end
 							end
