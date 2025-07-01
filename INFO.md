@@ -4,7 +4,7 @@ Citrus Doom is made of 5 parts, 2 of which don't even run in stormworks and are 
 
 The Level Viewer and wad_data.py load the Doom WADs (and some extra text files) and converts them into property text boxes, which are then (along with the compressed lua code) combined with base_doom.xml to get a complete Stormworks vehicle file
 
-All the lua blocks load the entirety of the asset data stored in the text boxes, and have their own internal idea of what is going on
+Lua blocks have a maximum code size of 8192 characters, which necessitates code miniaturisation and multiple lua blocks. All the lua blocks load the entirety of the asset data stored in the text boxes, and have their own internal idea of what is going on
 
 engine.lua handles the main game engine and takes input from the vehicle's HOTAS seat. It then feeds updates (e.g. changes to the player, monsters, sectors) to the other two blocks via a composite link (a set of 32 numbers and booleans that gets sent every Stormworks tick)
 
@@ -14,7 +14,9 @@ sound.lua does all the sound and HUD. Its purpose is to reduce the amount of cod
 
 # Data Storage
 
-All asset data is stored as packeted numbers in property text boxes within the vehicle's microcontroller. Each text box stores a maximum of 8192 characters/bytes, with the overal vehicle size limit of 8MB effectively capping the number of text boxes. The end of each number is denoted by a matching letter (e.g. 15 would be written as 1E, 1 would be written as A), but for readability commas will be used here. Packets have a 3 number header:
+All asset data is initially stored as packeted numbers in property text boxes within the vehicle's microcontroller, and is loaded into the variable M. Each text box stores a maximum of 8192 characters/bytes, with the overal vehicle size limit of 8MB effectively capping the number of text boxes. The text from a text box can be read with property.getText("box name")
+
+Numbers were stored as comma separated values, but to save space the commas have been removed. The end of each number is denoted by a matching letter (e.g. 15 would be written as 1E, 1 would be written as A), but for readability commas will be used here. Packets have a 3 number header:
 
 1. Position in (M)emory to insert the chunks
 2. Length of each chunk
@@ -55,3 +57,19 @@ M\[1] to M\[10] is the current level, and is where other levels are "moved" to d
 29. Weapon states
 
 Note that 20 and 25 are positioned first so that the logo can be displayed after loading the first few text boxes
+
+# Rendering
+
+Stormworks monitors are 32x32 per block, and since the largest monitor is 9x5 blocks, the highest resolution is 288x160. Monitors are drawn to in the onDraw() function of a given lua block, which is called every Stormworks tick per connected monitor (in this case once). Draw calls in onDraw() draw to a write-only buffer which is then displayed in the gameworld. Several lua blocks can be connected in sequence, and those later in the chain draw over the image produce by earlier block(s)
+
+Appart from some oddball calls that aren't useful here, all draw calls are monochrome and are coloured based on the most recent setColor() call. The relevant draw calls are drawRectF(x,y,w,h) which draws a filled rectangle, drawTriangleF(x1,y1,x2,y2,x3,y3) which draws a filled triangle, drawLine(x1,y1,x2,y2) which draws a line excluding the endpoint, and drawText(x,y,"text") which draw a 4x5 monospaced font with 1 pixel spacing between characters
+
+These draw calls each have a (mostly) fixed overhead, and lua isn't especially fast to begin with, so drawing as much as possible with each call is ideal. Doom's normal rendering avoids overdraw whenever possible by doing a lot of per-pixel checking. This makes sense, since it needs to draw to each pixel individually anyways. Because that is not the case here, overdraw is common
+
+Every subsector is processed front to back in onTick(), then drawn to the screen back to front in onDraw(). When drawing a given subsector, walls are drawn first, then flats, then objects/sprites
+
+Wall rendering is done by the texel (texture pixel) as one setColor() and two drawTriangleF() calls. This is much faster than normal rendering when a texel takes up more than a few pixels on the screen, which is helped at long distances by mipmapping. Floating middle textures are drawn identically to other walls
+
+Flats are drawn fairly normally, but to improve performance they can be drawn at half the normal horizontal resolution or as monochrome lines. Note that the sky is drawn is always drawn and is drawn first, and flats marked as sky aren't rendered and let the sky show through
+
+Objects/sprites within a given subsector are sorted based on distance to the player. They are drawn as simple grids of drawRectF() calls. Since they are drawn with the subsector they are in, any part of them which is sticking out of the subsector can later be overwritten when it shouldn't, or visible when it shouldn't be (though the latter is rare)
