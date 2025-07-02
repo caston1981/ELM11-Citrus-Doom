@@ -73,3 +73,30 @@ Wall rendering is done by the texel (texture pixel) as one setColor() and two dr
 Flats are drawn fairly normally, but to improve performance they can be drawn at half the normal horizontal resolution or as monochrome lines. Note that the sky is drawn is always drawn and is drawn first, and flats marked as sky aren't rendered and let the sky show through
 
 Objects/sprites within a given subsector are sorted based on distance to the player. They are drawn as simple grids of drawRectF() calls. Since they are drawn with the subsector they are in, any part of them which is sticking out of the subsector can later be overwritten when it shouldn't, or visible when it shouldn't be (though the latter is rare)
+
+# Game Engine
+
+Because the entire game engine needs to fit into a single 8192-character-sized lua block, all the code is made do be as multi-purpose as possible by leaving the specific details to the asset data. I have nothing good to say about the game engine (other than that it works), so this section will just be detailing the compromises in it
+
+The normal list of object states is implemented, but the actions that can be taken have been simplified. Every monster's (or player) attacks are either hitscan or projectile, which means Pinkies can accidentally attack other demons and Lost Souls fire a copy of themselves then delete the original via an edited state list. The chase code has no memory of which direction a monster was heading last, so it can change direction every walk movement when its target isn't in one of the 8 key directions, which looks weird and gives it a hard time finding its way around obstacles more complex than a pillar
+
+Collision checks only check the blockmap block the object's origin is in. To reduce wall weirdness, wad_data.py adds every linedef from the neibouring 8 blocks to a given block. The same can't be done for objects as they update their blockmap position in real time, which can sometimes be noticed when trying to pick up an item near the edge of a block
+
+Collision checks are also done with cylindrical colliders for objects because I didn't want to figure out exactly how normal Doom does it
+
+The line-of-sight checking function checks a singular line between the points 32 units above the passed positions. As it saved space and didn't have a massive impact during my testing, line-of-sight checks completely ignore the blockmap and simply check every linedef (or for situations where what it hits doesn't matter, every linedef until it finds one that blocks it)
+
+### Thinkers
+
+Linedef specials (doors, lifts, teleporters) are done using pre-calculated thinkers. Each thinker specifies
+
+1. What sector to effect
+2. What value in the sector to change
+3. What it should change it to
+4. The maximum change per tick that can be done
+5. The end delay before triggering the next thinker
+6. The next thinker (0 if none)
+7. What to replace the triggered linedef's type with (0 for use-once triggers)
+8. Thinker to create when this one is created (0 if none)
+
+The linedef's type specifies if it's a normal useable (1), a walkover (2), or a keyed usable (14-16). If the sector value is 0 then it will default to the object which is interacting with the linedef, which is used for teleporters. This system is simple enough to be done with little lua code, and versatile enough for most specials to be accurately pre-compiled by wad_data.py. It is not perfect, and some come out worse than others, but Doom 1's usage of specials is quite basic so it never 100% breaks a level
