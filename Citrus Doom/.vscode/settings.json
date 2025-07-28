@@ -38,11 +38,11 @@
     ],
     "Lua.runtime.pathStrict": true,
     "Lua.workspace.library": [
-        "c:/Users/Waity5/Documents/GitHub/Citrus-Doom/Citrus Doom/",
-        "c:/Users/Waity5/.vscode/extensions/nameouschangey.lifeboatapi-0.0.33/assets/lua/Common/",
-        "c:/Users/Waity5/.vscode/extensions/nameouschangey.lifeboatapi-0.0.33/assets/lua/Microcontroller/",
-        "c:/Users/Waity5/Documents/GitHub/Citrus-Doom/Citrus Doom/_build/libs/"
-    ],
+		"c:/Users/Waity5/Documents/GitHub/Citrus-Doom/Citrus Doom/",
+		"c:/Users/Waity5/.vscode/extensions/nameouschangey.lifeboatapi-0.0.33/assets/lua/Common/",
+		"c:/Users/Waity5/.vscode/extensions/nameouschangey.lifeboatapi-0.0.33/assets/lua/Microcontroller/",
+		"c:/Users/Waity5/Documents/GitHub/Citrus-Doom/Citrus Doom/_build/libs/"
+	],
     "lifeboatapi.stormworks.libs.gitLibraries": [
         {
             "name": "LifeBoatAPI",

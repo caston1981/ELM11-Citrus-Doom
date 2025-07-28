@@ -9,6 +9,7 @@ def compress(text,print_vars=False,delete_newlines=False):
                ]
     include = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
     includeNum = "0123456789"
+    point_exclude = ".:"
     is_string = False
 
     variables = []
@@ -84,7 +85,7 @@ def compress(text,print_vars=False,delete_newlines=False):
                         counts.append(1)
                     
                 cur=""
-                valid=(i!="." or text[index:index+2]=="..")
+                valid=((not i in point_exclude) or text[index:index+2]=="..")
                 
 
         if i == '"':
@@ -130,7 +131,7 @@ def compress(text,print_vars=False,delete_newlines=False):
             cur=i+cur
         else:
             if cur!="":
-                valid=(i!="." or text[index-1:index+1]=="..")
+                valid=((not i in point_exclude) or text[index-1:index+1]=="..")
                 if valid and (not cur in exclude) and (not cur[0] in includeNum) and (not is_string):
                     text = text[:index+1] + replacements[variables.index(cur)] + text[index+len(cur)+1:]
                 cur=""
