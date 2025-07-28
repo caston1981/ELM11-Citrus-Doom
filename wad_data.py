@@ -2816,6 +2816,11 @@ if __name__ == '__main__':
         for j in code_string_replacements:
             cur_replacement = '"' + j + '"'
             code = code.replace(cur_replacement,str(code_string_replacements[j]))
+
+        file = open(name[:-4]+".txt",mode="w", newline='\n')
+        file.write(code)
+        file.close()
+        
         code = compress(code,print_vars=i==-1,delete_newlines=True)
         print()
         
@@ -2911,6 +2916,9 @@ if __name__ == '__main__':
     
     
     for i in range(len(parts)):
+        file = open("textboxes/"+str(i+1)+".txt",mode="w", newline='\n')
+        file.write(parts[i])
+        file.close()
         contents += (text_block[0]+str(i+1)+text_block[1]+parts[i]+text_block[2]+str((i+1)*0.5)+text_block[3])
 
     
