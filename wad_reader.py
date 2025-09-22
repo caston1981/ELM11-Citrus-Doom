@@ -1,6 +1,20 @@
 import struct
-from pygame.math import Vector2 as vec2
+# from pygame.math import Vector2 as vec2  # Replaced with simple tuple
 from data_types import *
+
+class vec2:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        return f"vec2({self.x}, {self.y})"
+
+    def __add__(self, other):
+        return vec2(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return vec2(self.x - other.x, self.y - other.y)
 
 def off_add(a,b):
     return (a[0],a[1]+b)
