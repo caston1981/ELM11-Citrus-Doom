@@ -14,6 +14,10 @@ ipairsVar=ipairs
 tableRemove=table.remove
 str=string
 
+-- ELM11 rendering instead of Stormworks screen
+elrender = require("elrender")
+eldata = require("eldata")
+
 function cross(a,b)return a[1]*b[2]-a[2]*b[1]end
 function sub(a,b)return{(a[1]-b[1]),(a[2]-b[2])}end
 function wrap(a)return ((a+180)%360)-180 end
@@ -95,46 +99,10 @@ end
 function onTick()
 	mN=0
 
-	for j=1,3 do
-		if gB(9) and (not loaded)or not M[21]then -- M[21] is the first thing loaded after the loading screen orange, halting loading when that's done
-			rom=property.getText(romCr)
-			i=1
-			nm=""
-			cr=str.sub(rom,i,i)
-			while cr~=""do
-				pos=str.byte(cr)
-				if pos>64 then
-					nm=(nm..pos-65)+0
-					if stg==1 then
-						curIndex=nm
-						M[nm]=M[nm]or{}
-					elseif stg==2 then
-						intH=nm
-						curLength=0
-					elseif stg==3 then
-						count=nm
-					else
-						if curLength==0 then
-							curLength=intH
-							count=count-1
-							curM={}
-							M[curIndex][#M[curIndex]+1]=curM
-						end
-						curM[#curM+1]=nm
-						curLength=curLength-1
-						stg=mx(curLength,count)>0 and stg-1 or 0
-					end
-					stg=stg+1
-					nm=""
-				else
-					nm=nm..cr
-				end
-				i=i+1
-				cr=str.sub(rom,i,i)
-			end
-			romCr=romCr+1
-			loaded=rom==""
-		end
+	-- ELM11 data loading instead of Stormworks text boxes
+	if not loaded then
+		M = eldata.loadAllData()
+		loaded = true
 	end
 
 	if loaded then
@@ -166,7 +134,7 @@ function onTick()
 			health=gN(3)
 			
 			tick=tick+1
-			animationFrame=tick//10
+			animationFrame=math.floor(tick/10)
 
 			if init then
 				for i=1,10 do
@@ -535,8 +503,8 @@ function onTick()
 end
 
 function onDraw()
-	screenVar=screen
-	local tri,rec,stCl,drLine=screenVar.drawTriangleF,screenVar.drawRectF,screenVar.setColor,screenVar.drawLine --locals are faster because lua
+	-- ELM11 rendering functions instead of Stormworks screen
+	local tri,rec,stCl,drLine=elrender.drawTriangleF,elrender.drawRectF,elrender.setColor,elrender.drawLine
 	vises={floors,ceils}
 
 

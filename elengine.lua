@@ -79,7 +79,7 @@ function chkPs(p, mv, index, checkPlayerPosLoop, cr)
     bounds = findMe(#M[7], p)
     bt, tp = exp(bounds)
     blkPs = sub(p, M101)
-    blkCr = M10[2 + blkPs[1] // 128 + blkPs[2] // 128 * blockmapLim] or {}
+    blkCr = M10[2 + math.floor(blkPs[1] / 128) + math.floor(blkPs[2] / 128) * blockmapLim] or {}
     for i, cr in ipairsVar(blkCr[0] or {}) do
         pos = M1[cr]
         if cr ~= index and pos and collObject[14] ~= pos then
@@ -280,7 +280,7 @@ function onTick()
             for i, cr in ipairsVar(M1) do
                 if cr then
                     blkPs = sub(cr, M101)
-                    blkCr = M10[2 + blkPs[1] // 128 + blkPs[2] // 128 * blockmapLim]
+                    blkCr = M10[2 + math.floor(blkPs[1] / 128) + math.floor(blkPs[2] / 128) * blockmapLim]
                     if blkCr then
                         blkCr[0][#blkCr[0] + 1] = i
                     end

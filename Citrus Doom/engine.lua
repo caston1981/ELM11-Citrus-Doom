@@ -3,9 +3,9 @@ mx=m.max
 mn=m.min
 flr=m.floor
 pi=m.pi/180
-gN=input.getNumber
-gB=input.getBool
-sB=output.setBool
+gN=elinput.getNumber
+gB=elinput.getBool
+sB=elsound.setBool
 trueVar=true
 falseVar=false
 ipairsVar=ipairs
@@ -16,6 +16,9 @@ str=string
 
 -- ELM11 data loading
 eldata = require("eldata")
+-- ELM11 input and sound
+elinput = require("elinput")
+elsound = require("elsound")
 
 function add(a,b)return{(a[1]+b[1]),(a[2]+b[2])}end
 function sub(a,b)return{(a[1]-b[1]),(a[2]-b[2])}end
@@ -59,7 +62,7 @@ function chkPs(p,mv,index,checkPlayerPosLoop,cr) -- declerations variables are l
 	bounds=findMe(#M[7],p)
 	bt,tp=exp(bounds)
 	blkPs=sub(p,M101)
-	blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]or{} -- gives default case so it doesn't crash when an object is out-of-bounds
+	blkCr=M10[2+math.floor(blkPs[1]/128)+math.floor(blkPs[2]/128)*blockmapLim]or{} -- gives default case so it doesn't crash when an object is out-of-bounds
 	for i,cr in ipairsVar(blkCr[0]or{}) do -- similar do-not-crash case
 		pos=M1[cr]
 		if cr~=index and pos and collObject[14]~=pos then
@@ -227,7 +230,7 @@ function chkRayCol(p1,p2,level,index) -- raycast between two points
 end
 
 function httpReply()
-	httpTkP=httpTk//2
+	httpTkP=math.floor(httpTk/2)
 	httpTk=0
 end
 
@@ -239,8 +242,8 @@ end
 function damageThing(cr,i,pos)-- thing array, damage, damage source (optional), function declaration variables are local so the most common should be used
 	s1=M15[cr[4]]
 	if s1[23]&2>0 and cr[7]>0 then
-		cr[8]=cr[8]-(i+1)//2
-		cr[7]=cr[7]-i//2+mn(cr[8],0)
+		cr[8]=cr[8]-math.floor((i+1)/2)
+		cr[7]=cr[7]-math.floor(i/2)+mn(cr[8],0)
 		cr[8]=mx(cr[8],0)
 		cr[33]=s1[13]~="lost soul missile state" and pos or pTng -- makes lost souls always target the player when being damaged
 		if rand()<s1[10] then
@@ -438,7 +441,7 @@ function onTick()
 			for i,cr in ipairsVar(M1)do
 				if cr then
 					blkPs=sub(cr,M101)
-					blkCr=M10[2+blkPs[1]//128+blkPs[2]//128*blockmapLim]
+					blkCr=M10[2+math.floor(blkPs[1]/128)+math.floor(blkPs[2]/128)*blockmapLim]
 					if blkCr then
 						blkCr[0][#blkCr[0]+1]=i
 					end
@@ -704,10 +707,11 @@ function onTick()
 		sndLst=i
 
 		for i=1,32 do
-			output.setNumber(i,out[i])
+			elsound.setNumber(i,out[i])
 		end
 	end
 
-	httpTk=httpTk+1
-	async.httpGet(8,"")
+	-- HTTP communication not available on ELM11
+	-- httpTk=httpTk+1
+	-- async.httpGet(8,"")
 end

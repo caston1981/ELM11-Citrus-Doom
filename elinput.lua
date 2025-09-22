@@ -127,3 +127,73 @@ end
 
 -- Global flag for input mode
 local useNunchuk = true  -- Set to true for Nunchuk, false for GPIO
+
+-- ELM11 Input Module API wrapper for Citrus Doom compatibility
+-- Provides input.getNumber and input.getBool functions
+
+local input = {}
+
+-- Input channel mappings to Doom controls
+local channel_map = {
+    [1] = "weapon",      -- Weapon selection (analog)
+    [2] = "switch",      -- Switch interaction (analog)
+    [3] = "health",      -- Health/look direction (analog)
+    [4] = "interact",    -- Interact button (analog, negative when pressed)
+    [5] = "moveX",       -- Movement X (analog)
+    [6] = "moveY",       -- Movement Y (analog)
+    [10] = "level",      -- Level change (analog)
+    [11] = "map",        -- Map toggle (boolean)
+    [31] = "shoot",      -- Shoot button (boolean)
+    [32] = "loading"     -- Loading/data flag (boolean)
+}
+
+-- Get number input (analog values)
+function input.getNumber(channel)
+    local control = channel_map[channel]
+    if not control then return 0 end
+
+    local moveX, moveY, look, shoot, interact = get_input()
+
+    if control == "weapon" then
+        -- Weapon selection - map to weapon number
+        return 1 -- Default to pistol, would need button mapping
+    elseif control == "switch" then
+        return 0 -- Switch interaction
+    elseif control == "health" then
+        return look -- Look direction affects this in Doom
+    elseif control == "interact" then
+        return interact and -1 or 0 -- Negative when interacting
+    elseif control == "moveX" then
+        return moveX
+    elseif control == "moveY" then
+        return moveY
+    elseif control == "level" then
+        return 0 -- Level changes not implemented yet
+    end
+
+    return 0
+end
+
+-- Get boolean input (digital values)
+function input.getBool(channel)
+    local control = channel_map[channel]
+    if not control then return false end
+
+    local moveX, moveY, look, shoot, interact = get_input()
+
+    if control == "map" then
+        return false -- Map toggle, could map to a button
+    elseif control == "shoot" then
+        return shoot
+    elseif control == "loading" then
+        return false -- Loading flag
+    end
+
+    return false
+end
+
+-- Initialize input system
+function input.init(use_nunchuk)
+    useNunchuk = use_nunchuk
+    initInputSound(useNunchuk)
+end

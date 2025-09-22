@@ -62,9 +62,54 @@ function test_sound()
     play_sound(1)  -- Test pistol sound
 end
 
+-- ELM11 Sound Module API wrapper for Citrus Doom compatibility
+-- Provides output.setNumber and output.setBool functions
+
+local output = {}
+
+-- Output channel mappings
+local sound_channels = {
+    [1] = {active = false, frequency = 0, duty = 0},
+    [2] = {active = false, frequency = 0, duty = 0},
+    [3] = {active = false, frequency = 0, duty = 0},
+    [4] = {active = false, frequency = 0, duty = 0},
+    [5] = {active = false, frequency = 0, duty = 0},
+}
+
+-- Set number output (sound generation via PWM)
+function output.setNumber(channel, value)
+    local sound = sound_channels[channel]
+    if not sound then return end
+
+    if value == 0 then
+        -- Stop sound
+        sound.active = false
+        sound.duty = 0
+        -- In ELM11: set_pwm(PIN_SPEAKER, 0)
+    else
+        -- Start/play sound
+        sound.active = true
+        sound.frequency = math.abs(value) * 10 -- Scale frequency
+        sound.duty = 128 -- 50% duty cycle for square wave
+        -- In ELM11: set_pwm(PIN_SPEAKER, sound.duty)
+        -- pwm.setclock would set frequency
+    end
+end
+
+-- Set boolean output (not used for sound)
+function output.setBool(channel, value)
+    -- Boolean outputs not used in sound system
+end
+
+-- Initialize sound system
+function output.init()
+    init_sound()
+end
+
 return {
     init_sound = init_sound,
     play_sound = play_sound,
     update_sounds = update_sounds,
-    test_sound = test_sound
+    test_sound = test_sound,
+    output = output
 }

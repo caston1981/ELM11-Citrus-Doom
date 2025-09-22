@@ -32,7 +32,7 @@ end
 local currentColor = 0xFFFF  -- White
 function setColor(r, g, b)
     -- Convert RGB to RGB565
-    currentColor = ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3)
+    currentColor = (math.floor(r / 8) * 2048) + (math.floor(g / 4) * 32) + math.floor(b / 8)
 end
 
 -- Draw filled rectangle

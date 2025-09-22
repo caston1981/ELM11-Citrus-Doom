@@ -283,11 +283,14 @@ end
 - Main game engine loop
 - Player movement and collision
 - Basic AI and enemy behavior
+- Data loading from flash storage
+- API adaptation for ELM11 compatibility
+- Input/output system integration
 
 ### In Progress 🔄
-- Data generation script completion
-- Full system integration
-- Hardware testing and validation
+- Full system integration and testing
+- Hardware validation on ELM11
+- Performance optimization for 5-10 FPS target
 
 ### Planned 📋
 - Wall rendering and BSP traversal

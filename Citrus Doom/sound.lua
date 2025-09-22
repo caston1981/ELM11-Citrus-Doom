@@ -4,14 +4,21 @@ mn=m.min
 abs=m.abs
 flr=m.floor
 sqrt=m.sqrt
-gN=input.getNumber
-gB=input.getBool
-sN=output.setNumber
 pi=m.pi
 falseVar=false
 trueVar=true
 tableRemove=table.remove
 str=string
+
+-- ELM11 modules
+eldata = require("eldata")
+elinput = require("elinput")
+elsound = require("elsound")
+elrender = require("elrender")
+
+gN=elinput.getNumber
+gB=elinput.getBool
+sN=elsound.setNumber
 
 function add(a,b)return{(a[1]+b[1]),(a[2]+b[2])}end
 function cross(a,b)return a[1]*b[2]-a[2]*b[1]end
@@ -43,9 +50,9 @@ loaded=falseVar
 pp={{0,0},0,0}
 
 wdth=288
-wdthH=wdth//2
+wdthH=math.floor(wdth/2)
 hght=128
-hghtH=hght//2
+hghtH=math.floor(hght/2)
 pixelAspectCorrection=1.2
 weaponList={1,1}
 mRandom=1
@@ -135,46 +142,10 @@ end
 function onTick()
 	mN=0
 
-	for j=1,3 do
-		if gB(9) and (not loaded)or not M[21]then
-			rom=property.getText(romCr)
-			i=1
-			nm=""
-			cr=str.sub(rom,i,i)
-			while cr~=""do
-				pos=str.byte(cr)
-				if pos>64 then
-					nm=(nm..pos-65)+0
-					if stg==1 then
-						curIndex=nm
-						M[nm]=M[nm]or{}
-					elseif stg==2 then
-						intH=nm
-						curLength=0
-					elseif stg==3 then
-						count=nm
-					else
-						if curLength==0 then
-							curLength=intH
-							count=count-1
-							curM={}
-							M[curIndex][#M[curIndex]+1]=curM
-						end
-						curM[#curM+1]=nm
-						curLength=curLength-1
-						stg=mx(curLength,count)>0 and stg-1 or 0
-					end
-					stg=stg+1
-					nm=""
-				else
-					nm=nm..cr
-				end
-				i=i+1
-				cr=str.sub(rom,i,i)
-			end
-			romCr=romCr+1
-			loaded=rom==""
-		end
+	-- ELM11 data loading instead of Stormworks text boxes
+	if not loaded then
+		M = eldata.loadAllData()
+		loaded = true
 	end
 
 	if loaded then
@@ -495,7 +466,7 @@ function onTick()
 end
 
 function onDraw()
-	screenVar=screen
+	screenVar=elrender
 	local rec,stCl,drLine,text=screenVar.drawRectF,screenVar.setColor,screenVar.drawLine,screenVar.drawText
 	mN=mN+1
 
