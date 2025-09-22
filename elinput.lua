@@ -77,3 +77,53 @@ end
 function test_sound()
     playSound(1000, 500)  -- 1kHz for 0.5s
 end
+
+-- Get input values (adapted for Doom controls)
+-- Returns: moveX, moveY, look, shoot, interact
+function get_input()
+    local moveX = 0
+    local moveY = 0
+    local look = 0
+    local shoot = false
+    local interact = false
+
+    if useNunchuk then
+        -- Use Nunchuk input
+        local nunchuk_data = getDoomInput()
+        moveX = nunchuk_data.moveX
+        moveY = nunchuk_data.moveY
+        look = nunchuk_data.look
+        shoot = nunchuk_data.shoot
+        interact = nunchuk_data.interact
+    else
+        -- Use GPIO buttons
+        if getButtonUp() then moveY = moveY + 1 end
+        if getButtonDown() then moveY = moveY - 1 end
+        if getButtonLeft() then moveX = moveX - 1 end
+        if getButtonRight() then moveX = moveX + 1 end
+        shoot = getButtonShoot()
+        -- Interact could be another button, for now use shoot + up or something
+        interact = false  -- Placeholder
+    end
+
+    return moveX, moveY, look, shoot, interact
+end
+
+-- Get button state by number (for weapon switching)
+function get_button(button_num)
+    if useNunchuk then
+        -- Map Nunchuk buttons to weapon slots
+        local nunchuk_data = getDoomInput()
+        if button_num == 1 and nunchuk_data.buttonC then return true end
+        if button_num == 2 and nunchuk_data.buttonZ then return true end
+        -- Add more mappings as needed
+        return false
+    else
+        -- Map GPIO buttons to weapon numbers
+        -- This is simplified - in practice you'd need more buttons
+        return false
+    end
+end
+
+-- Global flag for input mode
+local useNunchuk = true  -- Set to true for Nunchuk, false for GPIO

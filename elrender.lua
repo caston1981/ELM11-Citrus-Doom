@@ -11,9 +11,20 @@ local CMD_RAMWR = 0x2C  -- Memory write
 
 -- Initialize LCD (call once)
 function initLCD()
-    -- Send init commands to ST7789
-    -- Example: spi_tx(PIN_SPI, 0x11)  -- Sleep out
-    -- This needs full init sequence for ST7789
+    -- Software reset
+    spi_tx(PIN_SPI_CS, 0x01)
+    -- Delay (assume timer)
+
+    -- Sleep out
+    spi_tx(PIN_SPI_CS, 0x11)
+
+    -- Set color mode to 16-bit (RGB565)
+    spi_tx(PIN_SPI_CS, 0x3A)
+    spi_tx(PIN_SPI_CS, 0x05)
+
+    -- Display on
+    spi_tx(PIN_SPI_CS, 0x29)
+
     print("LCD initialized")
 end
 
@@ -78,6 +89,43 @@ function drawText(x, y, text)
     -- Assume 4x5 font, implement pixel setting
     -- Placeholder
     print("Drawing text: " .. text .. " at " .. x .. "," .. y)
+end
+
+-- Update things for rendering (called by engine)
+function update_things(M1, M8, pTng, out)
+    -- Clear screen (fill with black)
+    setColor(0, 0, 0)
+    drawRectF(0, 0, 160, 128)
+
+    -- Draw player (simple representation)
+    if pTng then
+        setColor(255, 255, 255)  -- White
+        local px = math.floor(pTng[1] / 64)  -- Scale down coordinates
+        local py = math.floor(pTng[2] / 64)
+        drawRectF(px - 2, py - 2, 4, 4)
+    end
+
+    -- Draw other things (simplified)
+    for i, thing in ipairs(M1 or {}) do
+        if thing and thing[20] then  -- If alive
+            setColor(255, 0, 0)  -- Red for enemies
+            local tx = math.floor(thing[1] / 64)
+            local ty = math.floor(thing[2] / 64)
+            drawRectF(tx - 1, ty - 1, 2, 2)
+        end
+    end
+
+    -- Draw HUD elements
+    -- Weapon
+    drawText(5, 5, "Weapon: " .. (out[1] or 0))
+
+    -- Health
+    if pTng then
+        drawText(5, 15, "Health: " .. (pTng[7] or 0))
+    end
+
+    -- Ammo
+    drawText(5, 25, "Ammo: " .. (out[11] or 0))
 end
 
 -- Test functions

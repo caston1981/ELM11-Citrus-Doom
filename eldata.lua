@@ -74,6 +74,27 @@ function loadDoomData()
     return loaded
 end
 
+-- Load specific level data
+function load_level(level_num)
+    if not M or #M == 0 then
+        loadDoomData()
+    end
+
+    -- Return level data (assuming M contains all levels)
+    -- In the original, levels are offset by level_num
+    local level_data = {}
+    for i = 1, 10 do
+        level_data[i] = M[i + 10 * (level_num - 1)]
+    end
+
+    -- Copy shared data
+    for i = 11, #M do
+        level_data[i] = M[i]
+    end
+
+    return level_data
+end
+
 -- Test function
 function test_data_load()
     loadDoomData()
