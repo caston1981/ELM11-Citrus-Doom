@@ -12,7 +12,7 @@ This project adapts the [Citrus Doom](https://github.com/EngineerSmith/Citrus-Do
 
 ### Key Features
 - **Low-Resolution 3D**: 160x128 display on ST7789 SPI LCD
-- **Analog Controls**: Wii Nunchuk I2C controller for precise movement
+- **Analog Controls**: Arduino Joystick Shield with PS2 joystick + 6 buttons via I2C
 - **Sound Effects**: PWM audio output for Doom sound effects
 - **Complete Engine**: Player movement, collision detection, AI, weapons
 - **Flash Storage**: Level data stored in microcontroller flash memory
@@ -20,12 +20,12 @@ This project adapts the [Citrus Doom](https://github.com/EngineerSmith/Citrus-Do
 ### Hardware Requirements
 - ELM11 microcontroller board
 - 1.8" 160x128 ST7789 SPI TFT LCD display (~$5)
-- Wii Nunchuk controller with I2C adapter (~$3)
+- Arduino Joystick Shield (nRF24L01 + 5110 LCD + I2C controller) (~$8)
 - Small speaker with amplifier (~$2)
 - Breadboard and jumper wires
 - Power supply (5V recommended)
 
-**Estimated Total Cost**: $10-15
+**Estimated Total Cost**: $15-20
 
 ## Project Structure
 
@@ -33,8 +33,9 @@ This project adapts the [Citrus Doom](https://github.com/EngineerSmith/Citrus-Do
 - **`elmath.lua`**: Vector mathematics and utility functions
 - **`eldata.lua`**: Flash file I/O and Doom data loading
 - **`elrender.lua`**: ST7789 SPI display driver and rendering primitives
-- **`elinput.lua`**: Input handling (GPIO buttons or Nunchuk)
+- **`elinput.lua`**: Input handling (GPIO buttons, Nunchuk, or Joystick Shield)
 - **`elnunchuk.lua`**: Wii Nunchuk I2C protocol implementation
+- **`eljoystick.lua`**: Arduino Joystick Shield I2C protocol implementation
 - **`elsound.lua`**: PWM audio output for sound effects
 - **`elengine.lua`**: Main game engine with player movement, collision, AI
 
@@ -63,15 +64,21 @@ GND       | GND     | Ground
 3.3V      | VCC     | Power
 ```
 
-#### Wii Nunchuk Wiring (I2C Mode)
+#### Arduino Joystick Shield Wiring (I2C Mode)
 ```
-ELM11 Pin | Nunchuk Pin | Function
-----------|-------------|---------
-I2C_SDA   | SDA         | I2C Data
-I2C_SCL   | SCL         | I2C Clock
-GND       | GND         | Ground
-3.3V      | VCC         | Power
+ELM11 Pin | Shield Pin | Function
+----------|------------|---------
+I2C_SDA   | SDA        | I2C Data
+I2C_SCL   | SCL        | I2C Clock
+GND       | GND        | Ground
+3.3V      | VCC        | Power (set shield to 3.3V mode)
 ```
+
+**Note**: The Arduino Joystick Shield includes:
+- PS2 analog joystick (X/Y axes)
+- 6 buttons (4 directional + 2 action buttons)
+- Optional 5110 LCD for debugging/HUD
+- nRF24L01 wireless module (not used in this setup)
 
 #### Speaker Wiring (PWM Mode)
 ```
@@ -97,7 +104,7 @@ elm11-upload elmath.lua
 elm11-upload eldata.lua
 elm11-upload elrender.lua
 elm11-upload elinput.lua
-elm11-upload elnunchuk.lua
+elm11-upload eljoystick.lua
 elm11-upload elsound.lua
 elm11-upload elengine.lua
 ```
@@ -116,8 +123,13 @@ python3 generate_eldata.py doom.wad
 #### Input Mode Selection
 In `elinput.lua`, set the input mode:
 ```lua
-local useNunchuk = true  -- true for Nunchuk, false for GPIO buttons
+local inputMode = "joystick"  -- Options: "joystick", "nunchuk", "gpio"
 ```
+
+Available input modes:
+- `"joystick"`: Arduino Joystick Shield (recommended)
+- `"nunchuk"`: Wii Nunchuk controller
+- `"gpio"`: Simple GPIO buttons
 
 #### Pin Assignments
 Update pin numbers in each library to match your wiring:
@@ -147,13 +159,13 @@ setColor(255, 0, 0)  -- Red
 drawRectF(10, 10, 50, 50)
 ```
 
-#### Test Nunchuk Input
+#### Test Joystick Shield Input
 ```lua
-dofile("elnunchuk.lua")
+dofile("eljoystick.lua")
 dofile("elinput.lua")
-initNunchuk()
-local input = getDoomInput()
-print("Stick X:", input.moveX, "Y:", input.moveY)
+initJoystickShield()
+local input = getDoomInputFromShield()
+print("Stick X:", input.moveX, "Y:", input.moveY, "Shoot:", input.shoot)
 ```
 
 #### Test Sound
@@ -178,7 +190,7 @@ dofile("elengine.lua")
 -- Initialize systems
 initLCD()
 init_sound()
-initInputSound(true)  -- true for Nunchuk
+initInputSound(true)  -- true enables joystick shield mode
 
 -- Main game loop (call repeatedly)
 elengine.onTick()
@@ -236,10 +248,11 @@ Doom WAD files are converted to a compressed text format for flash storage:
 - Verify LCD power (3.3V, not 5V)
 - Test with `initLCD()` and basic `drawRectF()`
 
-#### Nunchuk Not Responding
-- Check I2C wiring and pull-up resistors
-- Verify Nunchuk has proper I2C adapter
-- Test with `getDoomInput()` in REPL
+#### Joystick Shield Not Responding
+- Check I2C wiring (SDA/SCL) and pull-up resistors
+- Verify shield is set to 3.3V mode (not 5V)
+- Check I2C address in `eljoystick.lua` (may need adjustment)
+- Test with `getDoomInputFromShield()` in REPL
 
 #### Sound Not Working
 - Check PWM pin wiring

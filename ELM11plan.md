@@ -113,7 +113,7 @@ This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake
 - ✅ **Math Library**: `elmath.lua` - Complete vector operations and utilities.
 - ✅ **Data Loading**: `eldata.lua` - Flash file I/O, level data parsing.
 - ✅ **Rendering Engine**: `elrender.lua` - ST7789 SPI commands, basic primitives.
-- ✅ **Input System**: `elinput.lua` + `elnunchuk.lua` - Dual-mode controls.
+- ✅ **Input System**: `elinput.lua` + `elnunchuk.lua` + `eljoystick.lua` - Multi-mode controls with Arduino Joystick Shield support.
 - ✅ **Sound System**: `elsound.lua` - PWM audio output.
 - ✅ **Game Engine**: `elengine.lua` - Core loop, player movement, collision, AI.
 - 🔄 **Data Generation**: `generate_eldata.py` - Basic structure, needs full adaptation.
@@ -149,5 +149,5 @@ ELM11-Citrus-Doom/
 - Port Core Math/Data Structures: Adapt Citrus Doom's math functions (e.g., vector ops, BSP) to ELM11 Lua, test in REPL for performance.
 - Adapt Data Loading: Create ELM11-compatible data loading from flash instead of Stormworks text boxes.
 - Implement Rendering Engine: Replace Stormworks draw calls with SPI commands for ST7789 (e.g., map drawRectF to pixel fills).
-- Add Input and Sound: Map input to GPIO interrupts and sound to PWM, test basic controls/audio.
+- ✅ Add Input and Sound: Map input to GPIO interrupts and sound to PWM, test basic controls/audio.
 - Full Integration and Testing: Integrate all components, load a simple level, and test gameplay loop at 5-10 FPS.
