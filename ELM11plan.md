@@ -35,7 +35,7 @@ This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake
 
 ## 3. Plan Hardware and Peripherals
 - Display: Use 1.8" 160x128 ST7789 SPI TFT LCD for 3D rendering. Configure pins as SPI_OUT for communication. Implement software rendering to draw pixels/rects via SPI commands, adapting Stormworks' draw calls. Resolution 160x128 (color) provides better detail than monochrome LCDs, suitable for low-res Doom gameplay.
-- Input: Use Wii Nunchuk controller via I2C for analog stick (movement/turning) and buttons (shoot/interact). Configure pins as I2C for communication. Provides precise, reliable controls without ADC complexity. Alternatively, digital joystick with 4 directional switches + shoot button.
+- Input: Use Arduino Joystick Shield with PS2 joystick + 6 buttons via I2C for analog stick (movement/turning) and buttons (shoot/interact/weapon select). Configure pins as I2C for communication. Provides precise analog control with more buttons than Nunchuk. Includes 5110 LCD for potential HUD/debug display.
 - Sound: PWM pin to speaker for basic tones (e.g., pickup sounds).
 - Power/Other: Stable power supply; enable watchdog.
 - Prototype: Breadboard setup with LCD, buttons, and speaker.
@@ -67,7 +67,7 @@ This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake
 - **`elmath.lua`**: Vector math utilities (add, sub, dist, at2, dVec, clamp). Pure Lua functions compatible with Lua 5.x.
 - **`eldata.lua`**: Flash file I/O for Doom data loading. Parses packed binary format from text files, loads level-specific data structures.
 - **`elrender.lua`**: ST7789 SPI display driver. Implements drawRectF, drawTriangleF, drawLine, drawText using SPI commands. Includes initLCD() for display setup.
-- **`elinput.lua`**: Dual-mode input system supporting Wii Nunchuk (I2C) and GPIO buttons. Provides get_input() and get_button() functions.
+- **`elinput.lua`**: Dual-mode input system supporting Wii Nunchuk (I2C), Arduino Joystick Shield (I2C), and GPIO buttons. Provides get_input() and get_button() functions.
 - **`elsound.lua`**: PWM audio output for sound effects. Maps Doom sound IDs to frequencies, plays via PWM pin.
 - **`elnunchuk.lua`**: I2C protocol handler for Wii Nunchuk controller. Decodes analog stick and button data.
 
@@ -93,6 +93,7 @@ This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake
 
 #### Input Mapping:
 - **Nunchuk Mode**: Analog stick → movement/turning, C/Z buttons → shoot/interact.
+- **Joystick Shield Mode**: PS2 joystick → movement/turning, 6 buttons → shoot/interact/weapon switching.
 - **GPIO Mode**: Digital buttons for up/down/left/right/shoot.
 - **Weapon Switching**: Button combinations map to weapon slots (1-8).
 
@@ -125,8 +126,9 @@ ELM11-Citrus-Doom/
 ├── elmath.lua          # Vector math utilities
 ├── eldata.lua          # Flash data loading
 ├── elrender.lua        # ST7789 SPI rendering
-├── elinput.lua         # Input handling (GPIO/Nunchuk)
+├── elinput.lua         # Input handling (GPIO/Nunchuk/Joystick Shield)
 ├── elnunchuk.lua       # Wii Nunchuk I2C protocol
+├── eljoystick.lua      # Arduino Joystick Shield I2C protocol
 ├── elsound.lua         # PWM sound output
 ├── elengine.lua        # Main game engine
 ├── generate_eldata.py  # WAD to ELM11 data converter

@@ -18,10 +18,13 @@ local PIN_SPEAKER = 6
 
 -- Initialize pins
 function initInputSound(useNunchuk)
-    if useNunchuk then
+    if inputMode == "nunchuk" then
         dofile("elnunchuk.lua")
         initNunchuk()
-    else
+    elseif inputMode == "joystick" then
+        dofile("eljoystick.lua")
+        initJoystickShield()
+    else -- gpio
         -- Configure buttons as GPIO_IN
         set_io_type_cfg(PIN_BUTTON_UP, GPIO_IN)
         set_io_type_cfg(PIN_BUTTON_DOWN, GPIO_IN)
@@ -66,8 +69,10 @@ end
 -- Test functions
 function test_input(useNunchuk)
     initInputSound(useNunchuk)
-    if useNunchuk then
+    if inputMode == "nunchuk" then
         test_nunchuk()
+    elseif inputMode == "joystick" then
+        test_joystick_shield()
     else
         print("Up: " .. tostring(getButtonUp()))
         print("Shoot: " .. tostring(getButtonShoot()))
@@ -81,52 +86,28 @@ end
 -- Get input values (adapted for Doom controls)
 -- Returns: moveX, moveY, look, shoot, interact
 function get_input()
-    local moveX = 0
-    local moveY = 0
-    local look = 0
-    local shoot = false
-    local interact = false
-
-    if useNunchuk then
-        -- Use Nunchuk input
-        local nunchuk_data = getDoomInput()
-        moveX = nunchuk_data.moveX
-        moveY = nunchuk_data.moveY
-        look = nunchuk_data.look
-        shoot = nunchuk_data.shoot
-        interact = nunchuk_data.interact
-    else
-        -- Use GPIO buttons
-        if getButtonUp() then moveY = moveY + 1 end
-        if getButtonDown() then moveY = moveY - 1 end
-        if getButtonLeft() then moveX = moveX - 1 end
-        if getButtonRight() then moveX = moveX + 1 end
-        shoot = getButtonShoot()
-        -- Interact could be another button, for now use shoot + up or something
-        interact = false  -- Placeholder
+    if inputMode == "nunchuk" then
+        return get_input_nunchuk()
+    elseif inputMode == "joystick" then
+        return get_input_joystick()
+    else -- gpio
+        return get_input_gpio()
     end
-
-    return moveX, moveY, look, shoot, interact
 end
 
 -- Get button state by number (for weapon switching)
 function get_button(button_num)
-    if useNunchuk then
-        -- Map Nunchuk buttons to weapon slots
-        local nunchuk_data = getDoomInput()
-        if button_num == 1 and nunchuk_data.buttonC then return true end
-        if button_num == 2 and nunchuk_data.buttonZ then return true end
-        -- Add more mappings as needed
-        return false
-    else
-        -- Map GPIO buttons to weapon numbers
-        -- This is simplified - in practice you'd need more buttons
-        return false
+    if inputMode == "nunchuk" then
+        return get_button_nunchuk(button_num)
+    elseif inputMode == "joystick" then
+        return get_button_joystick(button_num)
+    else -- gpio
+        return get_button_gpio(button_num)
     end
 end
 
 -- Global flag for input mode
-local useNunchuk = true  -- Set to true for Nunchuk, false for GPIO
+local inputMode = "joystick"  -- Options: "nunchuk", "joystick", "gpio"
 
 -- ELM11 Input Module API wrapper for Citrus Doom compatibility
 -- Provides input.getNumber and input.getBool functions
@@ -196,4 +177,20 @@ end
 function input.init(use_nunchuk)
     useNunchuk = use_nunchuk
     initInputSound(useNunchuk)
+end
+
+-- Arduino Joystick Shield support
+function get_input_joystick()
+    local input = getDoomInputFromShield()
+    return input.moveX, input.moveY, 0, input.shoot, input.interact -- look=0 for now
+end
+
+function get_button_joystick(button_num)
+    local input = getDoomInputFromShield()
+    if button_num == 1 then return input.weaponUp
+    elseif button_num == 2 then return input.weaponDown
+    elseif button_num == 3 then return input.button5
+    elseif button_num == 4 then return input.button6
+    end
+    return false
 end
