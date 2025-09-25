@@ -1,4 +1,4 @@
-# ELM11 Game Development Framework
+# ELM11 GamThis project started as an ambitious project to create a Citrus Doom port. However, before we can do this, we will test out simple games and demos. It includes: Development Framework
 
 A comprehensive game development framework for the ELM11 microcontroller, featuring Love2D-style game implementations, educational examples, and interactive development tools.
 
@@ -9,7 +9,7 @@ A comprehensive game development framework for the ELM11 microcontroller, featur
 
 ## Overview
 
-This project has evolved from a Citrus Doom port to a comprehensive ELM11 game development framework. It includes:
+This project started as an ambitious project to create a Citrus Doom port. However before we can do this we will test out simple games and demos.  It includes:
 
 - **Love2D Game Library**: Complete games adapted from Love2D patterns
 - **Educational Examples**: Love2D concepts demonstrated for ELM11
@@ -20,7 +20,7 @@ This project has evolved from a Citrus Doom port to a comprehensive ELM11 game d
 The ELM11 provides a 66MHz Lua 5.x runtime with hardware acceleration, making it suitable for real-time game development despite embedded constraints.
 
 ### Key Features
-- **288x160 Monochrome Display**: Optimized for ELM11's screen capabilities
+- **288x160 Color Display**: Full RGB565 color support with ST7789 TFT LCD
 - **Property-Based Input**: ELM11 button and control system
 - **Love2D API Adaptation**: Familiar game development patterns
 - **Interactive Development**: Python tools for code testing and deployment
@@ -29,7 +29,7 @@ The ELM11 provides a 66MHz Lua 5.x runtime with hardware acceleration, making it
 
 ### Hardware Requirements
 - ELM11 microcontroller board
-- Display (288x160 monochrome recommended)
+- Display (288x160 color TFT LCD recommended)
 - Input controls (buttons/joystick)
 - USB/serial connection for development
 - Optional: Speaker for sound effects
@@ -482,7 +482,7 @@ print("Level loaded, things:", #level[1])
 
 ### ELM11 Hardware Specifications
 - **Processor**: 66MHz ARM Cortex-M4
-- **Display**: 288x160 monochrome LCD
+- **Display**: 288x160 color TFT LCD (ST7789)
 - **Memory**: 256KB RAM, 1MB Flash
 - **Runtime**: Lua 5.3 interpreter
 - **Input**: 8-way directional pad, 4 action buttons
@@ -558,7 +558,7 @@ All games follow consistent patterns:
 ### Performance Specifications
 - **Target FPS**: 5-10 frames per second (Doom), 60 FPS (Love2D games)
 - **Resolution**: 160x128 pixels (Doom), 288x160 pixels (Love2D)
-- **Color Depth**: 16-bit RGB565 (Doom), monochrome (Love2D)
+- **Color Depth**: 16-bit RGB565 (full color support for both Doom and Love2D games)
 - **Memory Usage**: ~500KB for level data (Doom), optimized for Love2D games
 - **CPU Load**: ~50-70% at target framerate
 

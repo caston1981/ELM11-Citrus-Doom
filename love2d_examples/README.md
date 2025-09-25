@@ -1,6 +1,6 @@
 # Love2D Examples for ELM11
 
-This folder contains Love2D-inspired examples adapted for the ELM11 microcontroller platform. Each example demonstrates fundamental game development concepts while being constrained to ELM11's capabilities (288x160 monochrome display, property-based input system, Lua 5.x runtime).
+This folder contains Love2D-inspired examples adapted for the ELM11 microcontroller platform. Each example demonstrates fundamental game development concepts while being constrained to ELM11's capabilities (288x160 color TFT display, property-based input system, Lua 5.x runtime).
 
 ## Available Examples
 
@@ -60,7 +60,7 @@ These examples serve as:
 
 ## Constraints and Adaptations
 
-- **Display**: 288x160 monochrome (no alpha blending, limited colors)
+- **Display**: 288x160 color TFT (RGB565, full color palette)
 - **Input**: Property-based button system (no mouse, no keyboard events)
 - **Performance**: 66MHz processor, limited memory
 - **Graphics**: Rectangle-based drawing only (no circles, lines, or complex shapes)

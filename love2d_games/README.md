@@ -54,7 +54,7 @@ This folder contains complete Love2D games adapted for the ELM11 microcontroller
 
 ### Display Constraints
 - **Resolution**: Adapted from various resolutions (432x243, 340x388, etc.) to 288x160
-- **Colors**: Monochrome display - games use grayscale/color approximations
+- **Colors**: Full RGB565 color display - games can use rich color palettes
 - **Drawing**: Rectangle-based rendering only (no circles, lines, or complex shapes)
 
 ### Input System
@@ -110,7 +110,7 @@ These games demonstrate:
 
 - All games maintain core gameplay from originals while adapting to ELM11 limitations
 - Physics and collision detection simplified for performance
-- Visual design adapted for monochrome 288x160 display
+- Visual design optimized for 288x160 color TFT display
 - Input controls mapped to available ELM11 buttons
 - Games designed to run at 60 FPS with basic timing assumptions
 
