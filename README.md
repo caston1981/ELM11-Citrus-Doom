@@ -4,7 +4,7 @@ A comprehensive game development framework for the ELM11 microcontroller, featur
 
 ![ELM11](https://img.shields.io/badge/Platform-ELM11-blue)
 ![Lua](https://img.shields.io/badge/Language-Lua%205.x-yellow)
-![Games](https://img.shields.io/badge/Games-9+-green)
+![Games](https://img.shields.io/badge/Games-10-green)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## Overview
@@ -24,7 +24,7 @@ The ELM11 provides a 66MHz Lua 5.x runtime with hardware acceleration, making it
 - **Property-Based Input**: ELM11 button and control system
 - **Love2D API Adaptation**: Familiar game development patterns
 - **Interactive Development**: Python tools for code testing and deployment
-- **Complete Game Library**: 9+ fully playable games
+- **Complete Game Library**: 10 fully playable games
 - **Educational Content**: Learn game development concepts
 
 ### Hardware Requirements
@@ -84,17 +84,9 @@ Traditional game implementations:
 - **`docs/ELM11_Datasheet.md`**: ELM11 microcontroller documentation
 - **`love2d_examples/README.md`**: Love2D API adaptation guide
 - **`love2d_games/README.md`**: Love2D games documentation
-- **`games/pong/pong.lua`**: Complete Pong game implementation for ELM11
-  - **`games/pong/README.md`**: Detailed game documentation
-- **`games/space_invaders/space_invaders.lua`**: Complete Space Invaders game implementation for ELM11
-  - **`games/space_invaders/README.md`**: Detailed game documentation
-- **`games/pacman/pacman.lua`**: Complete Pac-Man game implementation for ELM11
-  - **`games/pacman/README.md`**: Detailed game documentation
-
-### Documentation
-- **`ELM11plan.md`**: Detailed porting plan and technical specifications
-- **`README.md`**: This file
-- **`docs/ELM11_Datasheet.md`**: ELM11 microcontroller documentation
+- **`games/pong/README.md`**: Pong game documentation
+- **`games/space_invaders/README.md`**: Space Invaders game documentation
+- **`games/pacman/README.md`**: Pac-Man game documentation
 
 ## Development Tools
 
@@ -682,7 +674,7 @@ end
 - Love2D Pac-Man (love2d_pacman.lua)
 - Love2D Space Invaders (love2d_space_invaders.lua)
 - Educational Love2D examples (5 complete examples)
-- Comprehensive game library with 9+ playable games
+- Comprehensive game library with 10 playable games
 
 ### In Progress 🔄
 - Full system integration and testing
