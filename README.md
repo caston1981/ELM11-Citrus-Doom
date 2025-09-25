@@ -42,10 +42,89 @@ This project adapts the [Citrus Doom](https://github.com/EngineerSmith/Citrus-Do
 ### Tools
 - **`generate_eldata.py`**: Python script to convert WAD files to ELM11 format
 - **`wad_data.py`**: Original WAD parsing utilities (adapted from Citrus Doom)
+- **`elm11_serial_test.py`**: Serial communication test script for ELM11
+- **`elm11_interface.py`**: Interactive Python interface for ELM11 development
+
+### Games
+- **`games/snake/snake.lua`**: Complete Snake game implementation for ELM11
+  - **`games/snake/README.md`**: Detailed game documentation
+- **`games/pong/pong.lua`**: Complete Pong game implementation for ELM11
+  - **`games/pong/README.md`**: Detailed game documentation
+- **`games/space_invaders/space_invaders.lua`**: Complete Space Invaders game implementation for ELM11
+  - **`games/space_invaders/README.md`**: Detailed game documentation
+- **`games/pacman/pacman.lua`**: Complete Pac-Man game implementation for ELM11
+  - **`games/pacman/README.md`**: Detailed game documentation
 
 ### Documentation
 - **`ELM11plan.md`**: Detailed porting plan and technical specifications
 - **`README.md`**: This file
+- **`docs/ELM11_Datasheet.md`**: ELM11 microcontroller documentation
+
+## Development Tools
+
+### ELM11 Serial Interface
+The project includes Python-based development tools for interacting with the ELM11:
+
+#### elm11_serial_test.py
+Basic serial communication test script that:
+- Connects to ELM11 via USB/serial
+- Tests REPL mode with Lua commands
+- Enters Command Mode to show available commands
+- Verifies serial connection and Lua execution
+
+#### elm11_interface.py
+Advanced interactive interface featuring:
+- **Lua Code Runner**: Execute Lua code snippets with examples
+- **Command Mode Access**: Browse and execute ELM11 system commands
+- **Boot Log Viewer**: Reset device to view startup information
+- **Game Library**: Placeholders for multiple games including Citrus Doom
+
+### Game Development
+The project includes complete game implementations as examples:
+
+#### Snake (games/snake/snake.lua)
+A fully functional Snake game demonstrating:
+- Grid-based movement and collision detection
+- Food spawning and score system
+- Input handling via ELM11 properties
+- Rendering using screen drawing primitives
+- Game state management (start/game over screens)
+
+**Controls**: Up/Down/Left/Right inputs + Start button
+**Status**: Complete and ready for upload to ELM11
+
+#### Pong (games/pong/pong.lua)
+A complete Pong implementation featuring:
+- Player-controlled paddle vs AI opponent
+- Ball physics with paddle angle deflection
+- Score tracking for both players
+- Center court line and game state displays
+- Simple AI paddle movement
+
+**Controls**: Up/Down inputs to move paddle + Start button
+**Status**: Complete and ready for upload to ELM11
+
+#### Space Invaders (games/space_invaders/space_invaders.lua)
+A simplified Space Invaders game with:
+- Player ship that moves and shoots
+- Formation of alien invaders with coordinated movement
+- Alien counter-fire with collision detection
+- Score system and game over conditions
+- Progressive alien descent
+
+**Controls**: Left/Right to move ship + Shoot button to fire
+**Status**: Complete and ready for upload to ELM11
+
+#### Pac-Man (games/pacman/pacman.lua)
+A simplified Pac-Man game featuring:
+- Maze navigation with dots and power pellets
+- Four ghosts with basic AI movement
+- Power mode that makes ghosts vulnerable
+- Lives system and level progression
+- Score tracking and collision detection
+
+**Controls**: Up/Down/Left/Right to move Pac-Man
+**Status**: Complete and ready for upload to ELM11
 
 ## Setup Instructions
 
@@ -148,6 +227,57 @@ local PIN_SPEAKER = 8
 ```
 
 ## Usage
+
+### Development Tools
+
+#### Using the Serial Interface
+```bash
+# Test basic serial communication
+python3 elm11_serial_test.py
+
+# Launch interactive development interface
+python3 elm11_interface.py
+```
+
+The interactive interface provides:
+- Lua code execution with built-in examples
+- Access to ELM11 Command Mode for system administration
+- Boot log viewing (requires device reset)
+- Game library with placeholders and implementations
+
+#### Testing Snake Game
+```bash
+# In elm11_interface.py, select "Run Games" > "Snake"
+# The interface will show upload instructions
+# Use Command Mode to upload games/snake/snake.lua to ELM11
+# Execute the program to play
+```
+
+#### Testing Pong Game
+```bash
+# In elm11_interface.py, select "Run Games" > "Pong"
+# The interface will show upload instructions
+# Use Command Mode to upload games/pong/pong.lua to ELM11
+# Execute the program to play
+```
+
+#### Testing Space Invaders Game
+```bash
+# In elm11_interface.py, select "Run Games" > "Space Invaders"
+# The interface will show upload instructions
+# Use Command Mode to upload games/space_invaders/space_invaders.lua to ELM11
+# Execute the program to play
+```
+
+#### Testing Pac-Man Game
+```bash
+# In elm11_interface.py, select "Run Games" > "Pac-Man"
+# The interface will show upload instructions
+# Use Command Mode to upload games/pacman/pacman.lua to ELM11
+# Execute the program to play
+```
+
+### Basic Testing
 
 ### Basic Testing
 
@@ -299,6 +429,12 @@ end
 - Data loading from flash storage
 - API adaptation for ELM11 compatibility
 - Input/output system integration
+- Serial communication tools (elm11_serial_test.py)
+- Interactive development interface (elm11_interface.py)
+- Complete Snake game implementation (snake.lua)
+- Complete Pong game implementation (pong.lua)
+- Complete Space Invaders game implementation (space_invaders.lua)
+- Complete Pac-Man game implementation (pacman.lua)
 
 ### In Progress 🔄
 - Full system integration and testing
@@ -308,6 +444,7 @@ end
 ### Planned 📋
 - Wall rendering and BSP traversal
 - Texture mapping and lighting
+- Additional game implementations (Pong, Pac-Man, Space Invaders)
 - Multiplayer support (if feasible)
 - Additional weapon types
 - Level editor integration
