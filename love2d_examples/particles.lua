@@ -2,6 +2,10 @@
 -- Original: love.graphics.draw(particleSystem, x, y)
 -- Adapted for ELM11 screen API (simulated particle system)
 
+-- Screen constants (ELM11 display is 288x160)
+SCREEN_WIDTH = 288
+SCREEN_HEIGHT = 160
+
 -- Particle system state
 particles = {}
 maxParticles = 50

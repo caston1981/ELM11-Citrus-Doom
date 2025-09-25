@@ -2,6 +2,10 @@
 -- Original: love.graphics.print("Hello World!", 400, 300)
 -- Adapted for ELM11 screen API
 
+-- Screen constants (ELM11 display is 288x160)
+SCREEN_WIDTH = 288
+SCREEN_HEIGHT = 160
+
 -- Game state
 message = "Hello World!"
 x = SCREEN_WIDTH / 2 - 40

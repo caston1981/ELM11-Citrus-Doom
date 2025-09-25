@@ -408,14 +408,21 @@ Complete games include:
 # Follow upload instructions for ELM11 deployment
 ```
 
-### Basic Testing
-```bash
-# Test serial connection
-python3 elm11_serial_test.py
+### Running Without Hardware (Simulation Mode)
+If you haven't connected screens or controllers yet, you can still explore the games using simulation mode:
 
-# Test Lua execution on ELM11
-# (Interface provides automated testing)
+```bash
+# Run in simulation mode (no ELM11 hardware required)
+python3 elm11_interface.py --simulate
 ```
+
+The simulation mode provides:
+- **Text-based previews** of all Love2D examples and games
+- **Code analysis** showing game structure and Love2D patterns
+- **Control schemes** and gameplay descriptions
+- **Technical details** about ELM11 adaptations
+
+This allows you to understand the games before connecting hardware.
 
 ### Basic Testing
 

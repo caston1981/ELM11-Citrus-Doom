@@ -1,6 +1,10 @@
 -- Love2D Input Demo Example (Adapted for ELM11)
--- Original: love.keyboard.isDown(key), love.mouse.getPosition()
--- Adapted for ELM11 property system
+-- Original: love.keyboard.isDown(key)
+-- Adapted for ELM11 property.getBool()
+
+-- Screen constants (ELM11 display is 288x160)
+SCREEN_WIDTH = 288
+SCREEN_HEIGHT = 160
 
 -- Game state
 inputState = {

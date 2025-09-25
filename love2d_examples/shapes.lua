@@ -2,6 +2,10 @@
 -- Original: love.graphics.rectangle("fill", x, y, width, height)
 -- Adapted for ELM11 screen API
 
+-- Screen constants (ELM11 display is 288x160)
+SCREEN_WIDTH = 288
+SCREEN_HEIGHT = 160
+
 -- Game state
 shapes = {
     {type = "rectangle", x = 50, y = 50, width = 100, height = 50, color = {255, 0, 0}},

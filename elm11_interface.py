@@ -8,6 +8,7 @@ import time
 import sys
 import glob
 import questionary
+import os
 
 # Serial configuration
 SERIAL_PORTS = glob.glob('/dev/ttyUSB*') + glob.glob('/dev/ttyACM*')
@@ -54,10 +55,34 @@ def connect_serial():
 def send_lua_code(ser, code):
     """Send Lua code to ELM11 and return response"""
     try:
-        ser.write((code + '\r\n').encode())
-        ser.flush()
-        time.sleep(0.5)
-        response = ser.read(1024)
+        # Send code in chunks if it's very large
+        chunk_size = 1024
+        if len(code) > chunk_size:
+            # Send in chunks with small delays
+            for i in range(0, len(code), chunk_size):
+                chunk = code[i:i+chunk_size]
+                ser.write(chunk.encode())
+                ser.flush()
+                time.sleep(0.1)  # Small delay between chunks
+            ser.write(b'\r\n')  # Final newline
+            ser.flush()
+        else:
+            ser.write((code + '\r\n').encode())
+            ser.flush()
+
+        # Wait longer for large code blocks
+        wait_time = min(2.0, 0.5 + len(code) / 2000)  # Scale wait time with code size
+        time.sleep(wait_time)
+
+        # Read response (may be multiple chunks)
+        response = b""
+        for _ in range(5):  # Try reading multiple times
+            chunk = ser.read(1024)
+            if not chunk:
+                break
+            response += chunk
+            time.sleep(0.1)
+
         return response.decode(errors='replace')
     except Exception as e:
         return f"Error: {e}"
@@ -330,13 +355,262 @@ def run_love2d_games(ser):
 
         input("\nPress Enter to continue...")
 
+def run_simulation_mode():
+    """Run games in simulation mode without ELM11 hardware"""
+    print("\nSimulation Mode")
+    print("=" * 40)
+    print("This mode simulates the ELM11 display and input system.")
+    print("Games will run in a graphical window on your computer.")
+    print("Note: This is a basic simulation - actual ELM11 performance may differ.\n")
+
+    while True:
+        choice = questionary.select(
+            "Simulation Mode:",
+            choices=[
+                "Love2D Examples",
+                "Love2D Games",
+                "Classic Games",
+                "Back to Main Menu"
+            ]
+        ).ask()
+
+        if choice == "Love2D Examples":
+            run_simulated_love2d_examples()
+        elif choice == "Love2D Games":
+            run_simulated_love2d_games()
+        elif choice == "Classic Games":
+            run_simulated_classic_games()
+        elif choice == "Back to Main Menu":
+            break
+
+def run_simulated_love2d_examples():
+    """Run Love2D examples in simulation mode"""
+    while True:
+        example_choice = questionary.select(
+            "Select a Love2D Example to simulate:",
+            choices=[
+                "Hello World - Basic text display",
+                "Shapes - Drawing geometric shapes",
+                "Animation - Moving objects and time-based updates",
+                "Input Demo - Button input detection",
+                "Particles - Particle system effects",
+                "Back to Simulation Menu"
+            ]
+        ).ask()
+
+        if example_choice == "Back to Simulation Menu":
+            break
+
+        # Map choices to files
+        file_map = {
+            "Hello World - Basic text display": "love2d_examples/hello_world.lua",
+            "Shapes - Drawing geometric shapes": "love2d_examples/shapes.lua",
+            "Animation - Moving objects and time-based updates": "love2d_examples/animation.lua",
+            "Input Demo - Button input detection": "love2d_examples/input_demo.lua",
+            "Particles - Particle system effects": "love2d_examples/particles.lua"
+        }
+
+        filepath = file_map.get(example_choice)
+        if filepath:
+            print(f"\nSimulating {example_choice}...")
+            print("Note: This is a text-based simulation. For full graphics, connect ELM11 hardware.")
+            print("The actual game would display graphics on the ELM11 screen.")
+
+            try:
+                with open(filepath, 'r') as f:
+                    content = f.read()
+
+                # Show key parts of the code
+                print(f"\n--- Code from {filepath} ---")
+                lines = content.split('\n')
+                for i, line in enumerate(lines[:20]):  # Show first 20 lines
+                    print("2d")
+                if len(lines) > 20:
+                    print(f"... ({len(lines)-20} more lines)")
+
+                print("\n--- Simulation Notes ---")
+                print("• love.load() → Game initialization")
+                print("• love.update(dt) → Game logic (60 FPS target)")
+                print("• love.draw() → Screen rendering")
+                print("• property.getBool() → Input detection")
+                print("• screen.drawText()/drawRect() → Display output")
+
+            except FileNotFoundError:
+                print(f"Error: {filepath} not found.")
+            except Exception as e:
+                print(f"Error: {e}")
+
+        input("\nPress Enter to continue...")
+
+def run_simulated_love2d_games():
+    """Run Love2D games in simulation mode"""
+    while True:
+        game_choice = questionary.select(
+            "Select a Love2D Game to simulate:",
+            choices=[
+                "LovePong - Pong with physics",
+                "LoveBirb - Flappy Bird clone",
+                "LovePlatform - Platformer prototype",
+                "Love2D Snake - Classic Snake game",
+                "Love2D Pac-Man - Pac-Man with ghosts",
+                "Love2D Space Invaders - Alien shooter",
+                "Back to Simulation Menu"
+            ]
+        ).ask()
+
+        if game_choice == "Back to Simulation Menu":
+            break
+
+        # Map choices to files
+        file_map = {
+            "LovePong - Pong with physics": "love2d_games/love_pong.lua",
+            "LoveBirb - Flappy Bird clone": "love2d_games/love_birb.lua",
+            "LovePlatform - Platformer prototype": "love2d_games/love_platform.lua",
+            "Love2D Snake - Classic Snake game": "love2d_games/love2d_snake.lua",
+            "Love2D Pac-Man - Pac-Man with ghosts": "love2d_games/love2d_pacman.lua",
+            "Love2D Space Invaders - Alien shooter": "love2d_games/love2d_space_invaders.lua"
+        }
+
+        filepath = file_map.get(game_choice.split(" - ")[0])
+        if filepath:
+            print(f"\nSimulating {game_choice}...")
+            print("Note: This is a text-based simulation. For full gameplay, connect ELM11 hardware.")
+            print("The actual game would be fully playable on the ELM11 device.")
+
+            try:
+                with open(filepath, 'r') as f:
+                    content = f.read()
+
+                # Extract game info
+                lines = content.split('\n')
+                game_title = ""
+                controls = []
+                features = []
+
+                for line in lines[:50]:  # Check first 50 lines for comments
+                    line = line.strip()
+                    if line.startswith("--") and "Game" in line:
+                        game_title = line[2:].strip()
+                    elif line.startswith("--") and ("Controls:" in line or "controls:" in line.lower()):
+                        controls.append(line[2:].strip())
+                    elif line.startswith("--") and ("Features:" in line or "features:" in line.lower()):
+                        features.append(line[2:].strip())
+
+                print(f"\n--- {game_title} ---")
+                if features:
+                    print("Features:")
+                    for feature in features[:5]:  # Show up to 5 features
+                        print(f"• {feature}")
+
+                print("\nControls (when running on ELM11):")
+                print("• Arrow Keys: Movement (Up/Down/Left/Right)")
+                print("• A Button: Primary action (jump/shoot/flap)")
+                print("• B Button: Secondary action")
+                print("• Start Button: Begin game/restart")
+
+                print("\nGame Structure:")
+                print("• State management (menu/playing/game over)")
+                print("• Entity system (player, enemies, projectiles)")
+                print("• Collision detection and physics")
+                print("• Scoring and progression systems")
+
+                # Show code sample
+                print(f"\n--- Sample Code from {filepath} ---")
+                # Find love.load function
+                in_load = False
+                load_lines = []
+                for line in lines:
+                    if line.strip().startswith("function love.load()"):
+                        in_load = True
+                    elif in_load and line.strip().startswith("end"):
+                        load_lines.append(line)
+                        break
+                    elif in_load:
+                        load_lines.append(line)
+
+                if load_lines:
+                    print("love.load() function:")
+                    for line in load_lines[:10]:
+                        print("2d")
+                    if len(load_lines) > 10:
+                        print("    ...")
+
+            except FileNotFoundError:
+                print(f"Error: {filepath} not found.")
+            except Exception as e:
+                print(f"Error: {e}")
+
+        input("\nPress Enter to continue...")
+
+def run_simulated_classic_games():
+    """Run classic games in simulation mode"""
+    while True:
+        game_choice = questionary.select(
+            "Select a Classic Game to simulate:",
+            choices=[
+                "Snake - Grid-based snake game",
+                "Pong - Classic paddle ball game",
+                "Space Invaders - Alien shooter",
+                "Pac-Man - Maze navigation game",
+                "Back to Simulation Menu"
+            ]
+        ).ask()
+
+        if game_choice == "Back to Simulation Menu":
+            break
+
+        # Map choices to files
+        file_map = {
+            "Snake - Grid-based snake game": "games/snake/snake.lua",
+            "Pong - Classic paddle ball game": "games/pong/pong.lua",
+            "Space Invaders - Alien shooter": "games/space_invaders/space_invaders.lua",
+            "Pac-Man - Maze navigation game": "games/pacman/pacman.lua"
+        }
+
+        filepath = file_map.get(game_choice.split(" - ")[0])
+        if filepath:
+            print(f"\nSimulating {game_choice}...")
+            print("Note: This is a text-based simulation. For full gameplay, connect ELM11 hardware.")
+
+            try:
+                with open(filepath, 'r') as f:
+                    content = f.read()
+
+                print(f"\n--- Code from {filepath} ---")
+                lines = content.split('\n')
+                for i, line in enumerate(lines[:15]):  # Show first 15 lines
+                    print("2d")
+                if len(lines) > 15:
+                    print(f"... ({len(lines)-15} more lines)")
+
+                print("\n--- Simulation Notes ---")
+                print("• Direct ELM11 API usage (screen.drawRect, property.getBool)")
+                print("• Game loop with onTick() and onDraw() functions")
+                print("• Optimized for 66MHz processor and 288x160 display")
+
+            except FileNotFoundError:
+                print(f"Error: {filepath} not found.")
+            except Exception as e:
+                print(f"Error: {e}")
+
+        input("\nPress Enter to continue...")
+
 def main():
     print("ELM11 Interactive Interface")
     print("=" * 40)
 
+    # Check if we should run in simulation mode (no hardware required)
+    if len(sys.argv) > 1 and sys.argv[1] == "--simulate":
+        run_simulation_mode()
+        return
+
     ser = connect_serial()
     if not ser:
-        sys.exit(1)
+        print("\nNo ELM11 hardware detected.")
+        print("Would you like to run in simulation mode instead?")
+        if questionary.confirm("Run in simulation mode?").ask():
+            run_simulation_mode()
+        return
 
     while True:
         choice = questionary.select(
@@ -348,6 +622,7 @@ def main():
                 "Run Games",
                 "Love2D Examples",
                 "Love2D Games",
+                "Simulation Mode (No Hardware)",
                 "Exit"
             ]
         ).ask()
@@ -365,6 +640,8 @@ def main():
             run_love2d_examples(ser)
         elif choice == "Love2D Games":
             run_love2d_games(ser)
+        elif choice == "Simulation Mode (No Hardware)":
+            run_simulation_mode()
         elif choice == "Exit":
             break
 

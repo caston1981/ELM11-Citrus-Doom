@@ -2,6 +2,14 @@
 -- Original: love.graphics.draw(image, x, y, r, sx, sy, ox, oy)
 -- Adapted for ELM11 screen API (using rectangles as sprites)
 
+-- Love2D Animation Example (Adapted for ELM11)
+-- Original: love.update(dt), love.draw() with time-based updates
+-- Adapted for ELM11 onTick() and onDraw()
+
+-- Screen constants (ELM11 display is 288x160)
+SCREEN_WIDTH = 288
+SCREEN_HEIGHT = 160
+
 -- Game state
 player = {
     x = 144,  -- Center of screen (288/2)
