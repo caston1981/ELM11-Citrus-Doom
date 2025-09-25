@@ -1,6 +1,8 @@
-# ELM11 GamThis project started as an ambitious project to create a Citrus Doom port. However, before we can do this, we will test out simple games and demos. It includes: Development Framework
+# ELM11 games
 
 A comprehensive game development framework for the ELM11 microcontroller, featuring Love2D-style game implementations, educational examples, and interactive development tools.
+
+This project started as an ambitious project to create a Citrus Doom port. However, before we can do this, we will test out simple games and demos. 
 
 ![ELM11](https://img.shields.io/badge/Platform-ELM11-blue)
 ![Lua](https://img.shields.io/badge/Language-Lua%205.x-yellow)
