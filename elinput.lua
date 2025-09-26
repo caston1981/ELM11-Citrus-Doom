@@ -74,9 +74,18 @@ function test_input(useNunchuk)
     elseif inputMode == "joystick" then
         test_joystick_shield()
     else
-        print("Up: " .. tostring(getButtonUp()))
-        print("Shoot: " .. tostring(getButtonShoot()))
+        test_gpio_buttons()
     end
+end
+
+function test_gpio_buttons()
+    print("Testing GPIO buttons...")
+    print("UP: " .. tostring(getButtonUp()))
+    print("DOWN: " .. tostring(getButtonDown()))
+    print("LEFT: " .. tostring(getButtonLeft()))
+    print("RIGHT: " .. tostring(getButtonRight()))
+    print("SHOOT: " .. tostring(getButtonShoot()))
+    print("GPIO test complete.")
 end
 
 function test_sound()
@@ -191,6 +200,39 @@ function get_button_joystick(button_num)
     elseif button_num == 2 then return input.weaponDown
     elseif button_num == 3 then return input.button5
     elseif button_num == 4 then return input.button6
+    end
+    return false
+end
+
+-- GPIO input functions
+function get_input_gpio()
+    -- Map button presses to Doom controls
+    local up = getButtonUp()
+    local down = getButtonDown()
+    local left = getButtonLeft()
+    local right = getButtonRight()
+    local shoot = getButtonShoot()
+    
+    -- Convert to analog values (-1 to 1)
+    local moveX = 0
+    local moveY = 0
+    
+    if left then moveX = -1 end
+    if right then moveX = 1 end
+    if up then moveY = 1 end
+    if down then moveY = -1 end
+    
+    -- No look control with basic buttons, interact = shoot for now
+    return moveX, moveY, 0, shoot, shoot
+end
+
+function get_button_gpio(button_num)
+    -- Map button numbers to GPIO pins
+    if button_num == 1 then return getButtonUp()
+    elseif button_num == 2 then return getButtonDown()
+    elseif button_num == 3 then return getButtonLeft()
+    elseif button_num == 4 then return getButtonRight()
+    elseif button_num == 5 then return getButtonShoot()
     end
     return false
 end

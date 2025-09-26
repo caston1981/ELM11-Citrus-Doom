@@ -205,6 +205,55 @@ def show_boot_log(ser):
         return True  # Indicate we closed the connection
     return False
 
+def run_gpio_test(ser):
+    """Run GPIO button testing functionality"""
+    print("GPIO Button Test")
+    print("=" * 40)
+    print("This will test GPIO buttons connected to pins 1-5 on your ELM11.")
+    print("Make sure you have buttons connected to GPIO pins:")
+    print("  Pin 1: UP button")
+    print("  Pin 2: DOWN button")
+    print("  Pin 3: LEFT button")
+    print("  Pin 4: RIGHT button")
+    print("  Pin 5: SHOOT button")
+    print("")
+
+    if not questionary.confirm("Do you have buttons connected and ready to test?").ask():
+        return
+
+    # Load the GPIO test script
+    try:
+        with open('gpio_test_repl.lua', 'r') as f:
+            test_code = f.read()
+    except FileNotFoundError:
+        print("Error: gpio_test_repl.lua not found in current directory")
+        return
+
+    print("Loading GPIO test script...")
+    response = send_lua_code(ser, test_code)
+    if "Error" in response:
+        print("Failed to load test script:")
+        print(response)
+        return
+
+    print("GPIO test script loaded successfully!")
+    print("The test will show button states in real-time.")
+    print("Press buttons to see them register as PRESSED.")
+    print("")
+
+    # Run the test
+    test_code = "test_input(false)"
+    print("Starting GPIO button test...")
+    response = send_lua_code(ser, test_code)
+    print("Test response:")
+    print(response)
+
+    print("")
+    print("Test complete! You can also run individual button checks:")
+    print("  getButtonUp(), getButtonDown(), getButtonLeft(), getButtonRight(), getButtonShoot()")
+    print("")
+    input("Press Enter to return to main menu...")
+
 def run_games_menu(ser):
     """Menu for selecting different games to run"""
     while True:
@@ -617,6 +666,7 @@ def main():
             "Choose an option:",
             choices=[
                 "Run Lua Code",
+                "GPIO Button Test",
                 "Enter Command Mode",
                 "Show Boot Log",
                 "Run Games",
@@ -629,6 +679,8 @@ def main():
 
         if choice == "Run Lua Code":
             run_lua_interactive(ser)
+        elif choice == "GPIO Button Test":
+            run_gpio_test(ser)
         elif choice == "Enter Command Mode":
             enter_command_mode(ser)
         elif choice == "Show Boot Log":

@@ -86,8 +86,10 @@ Traditional game implementations:
 - **`games/pacman/pacman.lua`**: Pac-Man with maze and ghost behavior
 
 ### Development Tools
-- **`elm11_interface.py`**: Interactive Python interface for ELM11 development
+- **`elm11_interface.py`**: Interactive Python interface for ELM11 development with menu system for games, GPIO testing, and Lua code execution
 - **`elm11_serial_test.py`**: Serial communication test script
+- **`gpio_button_test.lua`**: GPIO button testing script (for testing before controller arrives)
+- **`gpio_test_repl.lua`**: Quick GPIO button test for REPL
 - **`generate_eldata.py`**: Python script to convert WAD files to ELM11 format
 - **`wad_data.py`**: WAD parsing utilities adapted from Citrus Doom
 
@@ -478,6 +480,14 @@ dofile("elsound.lua")
 init_sound()
 play_sound(1)  -- Pistol sound
 ```
+
+#### Test GPIO Buttons (Before Controller Arrives)
+```lua
+dofile("gpio_test_repl.lua")
+-- Or run the full test:
+dofile("gpio_button_test.lua")
+```
+Connect buttons to GPIO pins 1-5 and test basic input functionality.
 
 ### Running the Game
 
