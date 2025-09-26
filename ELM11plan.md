@@ -143,8 +143,8 @@ ELM11-Citrus-Doom/
 - Fallback: Simplify to "Doom-lite" (e.g., 2D top-down or minimal 3D) if full port is too demanding.
 
 ## Next Steps
-- Acquire Hardware: Order 1.8" 160x128 ST7789 SPI TFT LCD from AliExpress (~$5) and basic components (buttons, speaker, wires).
-- Set Up ELM11 Development Environment: Set up ELM11 with serial connection, install upload tools, and test REPL with basic Lua commands.
+- Acquire Hardware: Order 1.8" 160x128 ST7789 SPI TFT LCD from AliExpress (~$5), Arduino Joystick Shield (~$8), 2x18 female GPIO header pins (~$1), and basic components (buttons, speaker, wires).
+- Set Up ELM11 Development Environment: Set up ELM11 with serial connection, install upload tools, and test REPL with basic Lua commands. First solder 2x18 GPIO header to ELM11 board.
 - Prototype LCD Display: Wire ST7789 LCD to ELM11 SPI pins and test basic drawing (e.g., fill screen, draw rect) in REPL.
 - Port Core Math/Data Structures: Adapt Citrus Doom's math functions (e.g., vector ops, BSP) to ELM11 Lua, test in REPL for performance.
 - Adapt Data Loading: Create ELM11-compatible data loading from flash instead of Stormworks text boxes.

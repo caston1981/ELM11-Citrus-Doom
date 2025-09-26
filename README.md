@@ -2,7 +2,18 @@
 
 A comprehensive game development framework for the ELM11 microcontroller, featuring Love2D-style game implementations, educational examples, and interactive development tools.
 
-This project started as an ambitious project to create a Citrus Doom port. However, before we can do this, we will test out simple games and demos. 
+This project started as an ambitious project to create a Citrus Doom p#### GPIO Header Soldering (Required First)
+The ELM11 has dual-row headers with 18 pins per side (36 total pins), including 16 programmable I/O pins plus power/ground pins. You'll need to solder female header pins to access the GPIO functionality.
+
+**Header Configuration:**
+- **Total Physical Pins**: 36 (18 per side)
+- **Programmable I/O Pins**: 16 (pins 1-16 in the pin numbering)
+- **Additional Pins**: Power (3.3V, 5V), Ground, USB, and other system pins
+
+**What to buy:**
+- 2x18 female header pins (2.54mm pitch) - or two 2x8 headers placed side by side
+- Soldering iron and solder
+- Optional: Helping hands or vise to hold the boardwever, before we can do this, we will test out simple games and demos. 
 
 ![ELM11](https://img.shields.io/badge/Platform-ELM11-blue)
 ![Lua](https://img.shields.io/badge/Language-Lua%205.x-yellow)
@@ -36,7 +47,7 @@ The ELM11 provides a 66MHz Lua 5.x runtime with hardware acceleration, making it
 - USB/serial connection for development
 - Optional: Speaker for sound effects
 
-**Estimated Development Cost**: $10-15 (ELM11 + basic peripherals)
+**Estimated Total Cost**: $20-25 (includes soldering supplies if needed)
 
 ## Project Structure
 
@@ -257,6 +268,30 @@ A simplified Pac-Man game featuring:
 ## Setup Instructions
 
 ### 1. Hardware Assembly
+
+**Note**: Basic soldering skills required. If you're new to soldering, practice on scrap first or consider asking for help. The header pins are the only soldering required for this project.
+
+#### GPIO Header Soldering (Required First)
+The ELM11 has dual-row headers with 18 pins per side (36 total pins), including 16 programmable I/O pins plus power/ground pins. You'll need to solder female header pins to access the GPIO functionality.
+
+**Header Configuration:**
+- **Total Physical Pins**: 36 (18 per side)
+- **Programmable I/O Pins**: 16 (pins 1-16 in the pin numbering)
+- **Additional Pins**: Power (3.3V, 5V), Ground, USB, and other system pins
+
+**What to buy:**
+- 2x18 female header pins (2.54mm pitch) - or two 2x8 headers placed side by side
+- Soldering iron and solder
+- Optional: Helping hands or vise to hold the board
+
+**Soldering tips:**
+1. Use a clean soldering iron (300-400°C for electronics)
+2. Apply solder to the iron first, then touch the pin
+3. Heat the pin for 2-3 seconds, then apply solder
+4. Avoid overheating - the plastic header can melt
+5. Check for cold solder joints (dull, cracked appearance)
+6. Clean excess flux with isopropyl alcohol if available
+7. Work in sections - solder a few pins, let cool, then continue
 
 #### ST7789 LCD Wiring (SPI Mode)
 ```
@@ -727,11 +762,13 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- **Citrus Doom**: Original engine by EngineerSmith
+- **Citrus Doom**: Original engine by EngineerSmith (originally created for Stormworks)
+- **Stormworks**: Game development platform where Citrus Doom was originally developed
+- **Love2D-Simple-Games**: Repository by danielnaoexiste providing the original Love2D game implementations
+- **Love2D Community**: For the excellent game framework that inspired our adaptations
 - **ELM11 Team**: For the excellent microcontroller platform
 - **id Software**: For creating Doom and releasing the source code
 - **Doom Community**: For maintaining WAD files and documentation
-- **Love2D Community**: For the excellent game framework that inspired our adaptations
 - **Open Source Contributors**: For the libraries and tools that made this possible
 
 ## Contact
