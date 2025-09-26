@@ -1,19 +1,8 @@
-# ELM11 games
+# ELM11 Citrus Doom
 
-A comprehensive game development framework for the ELM11 microcontroller, featuring Love2D-style game implementations, educational examples, and interactive development tools.
+A comprehensive project to port Citrus Doom to the ELM11 microcontroller, featuring Love2D-style game implementations, educational examples, and interactive development tools.
 
-This project started as an ambitious project to create a Citrus Doom p#### GPIO Header Soldering (Required First)
-The ELM11 has dual-row headers with 18 pins per side (36 total pins), including 16 programmable I/O pins plus power/ground pins. You'll need to solder female header pins to access the GPIO functionality.
-
-**Header Configuration:**
-- **Total Physical Pins**: 36 (18 per side)
-- **Programmable I/O Pins**: 16 (pins 1-16 in the pin numbering)
-- **Additional Pins**: Power (3.3V, 5V), Ground, USB, and other system pins
-
-**What to buy:**
-- 2x18 female header pins (2.54mm pitch) - or two 2x8 headers placed side by side
-- Soldering iron and solder
-- Optional: Helping hands or vise to hold the boardwever, before we can do this, we will test out simple games and demos. 
+This project focuses on porting Citrus Doom (a Lua-based Doom engine) to the ELM11 microcontroller. As part of the development process, we've created Love2D-style games and examples to test the platform capabilities.
 
 ![ELM11](https://img.shields.io/badge/Platform-ELM11-blue)
 ![Lua](https://img.shields.io/badge/Language-Lua%205.x-yellow)
@@ -22,32 +11,36 @@ The ELM11 has dual-row headers with 18 pins per side (36 total pins), including 
 
 ## Overview
 
-This project started as an ambitious project to create a Citrus Doom port. However before we can do this we will test out simple games and demos.  It includes:
+This project is porting Citrus Doom, a Lua-based Doom engine originally created for Stormworks, to run on the ELM11 microcontroller. The ELM11 provides a 66MHz Lua 5.x runtime with hardware acceleration, making it suitable for real-time game development despite embedded constraints.
 
-- **Love2D Game Library**: Complete games adapted from Love2D patterns
-- **Educational Examples**: Love2D concepts demonstrated for ELM11
-- **Interactive Development Tools**: Python interface for ELM11 development
+The project includes:
+
+- **Citrus Doom Engine**: 3D Doom engine adapted for embedded systems
+- **Love2D Game Library**: Complete games adapted from Love2D patterns for testing
+- **Educational Examples**: Love2D concepts demonstrated for ELM11 development
+- **Interactive Development Tools**: Python interface for ELM11 development and testing
 - **Classic Game Implementations**: Traditional games ported to ELM11
-- **Citrus Doom Engine**: Original 3D engine for embedded Doom gameplay
-
-The ELM11 provides a 66MHz Lua 5.x runtime with hardware acceleration, making it suitable for real-time game development despite embedded constraints.
 
 ### Key Features
-- **288x160 Color Display**: Full RGB565 color support with ST7789 TFT LCD
-- **Property-Based Input**: ELM11 button and control system
+- **160x128 Color Display**: RGB565 color support with ST7789 TFT LCD
+- **Multi-Input Support**: GPIO buttons, Arduino Joystick Shield, Wii Nunchuk
+- **GPIO Testing Tools**: Test your hardware setup before expensive peripherals arrive
 - **Love2D API Adaptation**: Familiar game development patterns
-- **Interactive Development**: Python tools for code testing and deployment
-- **Complete Game Library**: 10 fully playable games
-- **Educational Content**: Learn game development concepts
+- **Interactive Development**: Python interface with menu system for games and testing
+- **Complete Game Library**: 10+ fully playable games
+- **Educational Content**: Learn embedded game development concepts
 
 ### Hardware Requirements
-- ELM11 microcontroller board
-- Display (288x160 color TFT LCD recommended)
-- Input controls (buttons/joystick)
-- USB/serial connection for development
-- Optional: Speaker for sound effects
+- **ELM11 microcontroller board** with soldered GPIO headers
+- **Display**: 1.8" 160x128 ST7789 SPI TFT LCD ($5-8)
+- **Input Options**:
+  - Arduino Joystick Shield with PS2 joystick ($8)
+  - Wii Nunchuk controller (optional alternative)
+  - Basic GPIO buttons for testing (temporary)
+- **USB/serial connection** for development
+- **Optional**: Speaker for sound effects, soldering iron for header installation
 
-**Estimated Total Cost**: $20-25 (includes soldering supplies if needed)
+**Estimated Total Cost**: $20-30 (includes all components)
 
 ## Project Structure
 
@@ -294,6 +287,17 @@ The ELM11 has dual-row headers with 18 pins per side (36 total pins), including 
 5. Check for cold solder joints (dull, cracked appearance)
 6. Clean excess flux with isopropyl alcohol if available
 7. Work in sections - solder a few pins, let cool, then continue
+
+#### Test GPIO Headers (Recommended)
+After soldering the headers, test your work with GPIO buttons before connecting expensive peripherals:
+
+```bash
+# Connect buttons to GPIO pins 1-5, then run:
+python3 elm11_interface.py
+# Select "GPIO Button Test" from the menu
+```
+
+This will verify your soldering works and let you test basic input functionality while waiting for your controller to arrive.
 
 #### ST7789 LCD Wiring (SPI Mode)
 ```
