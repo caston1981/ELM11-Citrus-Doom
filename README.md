@@ -22,7 +22,7 @@ The project includes:
 - **Classic Game Implementations**: Traditional games ported to ELM11
 
 ### Key Features
-- **160x128 Color Display**: RGB565 color support with ST7789 TFT LCD
+- **128x128 Color Display**: RGB565 color support with ST7735S TFT LCD
 - **Multi-Input Support**: GPIO buttons, Arduino Joystick Shield, Wii Nunchuk
 - **GPIO Testing Tools**: Test your hardware setup before expensive peripherals arrive
 - **Love2D API Adaptation**: Familiar game development patterns
@@ -32,7 +32,7 @@ The project includes:
 
 ### Hardware Requirements
 - **ELM11 microcontroller board** with soldered GPIO headers
-- **Display**: 1.8" 160x128 ST7789 SPI TFT LCD ($5-8)
+- **Display**: 1.44" 128x128 ST7735S SPI TFT LCD ($5-8)
 - **Input Options**:
   - Arduino Joystick Shield with PS2 joystick ($8)
   - Wii Nunchuk controller (optional alternative)
@@ -47,7 +47,8 @@ The project includes:
 ### Core Libraries (Citrus Doom Engine)
 - **`elmath.lua`**: Vector mathematics and utility functions
 - **`eldata.lua`**: Flash file I/O and Doom data loading
-- **`elrender.lua`**: Display driver and rendering primitives
+- **`elrender.lua`**: ST7789 display driver and rendering primitives
+- **`elrender_st7735.lua`**: ST7735S 128x128 display driver and rendering primitives
 - **`elinput.lua`**: Input handling system
 - **`elnunchuk.lua`**: Wii Nunchuk I2C protocol implementation
 - **`eljoystick.lua`**: Arduino Joystick Shield I2C protocol implementation
@@ -79,10 +80,12 @@ Traditional game implementations:
 - **`games/pacman/pacman.lua`**: Pac-Man with maze and ghost behavior
 
 ### Development Tools
-- **`elm11_interface.py`**: Interactive Python interface for ELM11 development with menu system for games, GPIO testing, and Lua code execution
+- **`elm11_interface.py`**: Interactive Python interface for ELM11 development with menu system for games, GPIO testing, and LCD testing
 - **`elm11_serial_test.py`**: Serial communication test script
 - **`gpio_button_test.lua`**: GPIO button testing script (for testing before controller arrives)
 - **`gpio_test_repl.lua`**: Quick GPIO button test for REPL
+- **`st7735_test.lua`**: ST7735S LCD display testing script
+- **`elrender_st7735.lua`**: ST7735S LCD rendering library
 - **`generate_eldata.py`**: Python script to convert WAD files to ELM11 format
 - **`wad_data.py`**: WAD parsing utilities adapted from Citrus Doom
 
@@ -299,15 +302,15 @@ python3 elm11_interface.py
 
 This will verify your soldering works and let you test basic input functionality while waiting for your controller to arrive.
 
-#### ST7789 LCD Wiring (SPI Mode)
+#### ST7735S LCD Wiring (SPI Mode)
 ```
 ELM11 Pin | LCD Pin | Function
 ----------|---------|---------
 SPI_CS    | CS      | Chip Select
-SPI_CLK   | CLK     | SPI Clock
+SPI_CLK   | SCL     | SPI Clock
 SPI_MOSI  | SDA     | SPI Data
 GPIO_X    | DC      | Data/Command
-GPIO_X    | RST     | Reset
+GPIO_X    | RES     | Reset
 GND       | GND     | Ground
 3.3V      | VCC     | Power
 ```
@@ -463,10 +466,11 @@ This allows you to understand the games before connecting hardware.
 
 #### Test LCD Display
 ```lua
-dofile("elrender.lua")
+dofile("st7735_test.lua")
+-- Or run individual functions:
+dofile("elrender_st7735.lua")
 initLCD()
-setColor(255, 0, 0)  -- Red
-drawRectF(10, 10, 50, 50)
+test_render()
 ```
 
 #### Test Joystick Shield Input

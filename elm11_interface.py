@@ -254,6 +254,57 @@ def run_gpio_test(ser):
     print("")
     input("Press Enter to return to main menu...")
 
+def run_lcd_test(ser):
+    """Run LCD display testing functionality"""
+    print("LCD Display Test")
+    print("=" * 40)
+    print("This will test your ST7735S 1.44\" 128x128 TFT LCD display.")
+    print("Make sure your LCD is properly wired:")
+    print("  - SPI_CS -> ELM11 SPI_CS pin")
+    print("  - SPI_CLK -> ELM11 SPI_CLK pin")
+    print("  - SPI_MOSI -> ELM11 SPI_MOSI pin")
+    print("  - DC -> ELM11 GPIO pin")
+    print("  - RST -> ELM11 GPIO pin")
+    print("  - VCC -> 3.3V")
+    print("  - GND -> GND")
+    print("")
+
+    if not questionary.confirm("Is your ST7735S LCD connected and ready to test?").ask():
+        return
+
+    # Load the LCD test script
+    try:
+        with open('st7735_test.lua', 'r') as f:
+            test_code = f.read()
+    except FileNotFoundError:
+        print("Error: st7735_test.lua not found in current directory")
+        return
+
+    print("Loading ST7735S test script...")
+    response = send_lua_code(ser, test_code)
+    if "Error" in response:
+        print("Failed to load test script:")
+        print(response)
+        return
+
+    print("ST7735S test script loaded successfully!")
+    print("The test will display colors, shapes, and animations on your LCD.")
+    print("This may take a minute to complete...")
+    print("")
+
+    # The test script runs automatically when loaded
+    print("Test completed! Check your LCD display.")
+    print("You should have seen:")
+    print("  - Screen clear")
+    print("  - Colored rectangles (red, green, blue, yellow)")
+    print("  - White cross lines")
+    print("  - Additional shapes and text")
+    print("  - Simple animation")
+    print("")
+    print("If you didn't see these, check your wiring and try again.")
+    print("")
+    input("Press Enter to return to main menu...")
+
 def run_games_menu(ser):
     """Menu for selecting different games to run"""
     while True:
@@ -667,6 +718,7 @@ def main():
             choices=[
                 "Run Lua Code",
                 "GPIO Button Test",
+                "LCD Display Test",
                 "Enter Command Mode",
                 "Show Boot Log",
                 "Run Games",
@@ -681,6 +733,8 @@ def main():
             run_lua_interactive(ser)
         elif choice == "GPIO Button Test":
             run_gpio_test(ser)
+        elif choice == "LCD Display Test":
+            run_lcd_test(ser)
         elif choice == "Enter Command Mode":
             enter_command_mode(ser)
         elif choice == "Show Boot Log":
