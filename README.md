@@ -780,7 +780,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **Stormworks**: Game development platform where Citrus Doom was originally developed
 - **Love2D-Simple-Games**: Repository by danielnaoexiste providing the original Love2D game implementations
 - **Love2D Community**: For the excellent game framework that inspired our adaptations
-- **ELM11 Team**: For the excellent microcontroller platform
+- **Brisbane Silicon**: For the excellent ELM11 microcontroller platform
 - **id Software**: For creating Doom and releasing the source code
 - **Doom Community**: For maintaining WAD files and documentation
 - **Open Source Contributors**: For the libraries and tools that made this possible
