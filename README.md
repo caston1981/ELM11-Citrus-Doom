@@ -83,15 +83,18 @@ Traditional game implementations:
 - **`elm11_interface.py`**: Interactive Python interface for ELM11 development with menu system for games, GPIO testing, and LCD testing
 - **`elm11_serial_test.py`**: Serial communication test script
 - **`gpio_button_test.lua`**: GPIO button testing script (for testing before controller arrives)
+- **`gpio_led_test.lua`**: GPIO LED testing script (for testing soldered header pins)
 - **`gpio_test_repl.lua`**: Quick GPIO button test for REPL
 - **`st7735_test.lua`**: ST7735S LCD display testing script
 - **`elrender_st7735.lua`**: ST7735S LCD rendering library
+- **`gpio_wiring_diagram.py`**: Python script to generate GPIO wiring diagram (requires matplotlib)
 - **`generate_eldata.py`**: Python script to convert WAD files to ELM11 format
 - **`wad_data.py`**: WAD parsing utilities adapted from Citrus Doom
 
 ### Documentation
 - **`README.md`**: This comprehensive project overview
 - **`ELM11plan.md`**: Detailed technical specifications and porting plan
+- **`GPIO_Test_Wiring.md`**: GPIO LED testing wiring guide with breadboard setup
 - **`docs/ELM11_Datasheet.md`**: ELM11 microcontroller documentation
 - **`love2d_examples/README.md`**: Love2D API adaptation guide
 - **`love2d_games/README.md`**: Love2D games documentation
