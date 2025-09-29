@@ -205,6 +205,143 @@ def show_boot_log(ser):
         return True  # Indicate we closed the connection
     return False
 
+def run_gpio_test(ser):
+    """Run GPIO button testing functionality"""
+    print("GPIO Button Test")
+    print("=" * 40)
+    print("This will test GPIO buttons connected to pins 1-5 on your ELM11.")
+    print("Make sure you have buttons connected to GPIO pins:")
+    print("  Pin 1: UP button")
+    print("  Pin 2: DOWN button")
+    print("  Pin 3: LEFT button")
+    print("  Pin 4: RIGHT button")
+    print("  Pin 5: SHOOT button")
+    print("")
+
+    if not questionary.confirm("Do you have buttons connected and ready to test?").ask():
+        return
+
+    # Load the GPIO test script
+    try:
+        with open('gpio_test_repl.lua', 'r') as f:
+            test_code = f.read()
+    except FileNotFoundError:
+        print("Error: gpio_test_repl.lua not found in current directory")
+        return
+
+    print("Loading GPIO test script...")
+    response = send_lua_code(ser, test_code)
+    if "Error" in response:
+        print("Failed to load test script:")
+        print(response)
+        return
+
+    print("GPIO test script loaded successfully!")
+    print("The test will show button states in real-time.")
+    print("Press buttons to see them register as PRESSED.")
+    print("")
+
+    # Run the test
+    test_code = "test_input(false)"
+    print("Starting GPIO button test...")
+    response = send_lua_code(ser, test_code)
+    print("Test response:")
+    print(response)
+
+    print("")
+    print("Test complete! You can also run individual button checks:")
+    print("  getButtonUp(), getButtonDown(), getButtonLeft(), getButtonRight(), getButtonShoot()")
+    print("")
+    input("Press Enter to return to main menu...")
+
+def run_gpio_led_test(ser):
+    """Run GPIO LED testing functionality"""
+    print("GPIO LED Test")
+    print("=" * 40)
+    print("This will test GPIO output pins 0-15 by lighting LEDs sequentially.")
+    print("Make sure you have LEDs and resistors connected to GPIO pins:")
+    print("  Each GPIO pin (0-15) -> LED anode -> 330Ω resistor -> GND")
+    print("See GPIO_Test_Wiring.md for detailed wiring instructions.")
+    print("")
+
+    if not questionary.confirm("Do you have LEDs wired to GPIO pins 0-15 and ready to test?").ask():
+        return
+
+    # Load the GPIO LED test script
+    try:
+        with open('gpio_led_test.lua', 'r') as f:
+            test_code = f.read()
+    except FileNotFoundError:
+        print("Error: gpio_led_test.lua not found in current directory")
+        return
+
+    print("Loading GPIO LED test script...")
+    response = send_lua_code(ser, test_code)
+    if "Error" in response:
+        print("Failed to load test script:")
+        print(response)
+        return
+
+    print("GPIO LED test script loaded successfully!")
+    print("LEDs should light up sequentially (GPIO0 to GPIO15, 1 second each).")
+    print("Press Ctrl+C in the serial terminal to stop the test.")
+    print("")
+    print("Starting GPIO LED test... (script runs continuously)")
+    print("Check your LEDs - they should cycle through all pins.")
+    print("")
+    input("Press Enter to return to main menu... (test continues running on ELM11)")
+
+def run_lcd_test(ser):
+    """Run LCD display testing functionality"""
+    print("LCD Display Test")
+    print("=" * 40)
+    print("This will test your ST7735S 1.44\" 128x128 TFT LCD display.")
+    print("Make sure your LCD is properly wired:")
+    print("  - SPI_CS -> ELM11 SPI_CS pin")
+    print("  - SPI_CLK -> ELM11 SPI_CLK pin")
+    print("  - SPI_MOSI -> ELM11 SPI_MOSI pin")
+    print("  - DC -> ELM11 GPIO pin")
+    print("  - RST -> ELM11 GPIO pin")
+    print("  - VCC -> 3.3V")
+    print("  - GND -> GND")
+    print("")
+
+    if not questionary.confirm("Is your ST7735S LCD connected and ready to test?").ask():
+        return
+
+    # Load the LCD test script
+    try:
+        with open('st7735_test.lua', 'r') as f:
+            test_code = f.read()
+    except FileNotFoundError:
+        print("Error: st7735_test.lua not found in current directory")
+        return
+
+    print("Loading ST7735S test script...")
+    response = send_lua_code(ser, test_code)
+    if "Error" in response:
+        print("Failed to load test script:")
+        print(response)
+        return
+
+    print("ST7735S test script loaded successfully!")
+    print("The test will display colors, shapes, and animations on your LCD.")
+    print("This may take a minute to complete...")
+    print("")
+
+    # The test script runs automatically when loaded
+    print("Test completed! Check your LCD display.")
+    print("You should have seen:")
+    print("  - Screen clear")
+    print("  - Colored rectangles (red, green, blue, yellow)")
+    print("  - White cross lines")
+    print("  - Additional shapes and text")
+    print("  - Simple animation")
+    print("")
+    print("If you didn't see these, check your wiring and try again.")
+    print("")
+    input("Press Enter to return to main menu...")
+
 def run_games_menu(ser):
     """Menu for selecting different games to run"""
     while True:
@@ -617,6 +754,9 @@ def main():
             "Choose an option:",
             choices=[
                 "Run Lua Code",
+                "GPIO Button Test",
+                "GPIO LED Test",
+                "LCD Display Test",
                 "Enter Command Mode",
                 "Show Boot Log",
                 "Run Games",
@@ -629,6 +769,12 @@ def main():
 
         if choice == "Run Lua Code":
             run_lua_interactive(ser)
+        elif choice == "GPIO Button Test":
+            run_gpio_test(ser)
+        elif choice == "GPIO LED Test":
+            run_gpio_led_test(ser)
+        elif choice == "LCD Display Test":
+            run_lcd_test(ser)
         elif choice == "Enter Command Mode":
             enter_command_mode(ser)
         elif choice == "Show Boot Log":

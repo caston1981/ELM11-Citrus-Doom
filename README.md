@@ -1,6 +1,8 @@
-# ELM11 GamThis project started as an ambitious project to create a Citrus Doom port. However, before we can do this, we will test out simple games and demos. It includes: Development Framework
+# ELM11 Citrus Doom
 
-A comprehensive game development framework for the ELM11 microcontroller, featuring Love2D-style game implementations, educational examples, and interactive development tools.
+A comprehensive project to port Citrus Doom to the ELM11 microcontroller, featuring Love2D-style game implementations, educational examples, and interactive development tools.
+
+This project focuses on porting Citrus Doom (a Lua-based Doom engine) to the ELM11 microcontroller. As part of the development process, we've created Love2D-style games and examples to test the platform capabilities.
 
 ![ELM11](https://img.shields.io/badge/Platform-ELM11-blue)
 ![Lua](https://img.shields.io/badge/Language-Lua%205.x-yellow)
@@ -9,39 +11,44 @@ A comprehensive game development framework for the ELM11 microcontroller, featur
 
 ## Overview
 
-This project started as an ambitious project to create a Citrus Doom port. However before we can do this we will test out simple games and demos.  It includes:
+This project is porting Citrus Doom, a Lua-based Doom engine originally created for Stormworks, to run on the ELM11 microcontroller. The ELM11 provides a 66MHz Lua 5.x runtime with hardware acceleration, making it suitable for real-time game development despite embedded constraints.
 
-- **Love2D Game Library**: Complete games adapted from Love2D patterns
-- **Educational Examples**: Love2D concepts demonstrated for ELM11
-- **Interactive Development Tools**: Python interface for ELM11 development
+The project includes:
+
+- **Citrus Doom Engine**: 3D Doom engine adapted for embedded systems
+- **Love2D Game Library**: Complete games adapted from Love2D patterns for testing
+- **Educational Examples**: Love2D concepts demonstrated for ELM11 development
+- **Interactive Development Tools**: Python interface for ELM11 development and testing
 - **Classic Game Implementations**: Traditional games ported to ELM11
-- **Citrus Doom Engine**: Original 3D engine for embedded Doom gameplay
-
-The ELM11 provides a 66MHz Lua 5.x runtime with hardware acceleration, making it suitable for real-time game development despite embedded constraints.
 
 ### Key Features
-- **288x160 Color Display**: Full RGB565 color support with ST7789 TFT LCD
-- **Property-Based Input**: ELM11 button and control system
+- **128x128 Color Display**: RGB565 color support with ST7735S TFT LCD
+- **Multi-Input Support**: GPIO buttons, Arduino Joystick Shield, Wii Nunchuk
+- **GPIO Testing Tools**: Test your hardware setup before expensive peripherals arrive
 - **Love2D API Adaptation**: Familiar game development patterns
-- **Interactive Development**: Python tools for code testing and deployment
-- **Complete Game Library**: 10 fully playable games
-- **Educational Content**: Learn game development concepts
+- **Interactive Development**: Python interface with menu system for games and testing
+- **Complete Game Library**: 10+ fully playable games
+- **Educational Content**: Learn embedded game development concepts
 
 ### Hardware Requirements
-- ELM11 microcontroller board
-- Display (288x160 color TFT LCD recommended)
-- Input controls (buttons/joystick)
-- USB/serial connection for development
-- Optional: Speaker for sound effects
+- **ELM11 microcontroller board** with soldered GPIO headers
+- **Display**: 1.44" 128x128 ST7735S SPI TFT LCD ($5-8)
+- **Input Options**:
+  - Arduino Joystick Shield with PS2 joystick ($8)
+  - Wii Nunchuk controller (optional alternative)
+  - Basic GPIO buttons for testing (temporary)
+- **USB/serial connection** for development
+- **Optional**: Speaker for sound effects, soldering iron for header installation
 
-**Estimated Development Cost**: $10-15 (ELM11 + basic peripherals)
+**Estimated Total Cost**: $20-30 (includes all components)
 
 ## Project Structure
 
 ### Core Libraries (Citrus Doom Engine)
 - **`elmath.lua`**: Vector mathematics and utility functions
 - **`eldata.lua`**: Flash file I/O and Doom data loading
-- **`elrender.lua`**: Display driver and rendering primitives
+- **`elrender.lua`**: ST7789 display driver and rendering primitives
+- **`elrender_st7735.lua`**: ST7735S 128x128 display driver and rendering primitives
 - **`elinput.lua`**: Input handling system
 - **`elnunchuk.lua`**: Wii Nunchuk I2C protocol implementation
 - **`eljoystick.lua`**: Arduino Joystick Shield I2C protocol implementation
@@ -73,14 +80,21 @@ Traditional game implementations:
 - **`games/pacman/pacman.lua`**: Pac-Man with maze and ghost behavior
 
 ### Development Tools
-- **`elm11_interface.py`**: Interactive Python interface for ELM11 development
+- **`elm11_interface.py`**: Interactive Python interface for ELM11 development with menu system for games, GPIO testing, and LCD testing
 - **`elm11_serial_test.py`**: Serial communication test script
+- **`gpio_button_test.lua`**: GPIO button testing script (for testing before controller arrives)
+- **`gpio_led_test.lua`**: GPIO LED testing script (for testing soldered header pins)
+- **`gpio_test_repl.lua`**: Quick GPIO button test for REPL
+- **`st7735_test.lua`**: ST7735S LCD display testing script
+- **`elrender_st7735.lua`**: ST7735S LCD rendering library
+- **`gpio_wiring_diagram.py`**: Python script to generate GPIO wiring diagram (requires matplotlib)
 - **`generate_eldata.py`**: Python script to convert WAD files to ELM11 format
 - **`wad_data.py`**: WAD parsing utilities adapted from Citrus Doom
 
 ### Documentation
 - **`README.md`**: This comprehensive project overview
 - **`ELM11plan.md`**: Detailed technical specifications and porting plan
+- **`GPIO_Test_Wiring.md`**: GPIO LED testing wiring guide with breadboard setup
 - **`docs/ELM11_Datasheet.md`**: ELM11 microcontroller documentation
 - **`love2d_examples/README.md`**: Love2D API adaptation guide
 - **`love2d_games/README.md`**: Love2D games documentation
@@ -256,15 +270,50 @@ A simplified Pac-Man game featuring:
 
 ### 1. Hardware Assembly
 
-#### ST7789 LCD Wiring (SPI Mode)
+**Note**: Basic soldering skills required. If you're new to soldering, practice on scrap first or consider asking for help. The header pins are the only soldering required for this project.
+
+#### GPIO Header Soldering (Required First)
+The ELM11 has dual-row headers with 18 pins per side (36 total pins), including 16 programmable I/O pins plus power/ground pins. You'll need to solder female header pins to access the GPIO functionality.
+
+**Header Configuration:**
+- **Total Physical Pins**: 36 (18 per side)
+- **Programmable I/O Pins**: 16 (pins 1-16 in the pin numbering)
+- **Additional Pins**: Power (3.3V, 5V), Ground, USB, and other system pins
+
+**What to buy:**
+- 2x18 female header pins (2.54mm pitch) - or two 2x8 headers placed side by side
+- Soldering iron and solder
+- Optional: Helping hands or vise to hold the board
+
+**Soldering tips:**
+1. Use a clean soldering iron (300-400°C for electronics)
+2. Apply solder to the iron first, then touch the pin
+3. Heat the pin for 2-3 seconds, then apply solder
+4. Avoid overheating - the plastic header can melt
+5. Check for cold solder joints (dull, cracked appearance)
+6. Clean excess flux with isopropyl alcohol if available
+7. Work in sections - solder a few pins, let cool, then continue
+
+#### Test GPIO Headers (Recommended)
+After soldering the headers, test your work with GPIO buttons before connecting expensive peripherals:
+
+```bash
+# Connect buttons to GPIO pins 1-5, then run:
+python3 elm11_interface.py
+# Select "GPIO Button Test" from the menu
+```
+
+This will verify your soldering works and let you test basic input functionality while waiting for your controller to arrive.
+
+#### ST7735S LCD Wiring (SPI Mode)
 ```
 ELM11 Pin | LCD Pin | Function
 ----------|---------|---------
 SPI_CS    | CS      | Chip Select
-SPI_CLK   | CLK     | SPI Clock
+SPI_CLK   | SCL     | SPI Clock
 SPI_MOSI  | SDA     | SPI Data
 GPIO_X    | DC      | Data/Command
-GPIO_X    | RST     | Reset
+GPIO_X    | RES     | Reset
 GND       | GND     | Ground
 3.3V      | VCC     | Power
 ```
@@ -420,10 +469,11 @@ This allows you to understand the games before connecting hardware.
 
 #### Test LCD Display
 ```lua
-dofile("elrender.lua")
+dofile("st7735_test.lua")
+-- Or run individual functions:
+dofile("elrender_st7735.lua")
 initLCD()
-setColor(255, 0, 0)  -- Red
-drawRectF(10, 10, 50, 50)
+test_render()
 ```
 
 #### Test Joystick Shield Input
@@ -441,6 +491,14 @@ dofile("elsound.lua")
 init_sound()
 play_sound(1)  -- Pistol sound
 ```
+
+#### Test GPIO Buttons (Before Controller Arrives)
+```lua
+dofile("gpio_test_repl.lua")
+-- Or run the full test:
+dofile("gpio_button_test.lua")
+```
+Connect buttons to GPIO pins 1-5 and test basic input functionality.
 
 ### Running the Game
 
@@ -725,11 +783,13 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- **Citrus Doom**: Original engine by EngineerSmith
-- **ELM11 Team**: For the excellent microcontroller platform
+- **Citrus Doom**: Original engine by EngineerSmith (originally created for Stormworks)
+- **Stormworks**: Game development platform where Citrus Doom was originally developed
+- **Love2D-Simple-Games**: Repository by danielnaoexiste providing the original Love2D game implementations
+- **Love2D Community**: For the excellent game framework that inspired our adaptations
+- **Brisbane Silicon**: For the excellent ELM11 microcontroller platform
 - **id Software**: For creating Doom and releasing the source code
 - **Doom Community**: For maintaining WAD files and documentation
-- **Love2D Community**: For the excellent game framework that inspired our adaptations
 - **Open Source Contributors**: For the libraries and tools that made this possible
 
 ## Contact

@@ -1,7 +1,7 @@
 # ELM11 Porting Plan for Citrus Doom
 
 ## Overview
-This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake for Stormworks) to the ELM11 microcontroller board. The ELM11 runs Lua with hardware acceleration, GPIO, PWM, UART, SPI, I2C, interrupts, timers, and watchdog support. Key challenges include resource constraints (CPU, memory), API differences, and hardware integration for display, input, and sound. **Note: Due to ELM11's embedded nature, resolution will be significantly lower than original Doom (e.g., 320x200)—we'll target 160x128 on the ST7789 LCD for better detail.**
+This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake for Stormworks) to the ELM11 microcontroller board. The ELM11 runs Lua with hardware acceleration, GPIO, PWM, UART, SPI, I2C, interrupts, timers, and watchdog support. Key challenges include resource constraints (CPU, memory), API differences, and hardware integration for display, input, and sound. **Note: Due to ELM11's embedded nature, resolution will be significantly lower than original Doom (e.g., 320x200)—we'll target 128x128 on the ST7735S LCD for better detail.**
 
 ## 1. Study ELM11 Documentation and Capabilities
 - Download and review the ELM11 preliminary documentation and embLua OS docs.
@@ -34,7 +34,7 @@ This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake
 - Test Lua compatibility in REPL (e.g., math ops, minified code).
 
 ## 3. Plan Hardware and Peripherals
-- Display: Use 1.8" 160x128 ST7789 SPI TFT LCD for 3D rendering. Configure pins as SPI_OUT for communication. Implement software rendering to draw pixels/rects via SPI commands, adapting Stormworks' draw calls. Resolution 160x128 (color) provides better detail than monochrome LCDs, suitable for low-res Doom gameplay.
+- Display: Use 1.44" 128x128 ST7735S SPI TFT LCD for 3D rendering. Configure pins as SPI_OUT for communication. Implement software rendering to draw pixels/rects via SPI commands, adapting Stormworks' draw calls. Resolution 128x128 (color) provides good detail for low-res Doom gameplay.
 - Input: Use Arduino Joystick Shield with PS2 joystick + 6 buttons via I2C for analog stick (movement/turning) and buttons (shoot/interact/weapon select). Configure pins as I2C for communication. Provides precise analog control with more buttons than Nunchuk. Includes 5110 LCD for potential HUD/debug display.
 - Sound: PWM pin to speaker for basic tones (e.g., pickup sounds).
 - Power/Other: Stable power supply; enable watchdog.
@@ -67,6 +67,7 @@ This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake
 - **`elmath.lua`**: Vector math utilities (add, sub, dist, at2, dVec, clamp). Pure Lua functions compatible with Lua 5.x.
 - **`eldata.lua`**: Flash file I/O for Doom data loading. Parses packed binary format from text files, loads level-specific data structures.
 - **`elrender.lua`**: ST7789 SPI display driver. Implements drawRectF, drawTriangleF, drawLine, drawText using SPI commands. Includes initLCD() for display setup.
+- **`elrender_st7735.lua`**: ST7735S SPI display driver. Implements drawRectF, drawLine, drawText using SPI commands for 128x128 displays. Includes initLCD() for display setup.
 - **`elinput.lua`**: Dual-mode input system supporting Wii Nunchuk (I2C), Arduino Joystick Shield (I2C), and GPIO buttons. Provides get_input() and get_button() functions.
 - **`elsound.lua`**: PWM audio output for sound effects. Maps Doom sound IDs to frequencies, plays via PWM pin.
 - **`elnunchuk.lua`**: I2C protocol handler for Wii Nunchuk controller. Decodes analog stick and button data.
@@ -86,7 +87,7 @@ This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake
 - **Level Loading**: `load_level(level_num)` returns level-specific data subset.
 
 #### Rendering Pipeline:
-- **Display**: 160x128 ST7789 SPI LCD (RGB565 color).
+- **Display**: 128x128 ST7735S SPI LCD (RGB565 color).
 - **Commands**: SPI writes for column/row address set, memory write operations.
 - **Primitives**: Filled rectangles, triangles (bounding box approximation), lines (Bresenham), text (monospaced).
 - **Update**: `update_things()` called each frame to render player, enemies, HUD.
@@ -103,7 +104,7 @@ This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake
 - **Duration**: Fixed 200ms tones, triggered by engine output array.
 
 #### Performance Considerations:
-- **Resolution**: 160x128 vs original 320x200 (25% of pixels).
+- **Resolution**: 128x128 vs original 320x200 (~12.5% of pixels).
 - **Frame Rate**: Target 5-10 FPS on 66MHz CPU.
 - **Memory**: 1MB heap for level data, optimized Lua tables.
 - **CPU**: Hardware-accelerated Lua VM for math operations.
@@ -113,6 +114,7 @@ This plan outlines the steps to port Citrus Doom (a Lua-based Doom engine/remake
 - ✅ **Math Library**: `elmath.lua` - Complete vector operations and utilities.
 - ✅ **Data Loading**: `eldata.lua` - Flash file I/O, level data parsing.
 - ✅ **Rendering Engine**: `elrender.lua` - ST7789 SPI commands, basic primitives.
+- ✅ **ST7735S Rendering Engine**: `elrender_st7735.lua` - ST7735S SPI commands for 128x128 displays.
 - ✅ **Input System**: `elinput.lua` + `elnunchuk.lua` + `eljoystick.lua` - Multi-mode controls with Arduino Joystick Shield support.
 - ✅ **Sound System**: `elsound.lua` - PWM audio output.
 - ✅ **Game Engine**: `elengine.lua` - Core loop, player movement, collision, AI.
@@ -126,6 +128,7 @@ ELM11-Citrus-Doom/
 ├── elmath.lua          # Vector math utilities
 ├── eldata.lua          # Flash data loading
 ├── elrender.lua        # ST7789 SPI rendering
+├── elrender_st7735.lua # ST7735S SPI rendering (128x128)
 ├── elinput.lua         # Input handling (GPIO/Nunchuk/Joystick Shield)
 ├── elnunchuk.lua       # Wii Nunchuk I2C protocol
 ├── eljoystick.lua      # Arduino Joystick Shield I2C protocol
@@ -143,11 +146,11 @@ ELM11-Citrus-Doom/
 - Fallback: Simplify to "Doom-lite" (e.g., 2D top-down or minimal 3D) if full port is too demanding.
 
 ## Next Steps
-- Acquire Hardware: Order 1.8" 160x128 ST7789 SPI TFT LCD from AliExpress (~$5) and basic components (buttons, speaker, wires).
-- Set Up ELM11 Development Environment: Set up ELM11 with serial connection, install upload tools, and test REPL with basic Lua commands.
-- Prototype LCD Display: Wire ST7789 LCD to ELM11 SPI pins and test basic drawing (e.g., fill screen, draw rect) in REPL.
+- Acquire Hardware: Order 1.44" 128x128 ST7735S SPI TFT LCD (~$5), Arduino Joystick Shield (~$8), 2x18 female GPIO header pins (~$1), and basic components (buttons, speaker, wires).
+- Set Up ELM11 Development Environment: Set up ELM11 with serial connection, install upload tools, and test REPL with basic Lua commands. First solder 2x18 GPIO header to ELM11 board.
+- Prototype LCD Display: Wire ST7735S LCD to ELM11 SPI pins and test basic drawing (e.g., fill screen, draw rect) in REPL.
 - Port Core Math/Data Structures: Adapt Citrus Doom's math functions (e.g., vector ops, BSP) to ELM11 Lua, test in REPL for performance.
 - Adapt Data Loading: Create ELM11-compatible data loading from flash instead of Stormworks text boxes.
-- Implement Rendering Engine: Replace Stormworks draw calls with SPI commands for ST7789 (e.g., map drawRectF to pixel fills).
+- Implement Rendering Engine: Replace Stormworks draw calls with SPI commands for ST7735S (e.g., map drawRectF to pixel fills).
 - ✅ Add Input and Sound: Map input to GPIO interrupts and sound to PWM, test basic controls/audio.
 - Full Integration and Testing: Integrate all components, load a simple level, and test gameplay loop at 5-10 FPS.
