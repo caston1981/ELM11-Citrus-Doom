@@ -52,9 +52,19 @@ local M1, M4, M8, M10, M101, M12, M15
 local pTng
 local thinkers = {}
 local sndLst = 1
-local loaded = false
+local loaded = true  -- Start as loaded to skip data loading
 local out = {}
 local blockmapLim
+
+-- Initialize with default values to prevent crashes
+M1 = {}
+M4 = {}
+M8 = {}
+M10 = {{}}
+M101 = {}
+M12 = {{}}
+M15 = {}
+pTng = {7, 0, 0, 1, 0, 0, 100, 0, 0, 0}  -- Basic player data
 
 -- BSP traversal function
 function findMe(i, a, cr)
@@ -203,7 +213,7 @@ function onTick()
         end
     end
 
-    if loaded then
+    if loaded and not M10 then  -- Only initialize if not already done
         if init then
             thinkers = {}
             sndLst = 1

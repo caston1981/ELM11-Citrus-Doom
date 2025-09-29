@@ -100,3 +100,27 @@ function test_data_load()
     loadDoomData()
     print("M[1] size: " .. #M[1])
 end
+
+return {
+    loadDoomData = loadDoomData,
+    test_data_load = test_data_load,
+    load_level = function(level)
+        -- Return minimal data structure to prevent crashes
+        return {
+            [1] = {}, -- M1 - entities/things
+            [2] = {}, -- M2 - linedefs?
+            [3] = {}, -- M3
+            [4] = {}, -- M4 - sectors?
+            [5] = {}, -- M5
+            [6] = {}, -- M6
+            [7] = {}, -- M7 - vertices?
+            [8] = {}, -- M8 - sidedefs?
+            [9] = {}, -- M9
+            [10] = {}, -- M10 - blockmap
+            [11] = {}, -- M11
+            [12] = {}, -- M12 - sounds
+            [15] = {}, -- M15 - thing types
+            [16] = {}  -- M16 - states
+        }
+    end
+}

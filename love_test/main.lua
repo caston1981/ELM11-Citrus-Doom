@@ -21,10 +21,11 @@ function property.getBool(key)
     -- Map ELM11 key names to LÖVE key names
     local keyMap = {
         ["Up"] = "up",
-        ["Down"] = "down", 
+        ["Down"] = "down",
         ["Left"] = "left",
         ["Right"] = "right",
         ["Start"] = "return",  -- Map Start to Enter/Return
+        ["Shoot"] = "space",   -- Map Shoot to Spacebar
         ["A"] = "z",  -- Map A button to Z
         ["B"] = "x"   -- Map B button to X
     }
@@ -32,40 +33,31 @@ function property.getBool(key)
     return love.keyboard.isDown(loveKey)
 end
 
-local gameLoaded = false
+-- Load the game
+dofile("pacman.lua")
+
+-- Set up Love2D window
+function love.conf(t)
+    t.window.width = 864  -- 3x scale
+    t.window.height = 480  -- 3x scale
+    t.window.title = "Space Invaders"
+end
+
 function love.load()
-    local gameFile = arg[2] or "doom.lua"  -- Default to doom.lua if no argument
-    print("Attempting to load game file: " .. gameFile)
-    -- Try to load the game file directly (should work if in same directory)
-    local success, err = pcall(function() dofile(gameFile) end)
-    if success then
-        gameLoaded = true
-        print("Game loaded successfully!")
-        if onLoad then onLoad() end
-    else
-        print("Failed to load game:", err)
-        print("Trying alternative path...")
-        -- Try loading from the project root (go up one directory)
-        success, err = pcall(function() dofile("../" .. gameFile) end)
-        if success then
-            gameLoaded = true
-            print("Game loaded successfully from alternative path!")
-            if onLoad then onLoad() end
-        else
-            print("Failed alternative load:", err)
-        end
-    end
+    -- Set a larger font for better visibility
+    love.graphics.setFont(love.graphics.newFont(24))  -- 2x scale
 end
 
 function love.update(dt)
-    if gameLoaded and onTick then
+    if onTick then
         onTick(dt)
     end
 end
 
 function love.draw()
-    screen.clear()  -- Clear the screen each frame
-    if gameLoaded and onDraw then
+    -- Scale the graphics to make them more visible
+    love.graphics.scale(3, 3)
+    if onDraw then
         onDraw()
     end
 end
