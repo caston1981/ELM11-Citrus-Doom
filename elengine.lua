@@ -2,29 +2,26 @@
 -- Adapted from Citrus Doom engine.lua for ELM11 microcontroller
 -- Replaces Stormworks APIs with ELM11 libraries
 
-local elmath = require("elmath")
-local eldata = require("eldata")
-local elrender = require("elrender")
-local elinput = require("elinput")
-local elsound = require("elsound")
+local elmath = dofile("elmath.lua")
+local eldata = dofile("eldata.lua")
+local elrender = dofile("elrender.lua")
+local elinput = dofile("elinput.lua")
+local elsound = dofile("elsound.lua")
 
--- Math shortcuts
-local m = math
-local mx = m.max
-local mn = m.min
-local flr = m.floor
-local pi = m.pi / 180
-local abs = m.abs
-local sin = m.sin
-local cos = m.cos
-local atan2 = m.atan2
-local sqrt = m.sqrt
-local clamp = elmath.clamp
-local dist = elmath.dist
-local add = elmath.add
-local sub = elmath.sub
-local dVec = elmath.dVec
-local at2 = elmath.at2
+-- Simple bitwise AND function for Lua versions without bit32
+local function bitAnd(a, b)
+    local result = 0
+    local bit = 1
+    while a > 0 or b > 0 do
+        if a % 2 == 1 and b % 2 == 1 then
+            result = result + bit
+        end
+        a = math.floor(a / 2)
+        b = math.floor(b / 2)
+        bit = bit * 2
+    end
+    return result
+end
 
 -- Constants
 local trueVar = true
@@ -87,7 +84,7 @@ function chkPs(p, mv, index, checkPlayerPosLoop, cr)
             s2 = M15[pos[4]]
             if pos[20] then
                 x1 = dst - s2[18]
-                if x1 < bstDst and s2[23] & 1 > 0 and (s1[23] & 1 > 0 or clamp(p[9], pos[9] - h, pos[9] + s2[19]) == p[9]) then
+                if x1 < bstDst and math.fmod(s2[23], 2) == 1 and (math.fmod(s1[23], 2) == 1 or clamp(p[9], pos[9] - h, pos[9] + s2[19]) == p[9]) then
                     hitThing = pos
                     bstDst = x1
                     bstA = at2(p, pos)
@@ -143,7 +140,7 @@ end
 
 -- Fall physics
 function fall(cr)
-    flying = M15[cr[4]][23] & 4 > 0
+    flying = bitAnd(M15[cr[4]][23], 4) > 0
     if not flying then
         bounds = findMe(#M[7], cr)
         bt = bounds[1]
@@ -233,7 +230,7 @@ function onTick()
                 end
                 cr[7] = M15[cr[4]][4] -- health
                 cr[9], cr[10] = findMe(#M[7], cr)[1] -- vertical position
-                if cr[5] & difficulty < 1 then
+                if bitAnd(cr[5], difficulty) < 1 then
                     tableRemove(M1, i)
                 elseif cr[4] == 1 then -- identify player
                     if pTng then
@@ -312,7 +309,7 @@ function onTick()
                         cr[6] = state[4]
                         cr[15] = 0
                         local state3 = M[16][cr[6]][3]
-                        flying = s1[23] & 4 > 0
+                        flying = bitAnd(s1[23], 4) > 0
 
                         if state3 == 2 then -- view logic
                             chkPs(cr, falseVar, i, 8)
